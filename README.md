@@ -1,7 +1,7 @@
-# Magenta RealTime 2 on the iPhone Neural Engine
+# Magenta RealTime 2 Small on the iPhone Neural Engine
 
 **Google DeepMind's [Magenta RealTime 2](https://huggingface.co/google/magenta-realtime-2)
-(230M streaming music model), surgically ported to Core ML and resident on the
+(`mrt2_small`, 230M parameters), surgically ported to Core ML and resident on the
 Apple Neural Engine.** Temporal-body correlation vs the MLX reference: 0.99998.
 Decoder SNR: 118.85 dB. Ten minutes of continuous generation on an iPhone 15
 Pro Max with zero audio underruns.
@@ -14,22 +14,6 @@ Magenta RealTime 2 ships with an on-device engine for Apple Silicon **GPUs**
 **25 Hz — one 40 ms audio frame per step — on an iPhone's ANE**, where the
 power budget is small enough to survive a thermal soak? The models, the
 conversion method, and the receipts are all here.
-
-## Status — what's proven, what's not
-
-We publish what we've validated. Nothing here is aspirational.
-
-| Claim | Status | Evidence |
-| --- | --- | --- |
-| Temporal transformer numerically matches the MLX reference | ✅ Proven | correlation 0.999985904188, max err 0.118 ([receipts](docs/validation-receipts.md)) |
-| Temporal + depth pipeline samples identical tokens (deterministic) | ✅ Proven | 0/12 mismatches, composed correlation 0.999998250871 |
-| SpectroStream decoder matches MLX | ✅ Proven | SNR 118.850 dB, log-spectral distance 0.000722 dB |
-| Stateful temporal model is ANE-resident on device | ✅ Proven | MLComputePlan + Instruments, iPhone 15 Pro Max |
-| Temporal step fits the budget | ✅ Proven | p99 ≈ 14 ms/frame (temporal only, on device) |
-| Sustained playback without dropouts | ✅ Proven | 10-minute run, 0 underruns (with lookahead buffering) |
-| Composed pipeline p99 < 40 ms in all configs | ⚠️ Not yet | measured 24–62 ms/frame composed; lookahead absorbs the tail |
-| Turnkey Swift runtime / demo app | ❌ Not shipped | coming when it meets our bar |
-| Conditioning preset library | ❌ Not shipped | deliberately — see [Conditioning](#conditioning) |
 
 ## The method: redesign the pipeline, not the model
 
@@ -92,6 +76,22 @@ The cuts that matter, and why:
 The long-form version of this analysis is the
 [graph teardown](docs/graph-teardown.md). The ANE-specific KV-cache patterns are
 in the [stateful KV guide](docs/stateful-kv-coreml.md).
+
+## Status — what's proven, what's not
+
+We publish what we've validated. Nothing here is aspirational.
+
+| Claim | Status | Evidence |
+| --- | --- | --- |
+| Temporal transformer numerically matches the MLX reference | ✅ Proven | correlation 0.999985904188, max err 0.118 ([receipts](docs/validation-receipts.md)) |
+| Temporal + depth pipeline samples identical tokens (deterministic) | ✅ Proven | 0/12 mismatches, composed correlation 0.999998250871 |
+| SpectroStream decoder matches MLX | ✅ Proven | SNR 118.850 dB, log-spectral distance 0.000722 dB |
+| Stateful temporal model is ANE-resident on device | ✅ Proven | MLComputePlan + Instruments, iPhone 15 Pro Max |
+| Temporal step fits the budget | ✅ Proven | p99 ≈ 14 ms/frame (temporal only, on device) |
+| Sustained playback without dropouts | ✅ Proven | 10-minute run, 0 underruns (with lookahead buffering) |
+| Composed pipeline p99 < 40 ms in all configs | ⚠️ Not yet | measured 24–62 ms/frame composed; lookahead absorbs the tail |
+| Turnkey Swift runtime / demo app | ❌ Not shipped | coming when it meets our bar |
+| Conditioning preset library | ❌ Not shipped | deliberately — see [Conditioning](#conditioning) |
 
 ## Reproduce our numbers in two minutes
 
