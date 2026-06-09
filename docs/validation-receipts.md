@@ -205,6 +205,38 @@ a latency-headroom failure, not thermal — and then passed 10 minutes with
 0 underruns after prefilling a 15 s PCM reservoir. Older devices are viable
 as a higher-startup-latency tier.
 
+### 4.4 GPU absence and power
+
+The strongest placement evidence is what is *absent*. Instruments Core ML
+traces of composed all-ANE runs — on both iPhone 12 Pro and iPhone 15 Pro
+Max — export Metal GPU interval tables whose only rows belong to
+`backboardd`, the iOS screen compositor. App-attributed GPU time: **0 ns**.
+
+A counterbalanced Power Profiler pair (same app, same 60 s reservoir-backed
+live-audio run, temporal routed to ANE vs routed to GPU as the control) on
+iPhone 12 Pro measured:
+
+| Metric (60 s live run, iPhone 12 Pro) | temporal on ANE | temporal on GPU (control) |
+| --- | ---: | ---: |
+| Process GPU impact (duration-weighted) | 0.000 | 2.231 |
+| Process CPU impact (duration-weighted) | 1.380 | 2.625 |
+| CPU instructions | 48,123,948,704 | 110,255,108,500 |
+| Thermal state | nominal | nominal |
+
+A separate timing analysis of the same ANE-vs-GPU routing pair reported a
+producer active-work duty cycle of **0.57 for the ANE routing vs 0.93 for
+the GPU routing**: the ANE route finishes each second of audio early and
+sleeps ~43% of the wall clock, while the GPU route runs nearly pegged. These
+are process-attributed impact scores and duty cycles, not calibrated joules —
+strong directional evidence, not a battery-life claim.
+
+Scope note: these traces ran an all-ANE runtime configuration in which every
+Core ML stage requested `.cpuAndNeuralEngine`. In the published bundle, the
+fp32 decoder is the deliberate exception: fp32 cannot execute on the ANE
+(it is fp16 hardware), so the decoder schedules on GPU — one 25-frame call
+per second of audio, off the 40 ms critical path, traded for the 118.85 dB
+decode (Section 3).
+
 ## 5. Negative results: why the published temporal export is one frame
 
 The obvious export — unroll many frames into one prediction, or carry the K/V
