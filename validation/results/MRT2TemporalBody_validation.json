@@ -1,0 +1,169 @@
+{
+  "boundary": "temporal_body_unrolled_no_wrap",
+  "coreml_vs_mlx": {
+    "correlation": 0.9999859041880251,
+    "max_abs_error": 0.11785507202148438,
+    "mean_abs_error": 0.01972598255633784,
+    "shape": [
+      1,
+      1,
+      1024
+    ]
+  },
+  "coreml_vs_pytorch": {
+    "correlation": 0.9999859042462442,
+    "max_abs_error": 0.11786282062530518,
+    "mean_abs_error": 0.019726022088434547,
+    "shape": [
+      1,
+      1,
+      1024
+    ]
+  },
+  "export_compile": {
+    "compiled_path": "MRT2TemporalBody.mlmodelc",
+    "ok": true,
+    "output": "MRT2TemporalBody.mlmodelc/coremldata.bin"
+  },
+  "frames": 1,
+  "known_limits": [
+    "Unrolls a fixed no-wrap frame count into one prediction.",
+    "Frame 1 proves read-after-write across slots inside this unrolled graph.",
+    "This is not the final one-prediction-per-40-ms-frame runtime API.",
+    "The conditioning encoder remains host-owned through source_encoded.",
+    "Depth-body logits remain in a separate Core ML package.",
+    "This is not the 25-frame full temporal-plus-depth logits loop."
+  ],
+  "metadata_path": "MRT2TemporalBody_export_metadata.json",
+  "model_path": "MRT2TemporalBody.mlpackage",
+  "per_frame": [
+    {
+      "coreml_vs_mlx": {
+        "correlation": 0.9999859041880251,
+        "max_abs_error": 0.11785507202148438,
+        "mean_abs_error": 0.01972598255633784,
+        "shape": [
+          1,
+          1,
+          1024
+        ]
+      },
+      "coreml_vs_pytorch": {
+        "correlation": 0.9999859042462442,
+        "max_abs_error": 0.11786282062530518,
+        "mean_abs_error": 0.019726022088434547,
+        "shape": [
+          1,
+          1,
+          1024
+        ]
+      },
+      "frame": 0,
+      "pytorch_vs_mlx": {
+        "correlation": 0.9999999999998174,
+        "max_abs_error": 2.288818359375e-05,
+        "mean_abs_error": 2.216131179011427e-06,
+        "shape": [
+          1,
+          1,
+          1024
+        ]
+      }
+    }
+  ],
+  "pytorch_vs_mlx": {
+    "correlation": 0.9999999999998174,
+    "max_abs_error": 2.288818359375e-05,
+    "mean_abs_error": 2.216131179011427e-06,
+    "shape": [
+      1,
+      1,
+      1024
+    ]
+  },
+  "schema": "mrt2-temporal-body-unrolled-coreml-validation-v1",
+  "state_count": 48,
+  "temporal_plus_depth_logits": {
+    "float16": {
+      "available": true,
+      "boundary": "unrolled_temporal_coreml_outputs_to_depth_body_logits",
+      "coreml_vs_mlx": {
+        "correlation": 0.9999982508712859,
+        "max_abs_error": 0.06528902053833008,
+        "mean_abs_error": 0.011262782105446368,
+        "shape": [
+          1,
+          12,
+          12294
+        ]
+      },
+      "deterministic_argmax_sampling": {
+        "mismatch_count_vs_mlx": 0,
+        "mismatch_indices": [],
+        "sampled_unique_shape": [
+          1,
+          1,
+          12
+        ],
+        "total_tokens": 12
+      },
+      "label": "FLOAT16 depth-body candidate",
+      "model_path": "MRT2DepthBody.mlpackage",
+      "timing_smoke": {
+        "p50_ms": 6.727374995534774,
+        "p99_ms": 6.727374995534774,
+        "scope": "Python Core ML CPU_ONLY depth-body predict per frame, not device timing"
+      },
+      "topk_agreement_coreml_vs_mlx": {
+        "expected_argmax_in_actual_top40": 1.0,
+        "expected_argmax_in_actual_top5": 1.0,
+        "top1_exact": 1.0,
+        "top40_set_exact": 0.9166666666666666,
+        "top5_set_exact": 1.0
+      }
+    },
+    "float32": {
+      "available": true,
+      "boundary": "unrolled_temporal_coreml_outputs_to_depth_body_logits",
+      "coreml_vs_mlx": {
+        "correlation": 0.9999982508712859,
+        "max_abs_error": 0.06528902053833008,
+        "mean_abs_error": 0.011262782105446368,
+        "shape": [
+          1,
+          12,
+          12294
+        ]
+      },
+      "deterministic_argmax_sampling": {
+        "mismatch_count_vs_mlx": 0,
+        "mismatch_indices": [],
+        "sampled_unique_shape": [
+          1,
+          1,
+          12
+        ],
+        "total_tokens": 12
+      },
+      "label": "FLOAT32 depth-body control",
+      "model_path": "MRT2DepthBody_fp32_control.mlpackage",
+      "timing_smoke": {
+        "p50_ms": 6.344666995573789,
+        "p99_ms": 6.344666995573789,
+        "scope": "Python Core ML CPU_ONLY depth-body predict per frame, not device timing"
+      },
+      "topk_agreement_coreml_vs_mlx": {
+        "expected_argmax_in_actual_top40": 1.0,
+        "expected_argmax_in_actual_top5": 1.0,
+        "top1_exact": 1.0,
+        "top40_set_exact": 0.9166666666666666,
+        "top5_set_exact": 1.0
+      }
+    }
+  },
+  "timing_smoke": {
+    "predict_ms": 75.10966599511448,
+    "scope": "Python Core ML CPU_ONLY single unrolled predict, not device timing"
+  },
+  "zero_cache_control": null
+}

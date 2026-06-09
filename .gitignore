@@ -1,0 +1,9 @@
+# Model artifacts are hosted on Hugging Face, not in git:
+# https://huggingface.co/mattmireles/magenta-realtime-2-iphone
+models/
+build/
+
+__pycache__/
+*.pyc
+.DS_Store
+.venv/

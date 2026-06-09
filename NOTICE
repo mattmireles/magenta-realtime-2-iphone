@@ -1,0 +1,17 @@
+magenta-realtime-2-iphone
+Copyright 2026 Matt Mireles
+
+This repository contains code derived from Magenta RealTime
+(https://github.com/magenta/magenta-realtime), Copyright Google LLC,
+licensed under the Apache License, Version 2.0. Derived files retain their
+original Google copyright headers.
+
+The conversion scripts in this repository operate on, and the companion
+Hugging Face repository (https://huggingface.co/mattmireles/magenta-realtime-2-iphone)
+redistributes converted forms of, the Magenta RealTime 2 model weights
+published by Google DeepMind at
+https://huggingface.co/google/magenta-realtime-2 under the Creative Commons
+Attribution 4.0 International license (CC-BY-4.0). The converted weights are
+content-preserving derivatives (numerical precision and memory-layout
+transforms only) and remain subject to CC-BY-4.0 and to the upstream model's
+terms of use.
