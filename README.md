@@ -1,26 +1,43 @@
 # Magenta RealTime 2 Small on the iPhone Neural Engine
 
-**Google DeepMind's [Magenta RealTime 2](https://huggingface.co/google/magenta-realtime-2)
-(`mrt2_small`, 230M parameters), surgically ported to Core ML and resident on the
-Apple Neural Engine.** Temporal-body correlation vs the MLX reference: 0.99998.
-Decoder SNR: 118.85 dB. Ten minutes of continuous generation on an iPhone 15
-Pro Max with zero audio underruns.
+**Live music generation at 25 frames per second, on the phone in your pocket.
+Ten unbroken minutes of 48 kHz stereo. Zero dropouts. Even on a 2020 iPhone 12
+Pro.**
+
+This is Google DeepMind's [Magenta RealTime 2](https://huggingface.co/google/magenta-realtime-2)
+(`mrt2_small`, 230M parameters), surgically cut into three Core ML graphs and
+placed on the silicon each one wants. The temporal transformer holds **p99
+≈ 14 ms** on the Neural Engine against a 40 ms frame budget. Output correlation
+vs Google's MLX reference: **0.999985904188** — we publish all twelve digits
+because we measured all twelve. Decoder SNR: **118.85 dB**. Sampled tokens:
+identical, 0 of 12 mismatched.
 
 > **Pre-converted models:** [huggingface.co/mattmireles/magenta-realtime-2-iphone](https://huggingface.co/mattmireles/magenta-realtime-2-iphone)
 > **Exporters, validation harness, docs (this repo):** [github.com/mattmireles/magenta-realtime-2-iphone](https://github.com/mattmireles/magenta-realtime-2-iphone)
 
-Magenta RealTime 2 ships with an on-device engine for Apple Silicon **GPUs**
-(MLX). This project answers a different question: can the same model hold
-**25 Hz — one 40 ms audio frame per step — on an iPhone's ANE**, where the
-power budget is small enough to survive a thermal soak? The models, the
-conversion method, and the receipts are all here.
+## Why the Neural Engine?
+
+Magenta RealTime 2 already runs on Apple Silicon — Google ships an MLX engine
+for Mac **GPUs**. A phone is a different game. Real-time music is not a
+3-second benchmark: the model must deliver one 40 ms frame every 40 ms,
+indefinitely, on a device with no fan. The GPU can hit the latency; it can't
+hold the power budget through minute ten. The Neural Engine — the same silicon
+that runs Face ID and on-device Siri — devours static-shape fp16 matrix math
+at a fraction of the GPU's draw. It is the only compute unit on the phone
+built for this job.
+
+But the ANE has rules. No dynamic shapes. No data-dependent control flow. And
+a compiler that fails *silently*: push the whole model through as one graph
+and Core ML reports success while quietly scheduling your "Neural Engine
+model" on the CPU at ~640 ms per frame — 16× over budget, no error raised. We
+hit that cliff, measured it, and published it. Then we cut the pipeline at the
+joints.
 
 ## The method: redesign the pipeline, not the model
 
 MRT2's generation step is not one graph — it's a chain with fundamentally
-different hardware affinities. Fighting the converter to ship it as one graph
-produces a model that silently falls back to CPU. Cutting it at the right
-joints produces three small graphs that each land on the right silicon:
+different hardware affinities. Cutting it at the right joints produces three
+small graphs that each land on the right silicon:
 
 ```
 prompt text ──(offline, Mac)──► source_encoded [1,1,256]          exporters/export_conditioning.py
@@ -48,10 +65,10 @@ The cuts that matter, and why:
 1. **The KV cache is Core ML state, not an input.** The temporal body exports
    as a 1-frame stateful graph with 48 fp16 `ct.StateType` buffers. Multi-frame
    unrolled and host-carried-cache variants were exported, measured, and
-   **rejected**: past a size cliff the ANE compiler fails (BNNS error -14) and
-   Core ML silently falls back to CPU at ~640 ms/frame — 16× over budget with
-   no error surfaced. The negative result is documented in the
-   [receipts](docs/validation-receipts.md).
+   **rejected**: the ANE compiler cliff sits at exactly two frames. Past it,
+   compilation fails (BNNS error -14) and Core ML silently falls back to CPU at
+   ~640 ms/frame — 16× over budget with no error surfaced. The negative result
+   is documented in the [receipts](docs/validation-receipts.md).
 2. **Sampling stays on the host.** Depth logits come out of Core ML; Gumbel
    noise, top-k, and the RNG live in ordinary code. Deterministic parity
    becomes provable (0/12 token mismatches vs MLX) and seeds are reproducible.
@@ -59,10 +76,10 @@ The cuts that matter, and why:
    ANE-hostile, trivially fast on CPU. Shipping the table as a 12.6 MB flat
    binary beats embedding it in any graph.
 4. **The decoder is FLOAT32 on purpose.** The fp16 export of the conv decoder
-   overflowed — ~15.7% non-finite outputs, audibly corrupt on every prompt —
-   while passing a naive correlation check. The fp32 export measures 118.85 dB
-   SNR vs the reference. Lesson: **validate `finite_ratio`, not just
-   correlation.** ([details](docs/validation-receipts.md))
+   overflowed — 15.7% of its output came back NaN or Inf, audibly corrupt on
+   every prompt — *while passing a naive correlation check*. The fp32 export
+   measures 118.85 dB SNR vs the reference. Lesson: **validate `finite_ratio`,
+   not just correlation.** ([details](docs/validation-receipts.md))
 5. **iSTFT and overlap-add stay on the host.** The decoder's output boundary is
    the pre-iSTFT tensor; streaming overlap state is explicit host code instead
    of hidden graph state. See the [RVQ decoder guide](docs/rvq-decoder.md).
@@ -86,9 +103,10 @@ We publish what we've validated. Nothing here is aspirational.
 | Temporal transformer numerically matches the MLX reference | ✅ Proven | correlation 0.999985904188, max err 0.118 ([receipts](docs/validation-receipts.md)) |
 | Temporal + depth pipeline samples identical tokens (deterministic) | ✅ Proven | 0/12 mismatches, composed correlation 0.999998250871 |
 | SpectroStream decoder matches MLX | ✅ Proven | SNR 118.850 dB, log-spectral distance 0.000722 dB |
-| Stateful temporal model is ANE-resident on device | ✅ Proven | MLComputePlan + Instruments, iPhone 15 Pro Max |
-| Temporal step fits the budget | ✅ Proven | p99 ≈ 14 ms/frame (temporal only, on device) |
-| Sustained playback without dropouts | ✅ Proven | 10-minute run, 0 underruns (with lookahead buffering) |
+| Stateful temporal model is ANE-resident on device | ✅ Proven | ~70% of the compute plan on ANE; MLComputePlan + Instruments, iPhone 15 Pro Max |
+| Temporal step fits the budget | ✅ Proven | p99 ≈ 14 ms against a 40 ms frame (temporal only, on device) |
+| Sustained playback without dropouts | ✅ Proven | 10-minute runs: 0 underruns, 0 dropped frames — iPhone 15 Pro Max **and** iPhone 12 Pro (A14, 2020, with a 15 s startup reservoir) |
+| Survives a thermal soak | ✅ Proven | the 10-minute soak pushed iOS thermal state to "serious" — and never dropped a frame. On the A14, the only failure mode was latency headroom at *nominal* thermal; heat was never the limiter |
 | Composed pipeline p99 < 40 ms in all configs | ⚠️ Not yet | measured 24–62 ms/frame composed; lookahead absorbs the tail |
 | Turnkey Swift runtime / demo app | ❌ Not shipped | coming when it meets our bar |
 | Conditioning preset library | ❌ Not shipped | deliberately — see [Conditioning](#conditioning) |
@@ -172,3 +190,6 @@ ends up sounding broken. Compile your own prompts; the exporter is the product.
   [models](https://huggingface.co/google/magenta-realtime-2))
 - **Apple's coremltools team** for `ct.StateType`.
 - Conversion, validation, and port by [Matt Mireles](https://github.com/mattmireles).
+  Prior art in the same spirit: [kokoro-coreml](https://github.com/mattmireles/kokoro-coreml).
+
+*Real-time music generation in your pocket, with the receipts to prove it.*
