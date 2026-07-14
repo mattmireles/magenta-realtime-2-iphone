@@ -1,0 +1,215 @@
+{
+  "artifacts": {
+    "metadata": "build/models/spectrostream_decoder_conv_nchw_f16s_export_metadata.json",
+    "mlmodelc": "build/models/spectrostream_decoder_conv_nchw_f16s.mlmodelc",
+    "mlpackage": "build/models/spectrostream_decoder_conv_nchw_f16s.mlpackage",
+    "report": "build/validation/spectrostream_decoder_conv_nchw_f16s_validation.json",
+    "summary": "build/validation/spectrostream_decoder_conv_nchw_f16s_validation.md"
+  },
+  "boundary": "host RVQ embeddings to pre-iSTFT SpectroStream decoder tensor",
+  "checkpoint_path": "<local>/checkpoints/mrt2_small.safetensors (from google/magenta-realtime-2)",
+  "conversion": {
+    "compute_precision": "FLOAT16",
+    "compute_units_for_predict": "CPU_AND_GPU",
+    "conversion_error": null,
+    "convert_seconds": 2.6765622079838067,
+    "convert_to": "mlprogram",
+    "coreml_predict_error": null,
+    "minimum_deployment_target": "iOS18",
+    "trace_seconds": 1.5476363329216838
+  },
+  "coreml_vs_mlx_decoder": {
+    "correlation": 0.9999996382967414,
+    "finite_count": 184320,
+    "finite_ratio": 1.0,
+    "log_spectral_distance_db": 0.2611496179462343,
+    "max_abs_error": 2.5921630859375,
+    "mean_abs_error": 0.0038046987194849495,
+    "predict_timing_ms_cpu_and_gpu": {
+      "all": [
+        26.119541958905756,
+        25.581208989024162,
+        27.976084034889936,
+        27.11212495341897,
+        26.69333398807794
+      ],
+      "max": 27.976084034889936,
+      "min": 25.581208989024162,
+      "p50": 26.69333398807794,
+      "p90": 27.63050040230155,
+      "p99": 27.941525671631098,
+      "repeats": 5,
+      "warmups": 1
+    },
+    "rms_error": 0.04317433251331402,
+    "shape": [
+      1,
+      96,
+      480,
+      4
+    ],
+    "snr_db": 59.43924768078902,
+    "total_count": 184320
+  },
+  "decoder_codes": {
+    "max": 1018,
+    "min": 0,
+    "shape": [
+      25,
+      12
+    ]
+  },
+  "frames": 25,
+  "inputs": [
+    {
+      "dtype": "float32",
+      "name": "decoder_embeddings",
+      "shape": [
+        1,
+        25,
+        256
+      ],
+      "source": "host CPU RVQ lookup sum"
+    }
+  ],
+  "known_limits": [
+    "Exports a fixed chunk decoder conv baseline, not per-frame streaming Core ML state.",
+    "RVQ lookup remains host CPU owned.",
+    "Inverse STFT and PCM overlap state remain host owned.",
+    "CPU_AND_GPU predict timing on Mac is only a local smoke signal; iPhone profiling is Phase 5 authority."
+  ],
+  "outputs": [
+    {
+      "consumer": "host inverse STFT / overlap-add",
+      "dtype": "float32 model boundary, converted with selected compute precision",
+      "name": "decoder_stft",
+      "shape": [
+        1,
+        96,
+        480,
+        4
+      ]
+    }
+  ],
+  "pytorch_vs_mlx_decoder": {
+    "correlation": 0.9999999999994761,
+    "finite_count": 184320,
+    "finite_ratio": 1.0,
+    "log_spectral_distance_db": 0.0010733313520428873,
+    "max_abs_error": 0.0032958984375,
+    "mean_abs_error": 6.717606765155788e-06,
+    "rms_error": 4.189263971079296e-05,
+    "shape": [
+      1,
+      96,
+      480,
+      4
+    ],
+    "snr_db": 119.70100578655334,
+    "total_count": 184320
+  },
+  "schema": "spectrostream-decoder-conv-coreml-export-v1",
+  "source_commit": "d8b6f571cb89290fa8136b724b5652ee331068b6",
+  "warnings": {
+    "compile_error": null,
+    "compile_output": "build/models/spectrostream_decoder_conv_nchw_f16s.mlmodelc/coremldata.bin",
+    "python_warnings": [
+      {
+        "category": "RuntimeWarning",
+        "message": "overflow encountered in cast"
+      },
+      {
+        "category": "RuntimeWarning",
+        "message": "overflow encountered in cast"
+      },
+      {
+        "category": "RuntimeWarning",
+        "message": "overflow encountered in cast"
+      },
+      {
+        "category": "RuntimeWarning",
+        "message": "overflow encountered in cast"
+      },
+      {
+        "category": "RuntimeWarning",
+        "message": "overflow encountered in cast"
+      },
+      {
+        "category": "RuntimeWarning",
+        "message": "overflow encountered in cast"
+      },
+      {
+        "category": "RuntimeWarning",
+        "message": "overflow encountered in cast"
+      },
+      {
+        "category": "RuntimeWarning",
+        "message": "overflow encountered in cast"
+      },
+      {
+        "category": "RuntimeWarning",
+        "message": "overflow encountered in cast"
+      },
+      {
+        "category": "RuntimeWarning",
+        "message": "overflow encountered in cast"
+      },
+      {
+        "category": "RuntimeWarning",
+        "message": "overflow encountered in cast"
+      },
+      {
+        "category": "RuntimeWarning",
+        "message": "overflow encountered in cast"
+      },
+      {
+        "category": "RuntimeWarning",
+        "message": "overflow encountered in cast"
+      },
+      {
+        "category": "RuntimeWarning",
+        "message": "overflow encountered in cast"
+      },
+      {
+        "category": "ResourceWarning",
+        "message": "Implicitly cleaning up <TemporaryDirectory '<tmp>"
+      }
+    ],
+    "stderr": "Converting PyTorch Frontend ==> MIL Ops:   0%|          | 0/738 [00:00<?, ? ops/s]\rConverting PyTorch Frontend ==> MIL Ops: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589| 737/738 [00:00<00:00, 8858.40 ops/s]\n\rRunning MIL frontend_pytorch pipeline:   0%|          | 0/5 [00:00<?, ? passes/s]\rRunning MIL frontend_pytorch pipeline: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 5/5 [00:00<00:00, 181.69 passes/s]\n\rRunning MIL default pipeline:   0%|          | 0/95 [00:00<?, ? passes/s]\rRunning MIL default pipeline:  18%|\u2588\u258a        | 17/95 [00:00<00:00, 168.61 passes/s]\rRunning MIL default pipeline:  36%|\u2588\u2588\u2588\u258c      | 34/95 [00:00<00:00, 141.76 passes/s]\rRunning MIL default pipeline:  55%|\u2588\u2588\u2588\u2588\u2588\u258d    | 52/95 [00:00<00:00, 155.39 passes/s]\rRunning MIL default pipeline:  72%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258f  | 68/95 [00:01<00:00, 38.11 passes/s] \rRunning MIL default pipeline:  94%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258e| 89/95 [00:01<00:00, 57.40 passes/s]\rRunning MIL default pipeline: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 95/95 [00:01<00:00, 63.47 passes/s]\n\rRunning MIL backend_mlprogram pipeline:   0%|          | 0/12 [00:00<?, ? passes/s]\rRunning MIL backend_mlprogram pipeline: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 12/12 [00:00<00:00, 196.47 passes/s]"
+  },
+  "wrapper": {
+    "class": "mrt2_coreml.spectrostream_decoder_wrapper.SpectroStreamDecoderNCHWParallelWrapper",
+    "conv_layers": {
+      "conv2d": 7,
+      "conv2d_transpose": 1
+    },
+    "fp16_rescale": {
+      "biases_scaled": 9,
+      "boundary_out_absmax": [
+        1680.913818359375,
+        9083.970703125,
+        21966.912109375,
+        182573.953125,
+        2649330.75,
+        131797.359375,
+        2686.9921875
+      ],
+      "elus_swapped": 7,
+      "entry_block": 3,
+      "exit_block": 6,
+      "scale": 128.0,
+      "subtree_worst_absmax": [
+        1680.913818359375,
+        9083.970703125,
+        21966.912109375,
+        183177.515625,
+        2649330.75,
+        2649330.75,
+        63844.3984375
+      ]
+    },
+    "layout_mode": "nchw-parallel",
+    "nchw_parallel_layer": 5,
+    "weight_norm": "standard MRT2 SpectroStream config has global_weight_norm=False; no fusion needed"
+  }
+}

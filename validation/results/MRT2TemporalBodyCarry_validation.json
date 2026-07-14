@@ -1,0 +1,344 @@
+{
+  "boundary": "host_owned_kv_cache_inputs_and_update_outputs",
+  "cache_input_count": 48,
+  "cache_update_output_count": 48,
+  "cache_update_shapes": {
+    "temporal_layer_00_cross_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_00_cross_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_00_self_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_00_self_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_01_cross_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_01_cross_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_01_self_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_01_self_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_02_cross_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_02_cross_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_02_self_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_02_self_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_03_cross_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_03_cross_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_03_self_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_03_self_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_04_cross_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_04_cross_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_04_self_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_04_self_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_05_cross_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_05_cross_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_05_self_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_05_self_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_06_cross_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_06_cross_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_06_self_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_06_self_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_07_cross_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_07_cross_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_07_self_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_07_self_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_08_cross_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_08_cross_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_08_self_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_08_self_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_09_cross_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_09_cross_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_09_self_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_09_self_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_10_cross_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_10_cross_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_10_self_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_10_self_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_11_cross_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_11_cross_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_11_self_key_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ],
+    "temporal_layer_11_self_value_cache_updates": [
+      1,
+      2,
+      8,
+      128
+    ]
+  },
+  "cache_updates_all_finite": true,
+  "coreml_vs_mlx": {
+    "correlation": 0.999981748233229,
+    "max_abs_error": 0.33225250244140625,
+    "mean_abs_error": 0.020284962078221724,
+    "shape": [
+      1,
+      2,
+      1024
+    ]
+  },
+  "coreml_vs_pytorch": {
+    "correlation": 0.9999817524234571,
+    "max_abs_error": 0.3321685791015625,
+    "mean_abs_error": 0.020282577811030933,
+    "shape": [
+      1,
+      2,
+      1024
+    ]
+  },
+  "export_compile": {
+    "compiled_path": "build/models/mrt2_temporal_body_carry_02.mlmodelc",
+    "ok": true,
+    "output": "build/models/mrt2_temporal_body_carry_02.mlmodelc/coremldata.bin"
+  },
+  "frames": 2,
+  "known_limits": [
+    "This first carry proof uses empty host-owned caches and history_length=0.",
+    "It validates a no-wrap burst, not full rolling host cache placement.",
+    "Depth-body logits remain in a separate Core ML package."
+  ],
+  "metadata_path": "build/models/mrt2_temporal_body_carry_02_export_metadata.json",
+  "model_path": "build/models/mrt2_temporal_body_carry_02.mlpackage",
+  "pytorch_vs_mlx": {
+    "correlation": 0.9999999994326733,
+    "max_abs_error": 0.001277923583984375,
+    "mean_abs_error": 8.136276801451459e-05,
+    "shape": [
+      1,
+      2,
+      1024
+    ]
+  },
+  "schema": "mrt2-temporal-body-carry-coreml-validation-v1",
+  "timing_smoke": {
+    "predict_ms": 93.11937494203448,
+    "scope": "Python Core ML CPU_ONLY single carry predict, not device timing"
+  }
+}

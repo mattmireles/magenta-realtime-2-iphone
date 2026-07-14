@@ -14,27 +14,29 @@ supersession itself is a result reported in the paper (*Surgical Inference*,
 
 - **Corrected generation** — the exporters and receipts that reproduce the
   paper's three headline findings. This is the current, correct code path.
-- **Superseded generation** — the earlier artifacts still mirrored on Hugging
-  Face. They are retained as **negative-result evidence**: in-graph state
-  mutation fails ANE admission (§6.3), and a channels-last FP16 decoder is
-  numerically non-finite (§6.4). See "Superseded generation" below.
+- **Superseded generation** — the earlier artifacts, retained as
+  **negative-result evidence**: in-graph state mutation fails ANE admission
+  (§6.3), and a channels-last FP16 decoder is numerically non-finite (§6.4).
+  See "Superseded generation" below.
 
-Pre-converted `.mlpackage` binaries for the corrected generation are reproduced
-locally by the commands in the [README](README.md#reproduce-the-artifacts); the
-Hugging Face mirror
+Pre-converted `.mlpackage` binaries for the corrected generation are hosted on
+the Hugging Face mirror
 ([mattmireles/magenta-realtime-2-iphone](https://huggingface.co/mattmireles/magenta-realtime-2-iphone))
-currently still hosts the superseded binaries (checksums below) and the
-corrected binaries are pending upload.
+at the top level (checksums below), and are reproduced locally by the commands
+in the [README](README.md#re-export-from-scratch). Before upload, every
+corrected package was regenerated from the exporters in this repo and its
+weight payload matched the certified original byte-for-byte. The superseded
+binaries moved to the mirror's `superseded/` directory.
 
 ---
 
 ## Corrected generation (paper §6.3–6.5)
 
-| Artifact | Exporter | Precision | Compute target | Role |
-| --- | --- | --- | --- | --- |
-| `MRT2TemporalBodyCarry` | `convert_temporal_body_carry.py` | FLOAT16 | **ANE-clean (proven); shipped runtime `.cpuAndGPU`** | Stateless temporal step function. 48 K/V caches are ordinary **inputs**, 48 one-token cache updates are ordinary **outputs**, the host owns mutation. No `ct.StateType`. |
-| `MRT2DepthBodyRollout` | `convert_depth_body_rollout.py` | FLOAT16 (ship) / FLOAT32 (reference) | CPU/GPU/ANE (bandwidth-bound) | In-graph depth rollout: all 12 RVQ levels sampled in **one** prediction from host-supplied Gumbel noise. |
-| `SpectroStreamDecoder` (NCHW FP16) | `convert_spectrostream_decoder.py --nchw-parallel-layer 5 --fp16-rescale --compute-precision FLOAT16` | FLOAT16 (fp16-safe rescale) | **ANE** (`.cpuAndNeuralEngine`) | RVQ embeddings → pre-iSTFT tensor. Channels-first internal layout, channels-last public I/O. The only numerically finite FP16 variant. |
+| Artifact | HF file | Exporter | Precision | Compute target | Role |
+| --- | --- | --- | --- | --- | --- |
+| `MRT2TemporalBodyCarry` | `MRT2TemporalBodyCarry.mlpackage` | `convert_temporal_body_carry.py` | FLOAT16 | **ANE-clean (proven); shipped runtime `.cpuAndGPU`** | Stateless temporal step function. 48 K/V caches are ordinary **inputs**, 48 one-token cache updates are ordinary **outputs**, the host owns mutation. No `ct.StateType`. Uploaded package is the 2-frame bucket (`--frames 2`). |
+| `MRT2DepthBodyRollout` | `MRT2DepthBodyRollout.f16.mlpackage` (ship) / `.f32.mlpackage` (reference) | `convert_depth_body_rollout.py` | FLOAT16 (ship) / FLOAT32 (reference) | CPU/GPU/ANE (bandwidth-bound) | In-graph depth rollout: all 12 RVQ levels sampled in **one** prediction from host-supplied Gumbel noise. |
+| `SpectroStreamDecoder` (NCHW FP16) | `SpectroStreamDecoder.f16.mlpackage` (ship) / `SpectroStreamDecoder.mlpackage` (FP32 reference) | `convert_spectrostream_decoder.py --nchw-parallel-layer 5 --fp16-rescale --compute-precision FLOAT16` | FLOAT16 (fp16-safe rescale) | **ANE** (`.cpuAndNeuralEngine`) | RVQ embeddings → pre-iSTFT tensor. Channels-first internal layout, channels-last public I/O. The only numerically finite FP16 variant. |
 
 ### Why each is the corrected artifact
 
@@ -120,9 +122,11 @@ STFT / overlap-add. Audio-rate tensors never enter the Core ML graph.
 
 | Artifact | Receipt |
 | --- | --- |
+| `MRT2TemporalBodyCarry` (Core ML vs MLX carry parity, corr 0.999982, all cache updates finite) | `validation/results/MRT2TemporalBodyCarry_validation.{json,md}` |
 | `MRT2DepthBodyRollout` FP32 (0/900 token parity) | `validation/results/MRT2DepthBodyRollout_f32_validation.{json,md}` |
 | `MRT2DepthBodyRollout` FP16 (near-tie flips, distribution unchanged) | `validation/results/MRT2DepthBodyRollout_f16_validation.{json,md}` |
-| `SpectroStreamDecoder` NCHW parity (SNR 118.85 dB, finite 1.0) | `validation/results/SpectroStreamDecoder_validation.{json,md}` |
+| `SpectroStreamDecoder` NCHW FP32 parity (SNR 118.85 dB, finite 1.0) | `validation/results/SpectroStreamDecoder_validation.{json,md}` |
+| `SpectroStreamDecoder` NCHW FP16 (fp16-rescale; finite 184,320/184,320 on Mac, SNR 59.44 dB) | `validation/results/SpectroStreamDecoder_f16_validation.{json,md}` |
 
 The temporal stateless-boundary ANE placement (`ane:1033,cpu:2`, p99 14.991 ms),
 the stateful `ANECCompile −14` failures, and the decoder's on-device FP16
@@ -132,17 +136,24 @@ for the device evidence and per-run log pointers.
 
 ---
 
-## Superseded generation (still mirrored on Hugging Face)
+## Superseded generation (mirrored under `superseded/` on Hugging Face)
 
-These are the artifacts the HF repo currently hosts. They are retained as
-negative-result evidence; do **not** treat them as the paper's shipped
-configuration.
+These artifacts now live in the HF repo's `superseded/` directory (with their
+export metadata and validation receipts). They are retained as negative-result
+evidence; do **not** treat them as the paper's shipped configuration.
 
 | Artifact | Size | Precision | Compute target | Superseded by |
 | --- | --- | --- | --- | --- |
-| `MRT2TemporalBody.mlpackage` | 349 MB | FLOAT16 | ANE (stateful, 48 `ct.StateType`) | Stateless carry graph (§6.3): every in-graph state-mutation variant fails `ANECCompile −14`. |
-| `MRT2DepthBody.mlpackage` | 93 MB | FLOAT32 | CPU/GPU (host sampling) | In-graph FP16 rollout (§6.5): 12 predictions/frame are weight-bandwidth-doomed. |
-| `SpectroStreamDecoder.mlpackage` | 136 MB | FLOAT32 | GPU | NCHW FP16 decoder (§6.4): FP16 *is* achievable and ANE-resident with a channels-first rewrite; the "do not re-export at fp16" claim was wrong. |
+| `superseded/MRT2TemporalBody.mlpackage` | 349 MB | FLOAT16 | ANE (stateful, 48 `ct.StateType`) | Stateless carry graph (§6.3): every in-graph state-mutation variant fails `ANECCompile −14`. |
+| `superseded/MRT2DepthBody.mlpackage` | 93 MB | FLOAT32 | CPU/GPU (host sampling) | In-graph FP16 rollout (§6.5): 12 predictions/frame are weight-bandwidth-doomed. |
+
+**Decoder note.** The earlier generation's `SpectroStreamDecoder.mlpackage`
+turned out to be the NCHW FP32 build all along — its weight payload is
+byte-identical to the certified NCHW FP32 reference, and its receipt is the
+118.85 dB NCHW parity run. What §6.4 supersedes is the *shipping decision*
+("FP32, keep it off the ANE, do not re-export at fp16"), not the binary. It
+therefore stays at the mirror's top level as the FP32 reference, joined by the
+corrected FP16 ship variant `SpectroStreamDecoder.f16.mlpackage`.
 
 ### Host-side binaries
 
@@ -151,18 +162,26 @@ configuration.
 | `SpectroStreamRVQCodebooks.f32.bin` (+ `.json` shape sidecar) | 12.6 MB | 12 RVQ levels × 1024 codes × 256 dims, float32 little-endian. Loaded once; codebook gather runs on the CPU. |
 | `examples/test_vector_smooth_electronic.bin` (+ `.json` provenance) | 1 KB | One certified conditioning vector (`[1, 256]`, prompt "smooth electronic", CFG tokens (20, 10, 2)). Deterministic: `exporters/export_conditioning.py` reproduces it byte-for-byte. |
 
-### Checksums (sha256) — superseded HF binaries
+### Checksums (sha256) — corrected HF binaries
 
 | File | sha256 |
 | --- | --- |
-| `MRT2TemporalBody.mlpackage/Data/com.apple.CoreML/weights/weight.bin` | `6a662d011b4b2438a78c152a4308cffb4a54904f8249379b2739fd8bf090ed43` |
-| `MRT2TemporalBody.mlpackage/Data/com.apple.CoreML/model.mlmodel` | `04153ebbeac518cf684c9fd95f0cf30fe0861343a71879940cbc7111aa1ea2cc` |
-| `MRT2DepthBody.mlpackage/Data/com.apple.CoreML/weights/weight.bin` | `ff1554bb1ddaf9d74c5449bc7687bfe5db1dfd90a476390ba2a0938c59fd3a86` |
-| `MRT2DepthBody.mlpackage/Data/com.apple.CoreML/model.mlmodel` | `9d93fb43a8d278faf9950759a5afb6d5bcc5f083c72bbe978a654942063ee7c3` |
+| `MRT2TemporalBodyCarry.mlpackage/Data/com.apple.CoreML/weights/weight.bin` | `02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64` |
+| `MRT2DepthBodyRollout.f16.mlpackage/Data/com.apple.CoreML/weights/weight.bin` | `6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8` |
+| `MRT2DepthBodyRollout.f32.mlpackage/Data/com.apple.CoreML/weights/weight.bin` | `af3ec4f9fadb84991b5dabbac58acd44294df7514226af2db63aa79659e304a9` |
+| `SpectroStreamDecoder.f16.mlpackage/Data/com.apple.CoreML/weights/weight.bin` | `ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d` |
 | `SpectroStreamDecoder.mlpackage/Data/com.apple.CoreML/weights/weight.bin` | `38cbdf5ca97fe1744fa4d5a5caee23d50170a7eeb18daed1c40fe3a73aed9852` |
-| `SpectroStreamDecoder.mlpackage/Data/com.apple.CoreML/model.mlmodel` | `e69658faae08a659a39c5d7afe25bc7bb6c6a5620b169b90d058ca38dcf93598` |
 | `SpectroStreamRVQCodebooks.f32.bin` | `4e236269d4194ffe2d7463c483a1a36f4aff7d619c34f8e8bfe451c7af92d496` |
 | `examples/test_vector_smooth_electronic.bin` | `08dfec990345e92f7dbffa7f3c349b9bebf61967c67c653c069550a5c6132039` |
+
+### Checksums (sha256) — superseded binaries (`superseded/`)
+
+| File | sha256 |
+| --- | --- |
+| `superseded/MRT2TemporalBody.mlpackage/Data/com.apple.CoreML/weights/weight.bin` | `6a662d011b4b2438a78c152a4308cffb4a54904f8249379b2739fd8bf090ed43` |
+| `superseded/MRT2TemporalBody.mlpackage/Data/com.apple.CoreML/model.mlmodel` | `04153ebbeac518cf684c9fd95f0cf30fe0861343a71879940cbc7111aa1ea2cc` |
+| `superseded/MRT2DepthBody.mlpackage/Data/com.apple.CoreML/weights/weight.bin` | `ff1554bb1ddaf9d74c5449bc7687bfe5db1dfd90a476390ba2a0938c59fd3a86` |
+| `superseded/MRT2DepthBody.mlpackage/Data/com.apple.CoreML/model.mlmodel` | `9d93fb43a8d278faf9950759a5afb6d5bcc5f083c72bbe978a654942063ee7c3` |
 
 The superseded temporal export is `convert_temporal_body.py` (the stateful
 unrolled graph) and the superseded depth export is `convert_depth_body.py`
