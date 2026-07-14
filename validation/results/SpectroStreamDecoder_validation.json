@@ -116,7 +116,7 @@
     "python_warnings": [
       {
         "category": "ResourceWarning",
-        "message": "Implicitly cleaning up <TemporaryDirectory '/var/folders/36/wpt031kd2j17_6c21wnwxmmw0000gs/T/tmpias4hzar'>"
+        "message": "Implicitly cleaning up <TemporaryDirectory '<tmp>'>"
       }
     ],
     "stderr": "Converting PyTorch Frontend ==> MIL Ops:   0%|          | 0/603 [00:00<?, ? ops/s]\rConverting PyTorch Frontend ==> MIL Ops: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589| 602/603 [00:00<00:00, 7653.47 ops/s]\n\rRunning MIL frontend_pytorch pipeline:   0%|          | 0/5 [00:00<?, ? passes/s]\rRunning MIL frontend_pytorch pipeline: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 5/5 [00:00<00:00, 193.68 passes/s]\n\rRunning MIL default pipeline:   0%|          | 0/92 [00:00<?, ? passes/s]\rRunning MIL default pipeline:  24%|\u2588\u2588\u258d       | 22/92 [00:00<00:00, 212.36 passes/s]\rRunning MIL default pipeline:  48%|\u2588\u2588\u2588\u2588\u258a     | 44/92 [00:00<00:00, 176.47 passes/s]\rRunning MIL default pipeline:  68%|\u2588\u2588\u2588\u2588\u2588\u2588\u258a   | 63/92 [00:00<00:00, 172.03 passes/s]\rRunning MIL default pipeline:  96%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c| 88/92 [00:00<00:00, 198.81 passes/s]\rRunning MIL default pipeline: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 92/92 [00:00<00:00, 180.17 passes/s]\n\rRunning MIL backend_mlprogram pipeline:   0%|          | 0/12 [00:00<?, ? passes/s]\rRunning MIL backend_mlprogram pipeline: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 12/12 [00:00<00:00, 240.60 passes/s]"

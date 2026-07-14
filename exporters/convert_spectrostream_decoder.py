@@ -12,11 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Convert the SpectroStream decoder conv boundary to a Core ML GPU baseline.
+"""Convert the SpectroStream decoder conv boundary to Core ML.
 
 The exported graph starts after host CPU RVQ lookup and stops before host iSTFT.
-This keeps the known gather and iSTFT fallback risks out of the Core ML graph,
-matching the split recommended by ``README/Guides/RVQ-codec-decoder-guide.md``.
+This keeps the known gather and iSTFT fallback risks out of the Core ML graph;
+audio-rate tensors never enter the Core ML graph.
+
+Two configurations:
+
+* **FP32 baseline** (defaults): ``--nchw-parallel-layer 5 --compute-precision
+  FLOAT32``. Numerically clean everywhere; schedules on CPU/GPU. This was the
+  earlier shipped decoder.
+* **Corrected FP16, ANE-resident (paper §6.4):** add ``--fp16-rescale
+  --compute-precision FLOAT16``. Layout determines FP16 numerical survival — the
+  channels-first (NCHW) internal rewrite plus the exact-in-FP32
+  ``apply_fp16_safe_rescale`` transform make the FP16 decoder finite AND
+  ANE-resident. On iPhone 12 Pro ``.cpuAndNeuralEngine`` gives finite output
+  (184,320/184,320 at 25-frame, p99 24.77 ms) while CPU-only and CPU+GPU are
+  non-finite for the same artifact. The naive channels-last FP16 export is
+  non-finite everywhere (finite ratio 0.71).
+
+The public I/O contract is channels-last in both configurations.
 """
 
 from __future__ import annotations
@@ -46,6 +62,7 @@ from mrt2_coreml.spectrostream_decoder_wrapper import (
     SPECTROSTREAM_OUTPUT_CHANNELS,
     SpectroStreamDecoderConvWrapper,
     SpectroStreamDecoderNCHWParallelWrapper,
+    apply_fp16_safe_rescale,
     count_torch_conv_layers,
     decoder_output_frames,
 )
@@ -280,6 +297,21 @@ def convert(args: argparse.Namespace) -> dict[str, Any]:
         parallel_layer=args.nchw_parallel_layer,
     ).eval()
   example_input = torch.from_numpy(embeddings[np.newaxis]).to(torch.float32)
+
+  # FP16 path (paper §6.4): the decoder's residual upsampling tail peaks at
+  # ~2.65e6 on real content, so a plain compute_precision=FLOAT16 conversion
+  # emits NaN/Inf (the channels-last FP16 export measured finite_ratio 0.71).
+  # apply_fp16_safe_rescale rescales the hot mid-network by 1/S (exact in
+  # FP32), which is what makes the FP16 decoder finite AND ANE-resident on
+  # device. It requires the NCHW-parallel layout, so it is gated on
+  # --nchw-parallel-layer. The transform is exact in FP32, so the
+  # pytorch_vs_mlx parity below also validates it.
+  fp16_rescale_info = None
+  if args.fp16_rescale:
+    if args.nchw_parallel_layer is None:
+      raise ValueError("--fp16-rescale requires --nchw-parallel-layer")
+    fp16_rescale_info = apply_fp16_safe_rescale(wrapper, example_input)
+
   with torch.no_grad():
     torch_stft = wrapper(example_input).detach().cpu().numpy().astype(np.float32)
 
@@ -390,6 +422,7 @@ def convert(args: argparse.Namespace) -> dict[str, Any]:
           ),
           "conv_layers": count_torch_conv_layers(wrapper),
           "weight_norm": "standard MRT2 SpectroStream config has global_weight_norm=False; no fusion needed",
+          "fp16_rescale": fp16_rescale_info,
       },
       "pytorch_vs_mlx_decoder": {
           **pytorch_metrics,
@@ -519,6 +552,18 @@ def parse_args() -> argparse.Namespace:
       "--compute-precision",
       choices=("FLOAT16", "FLOAT32"),
       default=COMPUTE_PRECISION,
+  )
+  parser.add_argument(
+      "--fp16-rescale",
+      action=argparse.BooleanOptionalAction,
+      default=False,
+      help=(
+          "Rescale the hot mid-network (exact transform) so FLOAT16 "
+          "conversion cannot overflow; required for the finite, ANE-resident "
+          "FP16 decoder (paper §6.4). See apply_fp16_safe_rescale in "
+          "spectrostream_decoder_wrapper.py. Pair with --compute-precision "
+          "FLOAT16."
+      ),
   )
   parser.add_argument("--compile", action=argparse.BooleanOptionalAction, default=True)
   parser.add_argument("--predict", action=argparse.BooleanOptionalAction, default=True)

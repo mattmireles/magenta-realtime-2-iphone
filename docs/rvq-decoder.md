@@ -4,6 +4,22 @@ June 4, 2026
 
 *Deploying a SpectroStream-style neural audio codec decoder (Magenta RealTime 2 lineage) to Core ML / the Apple Neural Engine for real-time, streaming, 48 kHz stereo music generation on iPhone & Apple Silicon.*
 
+> **Correction — FP16 is achievable and ANE-resident (paper §6.4).** This guide
+> and the earlier `SpectroStreamDecoder.mlpackage` treated the decoder as an
+> FP32/GPU stage ("keep the final conv + iSTFT in fp32 if fp16 SNR is
+> marginal"). The shipped finding is stronger: **layout determines FP16
+> numerical survival.** The naive channels-last FP16 export is non-finite
+> (finite ratio 0.71), but converting the parallel upsampling block to
+> channels-first (NCHW) internally — public channels-last I/O preserved — plus
+> an exact-in-FP32 mid-network rescale (`apply_fp16_safe_rescale`) makes the FP16
+> graph finite **and** ANE-resident. On iPhone 12 Pro, `.cpuAndNeuralEngine`
+> (ANE 1.000) produces finite output (184,320/184,320 at 25-frame, p99 24.77 ms;
+> 30,720/30,720 at 5-frame, p99 6.65 ms) while CPU-only and CPU+GPU are
+> non-finite for the same artifact. Build it with
+> `exporters/convert_spectrostream_decoder.py --nchw-parallel-layer 5
+> --fp16-rescale --compute-precision FLOAT16`. See `MODELS.md` and
+> `docs/validation-receipts.md` §0.
+
 ## Related Documentation
 
 - **[Graph teardown](graph-teardown.md)**: SpectroStream decode op map, RVQ

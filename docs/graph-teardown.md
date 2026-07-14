@@ -1,7 +1,18 @@
 # MRT2 Small Graph Teardown
 
 **Date:** 2026-06-05
-**Status:** Reference
+**Status:** Reference (conversion-readiness map for the *superseded* first
+generation; see the correction note below)
+
+> **Correction (paper §6.3–6.5).** The "shipped" artifacts named in this
+> teardown — a 1-frame stateful FP16 temporal body, a FLOAT32 depth body, and a
+> FLOAT32 conv decoder — are the *superseded* first generation. The corrected
+> generation replaces them: a **stateless** host-owned-cache temporal step
+> (in-graph state mutation fails `ANECCompile −14`; §6.3), an **in-graph FP16
+> depth rollout** (weight-bandwidth invariant; §6.5), and an **NCHW FP16**
+> decoder that is finite and ANE-resident (§6.4). See `MODELS.md` and
+> `docs/validation-receipts.md` §0. This teardown remains an accurate op-level
+> map of the per-frame graph.
 
 ## Purpose
 

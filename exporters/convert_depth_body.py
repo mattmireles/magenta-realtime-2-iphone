@@ -12,7 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Convert the MRT2 Depthformer depth-body logits wrapper to Core ML."""
+"""Convert the MRT2 Depthformer depth-body logits wrapper to Core ML.
+
+SUPERSEDED (paper §6.5) — retained as a negative-result artifact. This exports
+full-vocabulary depth logits for host-side sampling, which requires 12 Core ML
+predictions per frame. On phones the depth path is weight-bandwidth-bound
+(per-call cost ~= weight bytes / DRAM bandwidth), so 12 predictions cost
+~40 ms/frame regardless of FLOPs — over the entire frame budget. The corrected
+depth exporter is ``convert_depth_body_rollout.py``
+(``DepthBodyRolloutWrapper``): all 12 RVQ levels sampled in ONE in-graph FP16
+prediction from host-supplied Gumbel noise (12.7 ms/frame on A14). Keep this
+script as the FLOAT32 full-pass reference the rollout validator gates against.
+"""
 
 from __future__ import annotations
 

@@ -10,6 +10,62 @@ The working rule throughout: **do not infer Core ML or ANE behavior from
 hope.** Every claim points to a command, a receipt file, or an explicit
 failure.
 
+## 0. Correction — the corrected artifact generation (paper §6.3–6.5)
+
+**The ledger in sections 1+ below documents the earlier, superseded artifact
+generation.** The shipped findings in *Surgical Inference* (§6.3–6.5) correct
+three of its conclusions. Read this first; see `MODELS.md` for the corrected
+artifact table and receipts.
+
+- **Temporal / stateful KV (contradicts §1, §5.2 below).** In-graph *state
+  mutation* — not attention math — is the ANE admission cliff. The stateless
+  host-owned-cache boundary (`exporters/convert_temporal_body_carry.py`,
+  `TemporalBodyCoreMLCarryWrapper`: 48 K/V caches as inputs, 48 one-token
+  updates as outputs, no `ct.StateType`) compiles the full 12-layer stack to a
+  single ANE-resident graph — on iPhone 12 Pro, `MLComputePlan`
+  `preferredCounts=ane:1033,cpu:2`, `costWeights=ane:1.000`, p99 **14.991 ms**,
+  beating CPU-only and GPU. Every `ct.StateType` variant fails ANE compilation:
+  the 25-frame stateful graph reproduces `MILCompilerForANE … ANECCompile()
+  FAILED`, Core ML **error −14**, on both phones and under both
+  `.cpuAndNeuralEngine` and `.all`. Core ML vs MLX temporal correlation
+  0.999975 (25-frame) / 0.999984 (carry). **Honesty note (§6.7):** admission is
+  *instance-fragile* — an artifact that compiled to the ANE in a test harness
+  later fell back to CPU in the shipping app — so the shipped temporal placement
+  is `.cpuAndGPU` today, with this stateless graph as the documented escape.
+
+- **Decoder FP16 (contradicts §3 below: "do not re-export at fp16").** The
+  overflow conclusion is superseded. A channels-first (NCHW) internal rewrite
+  plus an exact-in-FP32 mid-network rescale (`apply_fp16_safe_rescale`) makes the
+  FP16 decoder finite **and** ANE-resident. On iPhone 12 Pro,
+  `.cpuAndNeuralEngine` (ANE cost 1.000) yields finite output — 30,720/30,720 at
+  5-frame (p99 **6.65 ms**), 184,320/184,320 at 25-frame (p99 **24.77 ms**) —
+  while **CPU-only and CPU+GPU produce non-finite output from the same FP16
+  artifact.** The plain channels-last FP16 export is non-finite everywhere
+  (finite ratio 0.71). The ANE was the only compute unit that produced finite
+  FP16 output. FP32 NCHW parity vs MLX: SNR 118.85 dB (§3's receipt is the NCHW
+  FP32 wrapper parity, which — because the rescale is exact in FP32 — also
+  validates the FP16 transform).
+
+- **Depth FP32 / host sampling (contradicts §depth below).** Superseded by the
+  in-graph FP16 rollout (`exporters/convert_depth_body_rollout.py`): all 12 RVQ
+  levels sampled in one prediction from host-supplied Gumbel noise, because
+  per-call cost ≈ weight bytes ÷ DRAM bandwidth on every compute unit (§6.5).
+  FLOAT32 rollout is token-for-token exact (**0/900**;
+  `validation/results/MRT2DepthBodyRollout_f32_validation.*`); FP16 flips fp16
+  near-tie tokens without changing the distribution
+  (`validation/results/MRT2DepthBodyRollout_f16_validation.*`) and ships at
+  12.7 ms/frame (A14) / 8.4 ms (A17 Pro).
+
+**End-to-end perceptual status (§6.6–6.7).** The three findings above are
+artifact-level results, certified by numerical parity and on-device
+`MLComputePlan`/Instruments placement. The *composed* real-time device pipeline
+still has open runtime issues (periodic clicking/stutter/dropouts from temporal
+state and buffering, and an unmet 10-minute thermal-soak gate on A17 Pro); the
+paper reports these as open, and they live in the private streaming runtime, not
+in this conversion/validation layer.
+
+---
+
 ## 1. Headline results
 
 | Claim | Number | Evidence |

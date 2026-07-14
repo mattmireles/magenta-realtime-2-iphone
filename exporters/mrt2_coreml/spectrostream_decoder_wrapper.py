@@ -158,6 +158,52 @@ class TorchElu(nn.Module):
     return F.elu(values, alpha=self.alpha)
 
 
+class TorchScale(nn.Module):
+  """Elementwise constant multiply (one FP16-safe ``mul`` op after tracing).
+
+  Used in pairs by ``apply_fp16_safe_rescale``: ``TorchScale(1/S)`` enters the
+  rescaled region and ``TorchScale(S)`` restores native magnitudes after it.
+  """
+
+  def __init__(self, scale: float):
+    super().__init__()
+    self.scale = float(scale)
+
+  def forward(self, values: torch.Tensor) -> torch.Tensor:
+    return values * self.scale
+
+
+class TorchScaledElu(nn.Module):
+  """Exact ELU for a ``1/S``-scaled stream, FP16-overflow-safe by construction.
+
+  On a stream ``y = x/S`` this computes ``elu_alpha(x)/S`` as::
+
+    relu(y) + (alpha/S) * (exp(clamp(y, max=0) * S) - 1)
+
+  The clamp keeps the exponent argument <= 0 so ``exp`` never overflows; if
+  the FP16 multiply saturates a large-magnitude negative to ``-inf``,
+  ``exp(-inf) = 0`` and the branch lands exactly on its mathematical limit
+  ``-alpha/S``. Replaces ``TorchElu`` inside the region chosen by
+  ``apply_fp16_safe_rescale``.
+
+  Why not just retune ELU's alpha to ``alpha/S``: that changes the exponent
+  slope (``e**y`` vs ``e**(S*y)``) and the resulting transition-band error,
+  amplified through the downstream convs, measured 35.6 dB SNR vs the FP32
+  reference on the standard fixture (2026-06-12). This formulation is exact.
+  """
+
+  def __init__(self, alpha: float, scale: float):
+    super().__init__()
+    self.alpha = float(alpha)
+    self.scale = float(scale)
+
+  def forward(self, values: torch.Tensor) -> torch.Tensor:
+    negative = torch.clamp(values, max=0.0) * self.scale
+    return F.relu(values) + (self.alpha / self.scale) * (
+        torch.exp(negative) - 1.0
+    )
+
+
 class TorchExpandDims(nn.Module):
   """Expand channel dimensions while preserving batch/time axes."""
 
@@ -610,6 +656,150 @@ class SpectroStreamDecoderNCHWParallelWrapper(nn.Module):
     if not isinstance(decoder, TorchSerial):
       raise TypeError(f"Expected TorchSerial decoder, got {type(decoder).__name__}")
     return cls(decoder, parallel_layer)
+
+
+#: Default stream scale for ``apply_fp16_safe_rescale``. The hot region peaks
+#: at ~2.65e6 on the standard 25-frame fixture; 1/128 brings that to ~20.7k,
+#: a 3.2x margin under FP16 max (65504), while keeping the region's quiet
+#: content far above the FP16 subnormal floor.
+FP16_RESCALE_DEFAULT_SCALE = 128.0
+#: A top-level child block whose subtree exceeds this absmax joins the
+#: rescaled region (FP16 max is 65504; this leaves ~2x content headroom).
+FP16_RESCALE_ENTER_THRESHOLD = 30000.0
+#: The restore boundary must satisfy ``native_absmax * margin <= 65504`` so
+#: the exit ``TorchScale(S)`` multiply cannot itself overflow.
+FP16_RESCALE_RESTORE_MARGIN = 2.0
+_FP16_MAX = 65504.0
+
+
+def _replace_elus_with_scaled(module: nn.Module, scale: float) -> int:
+  """Recursively swap every ``TorchElu`` under ``module`` for the exact
+  ``TorchScaledElu`` equivalent. Returns the number swapped."""
+  swapped = 0
+  for name, child in module.named_children():
+    if isinstance(child, TorchElu):
+      setattr(module, name, TorchScaledElu(child.alpha, scale))
+      swapped += 1
+    else:
+      swapped += _replace_elus_with_scaled(child, scale)
+  return swapped
+
+
+def apply_fp16_safe_rescale(
+    wrapper: "SpectroStreamDecoderNCHWParallelWrapper",
+    example: torch.Tensor,
+    scale: float = FP16_RESCALE_DEFAULT_SCALE,
+    enter_threshold: float = FP16_RESCALE_ENTER_THRESHOLD,
+    restore_margin: float = FP16_RESCALE_RESTORE_MARGIN,
+) -> dict:
+  """Make the decoder FP16-convertible by rescaling its hot mid-network.
+
+  Why this exists: the SpectroStream decoder's residual upsampling blocks
+  produce activations up to ~2.65e6 on real content — 40x past FP16 max — so
+  a plain ``compute_precision=FLOAT16`` Core ML conversion emits NaN/Inf (the
+  2026-06-08 ``finite_ratio=0.843`` failure documented in
+  ``README/Notes/aperture-v0-phase5-real-audio.md``). FP32 cannot run on the
+  ANE at all, which is why this transform exists: it is the gate between the
+  decoder and the Apple Neural Engine.
+
+  The transform is EXACT in FP32 (measured 180 dB SNR vs the untouched
+  wrapper on the standard fixture; FP16 then measures ~62 dB, the FP16 grid
+  itself). It rescales the stream by ``1/scale`` across the hot region only:
+
+  * ``TorchScale(1/scale)`` / ``TorchScale(scale)`` are inserted at TOP-LEVEL
+    serial boundaries of ``wrapper.parallel_nchw.child`` — the only points
+    that dominate all dataflow. Scaling inside a residual branch mixes scales
+    at the residual add and destroys the function (measured -6.5 dB SNR).
+  * Region conv/convT WEIGHTS are untouched (their input is already scaled)
+    but every region BIAS is multiplied by ``1/scale`` — bias adds at output
+    scale; forgetting the shortcuts' conv biases cost 0.5-1.5% error.
+  * Region ``TorchElu``s become ``TorchScaledElu`` (exact, see its docstring).
+
+  Boundary selection runs live on ``example`` (use the standard 25-frame
+  fixture from ``scripts/convert_spectrostream_decoder_conv_coreml.py``):
+  entry before the first top-level block whose subtree worst absmax exceeds
+  ``enter_threshold``; exit after the last such block, advanced until the
+  boundary's native absmax restores safely. Returns a metadata dict (region,
+  scale, swap/bias counts, measured boundary maxima) for the export report.
+  """
+  child = wrapper.parallel_nchw.child
+  if not isinstance(child, TorchSerial):
+    raise TypeError(f"Expected TorchSerial child, got {type(child).__name__}")
+  blocks = list(child.layers)
+
+  # Profile: worst absmax per top-level block subtree + each block's output.
+  subtree_worst = [0.0] * len(blocks)
+  boundary_out = [0.0] * len(blocks)
+
+  def _make_subtree_hook(index: int):
+    def hook(_module, _inputs, output):
+      if isinstance(output, torch.Tensor):
+        subtree_worst[index] = max(
+            subtree_worst[index], float(output.detach().abs().max())
+        )
+    return hook
+
+  def _make_boundary_hook(index: int):
+    def hook(_module, _inputs, output):
+      if isinstance(output, torch.Tensor):
+        boundary_out[index] = max(
+            boundary_out[index], float(output.detach().abs().max())
+        )
+    return hook
+
+  handles = []
+  for index, block in enumerate(blocks):
+    handles.append(block.register_forward_hook(_make_boundary_hook(index)))
+    for module in block.modules():
+      handles.append(module.register_forward_hook(_make_subtree_hook(index)))
+  wrapper.eval()
+  with torch.no_grad():
+    wrapper(example)
+  for handle in handles:
+    handle.remove()
+
+  hot = [i for i, worst in enumerate(subtree_worst) if worst > enter_threshold]
+  if not hot:
+    raise RuntimeError(
+        f"No decoder block exceeds {enter_threshold}; rescale is unnecessary"
+    )
+  entry = hot[0]
+  exit_block = hot[-1]
+  while boundary_out[exit_block] * restore_margin > _FP16_MAX:
+    exit_block += 1
+    if exit_block >= len(blocks):
+      raise RuntimeError("No safe restore boundary inside the decoder child")
+
+  region = blocks[entry : exit_block + 1]
+  swapped = sum(_replace_elus_with_scaled(block, scale) for block in region)
+  biased = 0
+  seen: set[int] = set()
+  for block in region:
+    for module in block.modules():
+      if id(module) in seen:
+        continue
+      seen.add(id(module))
+      bias = getattr(module, "bias", None)
+      if isinstance(bias, torch.Tensor):
+        bias.mul_(1.0 / scale)
+        biased += 1
+
+  child.layers = nn.ModuleList(
+      blocks[:entry]
+      + [TorchScale(1.0 / scale)]
+      + region
+      + [TorchScale(scale)]
+      + blocks[exit_block + 1 :]
+  )
+  return {
+      "scale": float(scale),
+      "entry_block": int(entry),
+      "exit_block": int(exit_block),
+      "elus_swapped": int(swapped),
+      "biases_scaled": int(biased),
+      "subtree_worst_absmax": [float(value) for value in subtree_worst],
+      "boundary_out_absmax": [float(value) for value in boundary_out],
+  }
 
 
 class SpectroStreamDecoderTailWrapper(nn.Module):

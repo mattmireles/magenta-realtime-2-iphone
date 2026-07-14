@@ -12,24 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Convert a no-wrap unrolled MRT2 temporal-body proof to Core ML.
-
-SUPERSEDED (paper §6.3) — retained as a negative-result artifact. This exports a
-stateful ``ct.StateType`` graph, and in-graph state mutation is exactly the ANE
-admission cliff: the 25-frame unrolled stateful graph fails ``ANECCompile()``
-with Core ML error -14 on both test phones, under both ``.cpuAndNeuralEngine``
-and ``.all``. The corrected temporal exporter is
-``convert_temporal_body_carry.py`` (``TemporalBodyCoreMLCarryWrapper``): a
-stateless step with the 48 K/V caches as ordinary inputs and one-token updates
-as ordinary outputs, host-owned mutation, which compiles the full 12-layer stack
-to a single ANE-resident graph. Keep this script only to reproduce the -14
-failure; ship the carry exporter.
-
-The unrolled model keeps one Core ML model/state object and executes a fixed
-number of temporal frames in one prediction. This tests whether later frames can
-observe K/V state written by earlier frames without relying on separate
-fixed-slot packages that cannot share ``MLState`` continuity by themselves.
-"""
+"""Convert a host-owned K/V carry MRT2 temporal-body proof to Core ML."""
 
 from __future__ import annotations
 
@@ -57,17 +40,15 @@ from mrt2_coreml.depthformer_wrapper import (
 )
 from mrt2_coreml.temporal_body_wrapper import (
     TEMPORAL_SOURCE_DIM,
-    TemporalBodyCoreMLUnrolledWrapper,
+    TemporalBodyCoreMLCarryWrapper,
 )
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "build" / "models"
-DEFAULT_PACKAGE_TEMPLATE = "mrt2_temporal_body_unrolled_{frames:02d}.mlpackage"
-DEFAULT_COMPILED_TEMPLATE = "mrt2_temporal_body_unrolled_{frames:02d}.mlmodelc"
-DEFAULT_METADATA_TEMPLATE = (
-    "mrt2_temporal_body_unrolled_{frames:02d}_export_metadata.json"
-)
+DEFAULT_PACKAGE_TEMPLATE = "mrt2_temporal_body_carry_{frames:02d}.mlpackage"
+DEFAULT_COMPILED_TEMPLATE = "mrt2_temporal_body_carry_{frames:02d}.mlmodelc"
+DEFAULT_METADATA_TEMPLATE = "mrt2_temporal_body_carry_{frames:02d}_export_metadata.json"
 TEMPORAL_INPUT_NAME = "temporal_inputs"
 SOURCE_INPUT_NAME = "source_encoded"
 OUTPUT_NAME = "temporal_outputs"
@@ -132,22 +113,37 @@ def _compile_model(package_path: Path, compiled_path: Path) -> dict[str, Any]:
     }
 
 
-def _state_types() -> list[ct.StateType]:
-  """Return Core ML state declarations for all temporal K/V buffers."""
+def _format_template(template: str, args: argparse.Namespace) -> str:
+  """Format artifact template fields for carry frame/history buckets."""
+  formatted = template.format(frames=args.frames, history_length=args.history_length)
+  if args.history_length == 0 or "history_length" in template:
+    return formatted
+  path = Path(formatted)
+  return f"{path.stem}_h{args.history_length:02d}{path.suffix}"
+
+
+def _cache_tensor_types() -> list[ct.TensorType]:
+  """Return ordinary Core ML tensor inputs for host-owned K/V caches."""
+  cache_shape = (
+      1,
+      MRT2_LOCAL_WINDOW_FRAMES,
+      MRT2_TEMPORAL_HEADS,
+      MRT2_HEAD_DIM,
+  )
   return [
-      ct.StateType(
-          wrapped_type=ct.TensorType(
-              shape=(
-                  1,
-                  MRT2_LOCAL_WINDOW_FRAMES,
-                  MRT2_TEMPORAL_HEADS,
-                  MRT2_HEAD_DIM,
-              ),
-              dtype=np.float16,
-          ),
-          name=name,
-      )
-      for name in TemporalBodyCoreMLUnrolledWrapper.state_names()
+      ct.TensorType(name=name, shape=cache_shape, dtype=np.float16)
+      for name in TemporalBodyCoreMLCarryWrapper.cache_input_names()
+  ]
+
+
+def _output_tensor_types(args: argparse.Namespace) -> list[ct.TensorType]:
+  """Return temporal output plus K/V update output declarations."""
+  return [
+      ct.TensorType(name=OUTPUT_NAME),
+      *[
+          ct.TensorType(name=name, dtype=np.float16)
+          for name in TemporalBodyCoreMLCarryWrapper.cache_update_output_names()
+      ],
   ]
 
 
@@ -156,16 +152,31 @@ def convert(args: argparse.Namespace) -> dict[str, Any]:
   _ensure_coreml_runtime_path()
   output_dir = Path(args.output_dir)
   output_dir.mkdir(parents=True, exist_ok=True)
-  package_path = output_dir / args.package_template.format(frames=args.frames)
-  compiled_path = output_dir / args.compiled_template.format(frames=args.frames)
-  metadata_path = output_dir / args.metadata_template.format(frames=args.frames)
+  package_path = output_dir / _format_template(args.package_template, args)
+  compiled_path = output_dir / _format_template(args.compiled_template, args)
+  metadata_path = output_dir / _format_template(args.metadata_template, args)
 
-  model = TemporalBodyCoreMLUnrolledWrapper(frame_count=args.frames).eval()
+  model = TemporalBodyCoreMLCarryWrapper(
+      frame_count=args.frames,
+      history_length=args.history_length,
+  ).eval()
   temporal_inputs = torch.zeros((1, args.frames, MRT2_MODEL_DIM), dtype=torch.float32)
   source_encoded = torch.zeros((1, args.frames, TEMPORAL_SOURCE_DIM), dtype=torch.float32)
+  cache_inputs = [
+      torch.zeros(
+          (
+              1,
+              MRT2_LOCAL_WINDOW_FRAMES,
+              MRT2_TEMPORAL_HEADS,
+              MRT2_HEAD_DIM,
+          ),
+          dtype=torch.float16,
+      )
+      for _ in model.cache_input_names()
+  ]
 
   start_trace = time.perf_counter()
-  traced = torch.jit.trace(model, (temporal_inputs, source_encoded))
+  traced = torch.jit.trace(model, (temporal_inputs, source_encoded, *cache_inputs))
   trace_seconds = time.perf_counter() - start_trace
 
   stderr_buffer = io.StringIO()
@@ -187,9 +198,9 @@ def convert(args: argparse.Namespace) -> dict[str, Any]:
                   shape=(1, args.frames, TEMPORAL_SOURCE_DIM),
                   dtype=np.float32,
               ),
+              *_cache_tensor_types(),
           ],
-          outputs=[ct.TensorType(name=OUTPUT_NAME)],
-          states=_state_types(),
+          outputs=_output_tensor_types(args),
           compute_precision=ct.precision.FLOAT16,
           minimum_deployment_target=ct.target.iOS18,
       )
@@ -201,14 +212,12 @@ def convert(args: argparse.Namespace) -> dict[str, Any]:
 
   compile_report = _compile_model(package_path, compiled_path) if args.compile else None
   metadata: dict[str, Any] = {
-      "schema": "mrt2-temporal-body-unrolled-coreml-export-v1",
+      "schema": "mrt2-temporal-body-carry-coreml-export-v1",
       "source_commit": _git_commit(),
       "frames": args.frames,
-      "wrapper": (
-          "magenta_rt.coreml.temporal_body_wrapper."
-          "TemporalBodyCoreMLUnrolledWrapper"
-      ),
-      "boundary": "unrolled_temporal_body_outputs_from_host_temporal_inputs",
+      "history_length": args.history_length,
+      "wrapper": "mrt2_coreml.temporal_body_wrapper.TemporalBodyCoreMLCarryWrapper",
+      "boundary": "host_owned_kv_cache_inputs_and_update_outputs",
       "inputs": [
           {
               "name": TEMPORAL_INPUT_NAME,
@@ -220,21 +229,34 @@ def convert(args: argparse.Namespace) -> dict[str, Any]:
               "shape": [1, args.frames, TEMPORAL_SOURCE_DIM],
               "dtype": "float32",
           },
+          *[
+              {
+                  "name": name,
+                  "shape": [
+                      1,
+                      MRT2_LOCAL_WINDOW_FRAMES,
+                      MRT2_TEMPORAL_HEADS,
+                      MRT2_HEAD_DIM,
+                  ],
+                  "dtype": "float16",
+              }
+              for name in TemporalBodyCoreMLCarryWrapper.cache_input_names()
+          ],
       ],
       "outputs": [
           {
               "name": OUTPUT_NAME,
               "shape": [1, args.frames, MRT2_MODEL_DIM],
               "dtype": "Core ML selected",
-          }
-      ],
-      "states": [
-          {
-              "name": name,
-              "shape": [1, MRT2_LOCAL_WINDOW_FRAMES, MRT2_TEMPORAL_HEADS, MRT2_HEAD_DIM],
-              "dtype": "float16",
-          }
-          for name in TemporalBodyCoreMLUnrolledWrapper.state_names()
+          },
+          *[
+              {
+                  "name": name,
+                  "shape": [1, args.frames, MRT2_TEMPORAL_HEADS, MRT2_HEAD_DIM],
+                  "dtype": "float16",
+              }
+              for name in TemporalBodyCoreMLCarryWrapper.cache_update_output_names()
+          ],
       ],
       "conversion": {
           "convert_to": "mlprogram",
@@ -260,9 +282,9 @@ def convert(args: argparse.Namespace) -> dict[str, Any]:
       },
       "compile": compile_report,
       "known_limits": [
-          "Unrolls a fixed no-wrap frame count into one prediction.",
-          "Graph size and conversion time grow with frame count.",
-          "This is a proof of state read-after-write, not the final per-frame API.",
+          "This first carry proof uses a fixed no-wrap history_length bucket.",
+          "Host code owns K/V cache lifetime and ring-buffer placement.",
+          "The graph returns K/V update slices, not full copied cache tensors.",
           "Conditioning encoder remains host-owned; source_encoded is an input.",
           "Depth-body logits remain a separate Core ML package for this phase.",
       ],
@@ -275,9 +297,8 @@ def parse_args() -> argparse.Namespace:
   """Parse command-line flags."""
   parser = argparse.ArgumentParser(description=__doc__)
   parser.add_argument("--output-dir", default=str(DEFAULT_OUTPUT_DIR))
-  # The published MRT2TemporalBody.mlpackage is the 1-frame stateful export
-  # (one prediction per 40 ms frame); larger unrolls are probe variants.
-  parser.add_argument("--frames", type=int, default=1)
+  parser.add_argument("--frames", type=int, default=2)
+  parser.add_argument("--history-length", type=int, default=0)
   parser.add_argument("--package-template", default=DEFAULT_PACKAGE_TEMPLATE)
   parser.add_argument("--compiled-template", default=DEFAULT_COMPILED_TEMPLATE)
   parser.add_argument("--metadata-template", default=DEFAULT_METADATA_TEMPLATE)
