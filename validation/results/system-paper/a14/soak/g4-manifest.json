@@ -1,0 +1,222 @@
+{
+  "device": {
+    "chip": "A14 Bionic",
+    "marketingName": "iPhone 12 Pro",
+    "modelIdentifier": "iPhone13,3",
+    "name": "Webcam",
+    "osVersion": "26.5"
+  },
+  "evidence": {
+    "artifactSha256": {
+      "event-trace": "bde5015d47ad1f831420b0bcc45932281caa54fc1716b256c6232e99bd6167bd",
+      "pcm-capture": "e838d69736d50aa6c8cdb8e8b2527dd8e206df90ae9b6b3dd743add470f5c71b",
+      "runtime-log": "16cd1497cd8b38e0a4b0a2ea2ceaf8eeea9bc13b9a1edaa177b1353b4e0db4da"
+    },
+    "continuousPlaySecondsBeforeFirstUnderrun": 294.0775580406189,
+    "effectiveFrameCount": 13675,
+    "effectiveFrameDefinition": "temporal+depth+sampling+decoder/decoded_frames",
+    "foreground": true,
+    "g1ReportSha256": "3e82a8403db3a4d247525cb6fc275eaf3b04878bc7ccf8e4f0de3e2725807dd6",
+    "generatedAudioSeconds": 547,
+    "generationRate": 0.8966618803987042,
+    "maxDropped": 0,
+    "maxUnderruns": 7952,
+    "maximumStartReservoirSeconds": 20.16,
+    "measuredWindowSeconds": 610.040431022644,
+    "minuteBins": [
+      {
+        "endReservoirFrames": 983808,
+        "endSeconds": 60.0,
+        "generationIterations": 59,
+        "minReservoirFrames": 980992,
+        "p50EffectiveFrameMs": 39.36968,
+        "p99EffectiveFrameMs": 52.19448320000001,
+        "startSeconds": 0.0,
+        "thermalStates": [
+          "fair",
+          "nominal"
+        ]
+      },
+      {
+        "endReservoirFrames": 837888,
+        "endSeconds": 120.0,
+        "generationIterations": 58,
+        "minReservoirFrames": 837888,
+        "p50EffectiveFrameMs": 40.76614,
+        "p99EffectiveFrameMs": 54.0083796,
+        "startSeconds": 60.0,
+        "thermalStates": [
+          "fair",
+          "serious"
+        ]
+      },
+      {
+        "endReservoirFrames": 605440,
+        "endSeconds": 180.0,
+        "generationIterations": 54,
+        "minReservoirFrames": 595456,
+        "p50EffectiveFrameMs": 42.9203,
+        "p99EffectiveFrameMs": 56.436796400000006,
+        "startSeconds": 120.0,
+        "thermalStates": [
+          "serious"
+        ]
+      },
+      {
+        "endReservoirFrames": 304384,
+        "endSeconds": 240.0,
+        "generationIterations": 54,
+        "minReservoirFrames": 304384,
+        "p50EffectiveFrameMs": 43.503879999999995,
+        "p99EffectiveFrameMs": 56.8005276,
+        "startSeconds": 180.0,
+        "thermalStates": [
+          "serious"
+        ]
+      },
+      {
+        "endReservoirFrames": 24576,
+        "endSeconds": 300.0,
+        "generationIterations": 54,
+        "minReservoirFrames": 24576,
+        "p50EffectiveFrameMs": 43.694919999999996,
+        "p99EffectiveFrameMs": 56.9892332,
+        "startSeconds": 240.0,
+        "thermalStates": [
+          "serious"
+        ]
+      },
+      {
+        "endReservoirFrames": 17408,
+        "endSeconds": 360.0,
+        "generationIterations": 53,
+        "minReservoirFrames": 12544,
+        "p50EffectiveFrameMs": 43.875960000000006,
+        "p99EffectiveFrameMs": 57.3632704,
+        "startSeconds": 300.0,
+        "thermalStates": [
+          "serious"
+        ]
+      },
+      {
+        "endReservoirFrames": 45824,
+        "endSeconds": 420.0,
+        "generationIterations": 53,
+        "minReservoirFrames": 11520,
+        "p50EffectiveFrameMs": 44.44424,
+        "p99EffectiveFrameMs": 58.8362688,
+        "startSeconds": 360.0,
+        "thermalStates": [
+          "serious"
+        ]
+      },
+      {
+        "endReservoirFrames": 39936,
+        "endSeconds": 480.0,
+        "generationIterations": 52,
+        "minReservoirFrames": 12032,
+        "p50EffectiveFrameMs": 44.59572,
+        "p99EffectiveFrameMs": 58.2125152,
+        "startSeconds": 420.0,
+        "thermalStates": [
+          "serious"
+        ]
+      },
+      {
+        "endReservoirFrames": 33280,
+        "endSeconds": 540.0,
+        "generationIterations": 52,
+        "minReservoirFrames": 11264,
+        "p50EffectiveFrameMs": 45.22376,
+        "p99EffectiveFrameMs": 59.520492000000004,
+        "startSeconds": 480.0,
+        "thermalStates": [
+          "serious"
+        ]
+      },
+      {
+        "endReservoirFrames": 29952,
+        "endSeconds": 600.0,
+        "generationIterations": 50,
+        "minReservoirFrames": 10496,
+        "p50EffectiveFrameMs": 47.21412,
+        "p99EffectiveFrameMs": 62.263706,
+        "startSeconds": 540.0,
+        "thermalStates": [
+          "serious"
+        ]
+      },
+      {
+        "endReservoirFrames": 17664,
+        "endSeconds": 610.040431022644,
+        "generationIterations": 8,
+        "minReservoirFrames": 17664,
+        "p50EffectiveFrameMs": 48.06632,
+        "p99EffectiveFrameMs": 48.395605200000006,
+        "startSeconds": 600.0,
+        "thermalStates": [
+          "serious"
+        ]
+      }
+    ],
+    "p50EffectiveFrameMs": 43.875960000000006,
+    "p90EffectiveFrameMs": 47.24796,
+    "p99EffectiveFrameMs": 58.586438400000006,
+    "pcmCaptureSeconds": 568.32,
+    "primeSeconds": 19.41944694519043,
+    "protocol": {
+      "computeUnits": {
+        "decoder": "cpuAndNeuralEngine",
+        "depth": "cpuOnly",
+        "temporal": "cpuAndNeuralEngine"
+      },
+      "modelSha256": {
+        "decoder": "38cbdf5ca97fe1744fa4d5a5caee23d50170a7eeb18daed1c40fe3a73aed9852"
+      },
+      "prompt": "warm ambient texture",
+      "temperature": 1.0,
+      "temporalMode": "streamingCarry",
+      "topK": 40,
+      "trajectoryRefreshSeconds": 10.0
+    },
+    "pulledAudioSeconds": 566.992,
+    "reservoirEndFrames": 17664,
+    "reservoirSlopeFramesPerSecond": -1557.3000602721304,
+    "reservoirStartFrames": 967680,
+    "runSummary": {
+      "finalFillFrames": 17664,
+      "finalPulledFrames": 27215616,
+      "finalPushedFrames": 27233280,
+      "generationIterations": 547,
+      "minObservedFillFrames": 0,
+      "thermalStates": [
+        "fair",
+        "nominal",
+        "serious"
+      ]
+    },
+    "screenOn": true,
+    "startupToFirstAudioSeconds": 24.194828987121582,
+    "thermalTimeline": [
+      {
+        "elapsedSeconds": 0.0,
+        "state": "nominal"
+      },
+      {
+        "elapsedSeconds": 51.081053018569946,
+        "state": "fair"
+      },
+      {
+        "elapsedSeconds": 106.06230700016022,
+        "state": "serious"
+      },
+      {
+        "elapsedSeconds": 610.040431022644,
+        "state": "serious"
+      }
+    ],
+    "unqualifiedRealTimeClaimAllowed": false
+  },
+  "outcome": "bounded-reservoir",
+  "schema": "mrt2-system-paper-g4-v1"
+}

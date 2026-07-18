@@ -5,7 +5,9 @@
 - **Primary publication path:** arXiv technical paper
 - **Length target:** 10–12 pages of main text plus references and a compact
   reproducibility appendix
-**Working title:** *Live: Sustained GPU-Free Generative Music on iPhone*
+
+**Paper title:** *The Three Clocks of Live Music Generation: Sustained
+GPU-Free MRT2 Inference on iPhone*
 
 This ledger is the paper's scientific contract. A sentence may enter the
 abstract, contributions, conclusion, or public launch copy only if its gate is
@@ -212,6 +214,14 @@ python3 validation/verify_system_paper_gate.py g3 \
 **Public receipt root:**
 `validation/results/system-paper/audio/`
 
+**Measured result (2026-07-18): FAIL, retained.** The corrected 600 s capture
+passes finite, clipping, boundary, stereo, prompt-adherence, reference-
+similarity, delivery-counter, and all six known-bad-control checks. It fails
+the frozen 4–16 Hz pulse-share band (`0.1364 > 0.07`) and receives only 2/5
+candidate passes from five otherwise-valid calibrated blind votes. A
+temperature-0.5 intervention fixes pulse share but fails clipping, stereo,
+prompt, and reference bands. G3 is not weakened or tuned away.
+
 ### G4 — A14 tier decision
 
 Exactly one outcome must be selected from measured `Webcam` evidence:
@@ -219,11 +229,13 @@ Exactly one outcome must be selected from measured `Webcam` evidence:
 - **Native real-time pass:** the corrected pipeline has p99 effective frame
   cost below 40 ms and completes the G2-equivalent 600 s zero-underrun run
   without relying on a draining reservoir; or
-- **Reservoir tier:** report startup prime duration, achieved continuous-play
-  duration, reservoir slope, p50/p90/p99 effective frame cost, thermal
-  timeline, and zero-underrun result. The words "real time on a 2020 phone"
-  are forbidden for this outcome unless always qualified by the measured
-  startup reservoir tier.
+- **Reservoir tier or bounded-reservoir failure:** report startup prime
+  duration, achieved continuous-play duration, reservoir slope,
+  p50/p90/p99 effective frame cost, thermal timeline, and underrun/drop
+  counters. A tier requires a complete zero-underrun run. If the largest
+  fixed reservoir still drains, report the first-underrun time and name the
+  result a bounded-reservoir failure. The words "real time on a 2020 phone"
+  are forbidden for either non-native outcome.
 
 **Public receipt root:**
 `validation/results/system-paper/a14/soak/`
@@ -240,16 +252,16 @@ python3 validation/verify_system_paper_gate.py g4 \
 
 | ID | Candidate paper claim | Required gate / receipt | Current disposition |
 | --- | --- | --- | --- |
-| C1 | A complete `mrt2_small` pipeline generates 48 kHz stereo music continuously at 25 Hz on an iPhone 15 Pro Max with zero app-attributed GPU time. | G1 + G2 + G3; A17 placement, soak, and audio roots | **G1 passed; blocked on G2/G3.** The composed A17 trace is GPU-empty and the observed short-run cost is below budget, but the headline still requires the 600 s and audio gates. |
-| C2 | The system sustains the 40 ms/frame contract for 10 foreground minutes with zero underruns. | G2; five-run latency dispersion plus the 600 s soak | **Blocked.** Prior corrected-pipeline soak fails around minutes 5–7 and is negative-result context only. |
+| C1 | A complete `mrt2_small` pipeline generates 48 kHz stereo music continuously at 25 Hz on an iPhone 15 Pro Max with zero app-attributed GPU time. | G1 + G2 + G3; A17 placement, soak, and audio roots | **Rejected as written.** G1 and G2 pass, but G3 fails its frozen pulse and calibrated-blind-vote requirements. The paper claims sustained GPU-free inference and delivery, not sustained musical validity. |
+| C2 | The system sustains the 40 ms/frame contract for 10 foreground minutes with zero underruns. | G2; five-run latency dispersion plus the 600 s soak | **Passed on A17 Pro.** The 610.19 s run produces at 1.0308x, p99 21.66 ms, zero underruns/drops, and a growing reservoir; five independent ANE-policy processes have median run-level p99 22.35 ms (IQR 0.42). |
 | C3 | A stateless host-owned K/V boundary makes the full temporal math island reliably ANE-resident in the shipping app. | G1 plus fresh/warm and >41-frame state receipts | **Passed on A17 Pro and A14.** Both phones pass 10/10 cold-process plan/state gates; both model-attributed traces show temporal ANE predictions and zero app GPU intervals. |
 | C4 | Reducing temporal weight bytes improves frame cost and sustained headroom in the bandwidth-bound regime without changing audible behavior. | Quantization ladder: artifact bytes, finite/parity/audio gates, device latency and soak pair | **Rejected for the tested post-training methods.** Int8-linear, 6-bit palettized, and 4-bit palettized temporal artifacts shrink to 0.502x, 0.376x, and 0.252x of baseline, but all fail the 64-step deterministic state gate. They were stopped before device/audio measurement, so no speedup or audio-equivalence claim is supported. |
-| C5 | The delivery architecture converts measured jitter into bounded startup latency without blocking the audio render thread. | Runtime log, ring/reservoir trace, zero-underrun soak, pseudocode | **Supported historically, must be re-proven on the corrected pipeline.** |
-| C6 | GPU-free placement lowers process GPU impact and producer duty cycle relative to a temporal-GPU control. | Corrected-pipeline, counterbalanced Power Profiler pair; placement receipts | **Blocked pending re-run.** The old 0.57-vs-0.93 duty-cycle pair predates correctness fixes. |
-| C7 | The same pipeline has a measured, honest deployment tier on an A14 iPhone. | G4 | **Guaranteed as a reporting result, not guaranteed as a real-time pass.** |
-| C8 | Cold start to first audible PCM is measured on both phones. | Five cold launches/device with load, compile, prime, and first-render timestamps | **Unmeasured.** No responsiveness claim until receipts exist. |
+| C5 | The delivery architecture converts measured jitter into bounded startup latency without blocking the audio render thread. | Runtime log, ring/reservoir trace, zero-underrun soak, pseudocode | **Passed on A17 Pro.** The candidate pulls 610.21 s with zero callback underruns/drops while the reservoir grows from 2.88 to 21.47 s. A14's draining trace independently proves that the counter detects an inadequate producer. |
+| C6 | GPU-free placement lowers process GPU impact and producer duty cycle relative to a temporal-GPU control. | Corrected-pipeline, counterbalanced Power Profiler pair; placement receipts | **Re-run in progress.** The first corrected-bundle trace is invalid because the bundle omitted `warm.bin` and exited at preflight; it is retained and excluded. No power claim is made from it. |
+| C7 | The same pipeline has a measured, honest deployment tier on an A14 iPhone. | G4 | **Passed as a bounded-reservoir failure, not a tier.** p99 is 58.59 ms, production 0.8967x, the maximum 20.16 s reservoir first underflows at 294.08 s, and the 610 s run records 7,952 underruns. Unqualified A14 real time is forbidden. |
+| C8 | Cold start to first audible PCM is measured on both phones. | Five cold launches/device with load, compile, prime, and first-render timestamps | **Measured.** Median (IQR) is 4.26 s (0.04) on A17 Pro and 7.52 s (0.01) on A14 under the selected ANE policy; all five run values remain in the evaluation manifest. |
 | C9 | Placement reliability is a deployment property distinct from graph convertibility and one-off harness success. | Ten cold launches/device plus falsification matrix | **Passed.** The first post-install A14 process costs 39.498 s while warmed gate processes cost about 1.7 s, yet all 10/10 on each device preserve the same ANE plan and state result. |
-| C10 | Negative results identify where state, precision, compression, placement, or thermal behavior break. | Failed variants retained with commands, hashes, and failure text | **Supported for state, precision, compression, and placement; thermal pending G2/G4.** The compression receipt retains sizes, hashes, metrics, gate order, and the explicit early-stop disposition for all six rejected variants. |
+| C10 | Negative results identify where state, precision, compression, placement, thermal behavior, or long-horizon generation break. | Failed variants retained with commands, hashes, and failure text | **Supported.** The public receipts retain six rejected compression variants, the A14 FP16/FLOAT32 boundary and bounded-reservoir failure, the recorder-stride falsification, and the failed 600 s generative-quality gate. |
 
 ## Claims Explicitly Forbidden
 

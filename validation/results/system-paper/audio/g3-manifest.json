@@ -1,0 +1,272 @@
+{
+  "artifactSha256": {
+    "analysis.json": "38bbf67a966c25cb76d9fdb9c0829dddc54e6f2321f2f101810b1777c4803a34",
+    "g2-manifest.json": "41872f66a29d8843edb07e75aea806b0b987add20090737259d2d43868333351",
+    "g2-report.json": "c2450588ba7986512be813129c31527c6766dd40d44b3272c32508aa80358c77",
+    "lineups-manifest.json": "1057c169b1e1ae6635718214243c00e6b8ace3a161b5f4dcf3f1328cc5cc1e69",
+    "vote-seed-1618033.json": "ae83709af69ce8c3d96b91ba5e676bfb39b33f4c4862e11f5d4dd49e0b4341ec",
+    "vote-seed-1729.json": "810033b7fbfcadec8a7ea2711df38ef886b8fcbb4cdf2f11b6ea7ac1fbe405ee",
+    "vote-seed-271828.json": "9891910f50e037d0584cbb230a306cc0b13f9a0767e31f8e36feb13ba0090c8e",
+    "vote-seed-31415.json": "4ee4a68cb87ed57dc594c3e558a2db61c79d23aea4477bc45efab6637384c8d6",
+    "vote-seed-8675309.json": "898b4f5ce1e3c495fb05f8f18c8ae02d1d281090db6342d4d45f490efcb5ca2d"
+  },
+  "blindAutomatedVotes": [
+    {
+      "artifactSha256": "810033b7fbfcadec8a7ea2711df38ef886b8fcbb4cdf2f11b6ea7ac1fbe405ee",
+      "candidateClipPass": true,
+      "candidatePass": true,
+      "candidateSameQualityClass": true,
+      "controlsRankedCorrectly": true,
+      "knownBadPass": false,
+      "knownGoodPass": true,
+      "seed": 1729
+    },
+    {
+      "artifactSha256": "4ee4a68cb87ed57dc594c3e558a2db61c79d23aea4477bc45efab6637384c8d6",
+      "candidateClipPass": false,
+      "candidatePass": false,
+      "candidateSameQualityClass": false,
+      "controlsRankedCorrectly": true,
+      "knownBadPass": false,
+      "knownGoodPass": true,
+      "seed": 31415
+    },
+    {
+      "artifactSha256": "9891910f50e037d0584cbb230a306cc0b13f9a0767e31f8e36feb13ba0090c8e",
+      "candidateClipPass": false,
+      "candidatePass": false,
+      "candidateSameQualityClass": false,
+      "controlsRankedCorrectly": true,
+      "knownBadPass": false,
+      "knownGoodPass": true,
+      "seed": 271828
+    },
+    {
+      "artifactSha256": "ae83709af69ce8c3d96b91ba5e676bfb39b33f4c4862e11f5d4dd49e0b4341ec",
+      "candidateClipPass": true,
+      "candidatePass": true,
+      "candidateSameQualityClass": true,
+      "controlsRankedCorrectly": true,
+      "knownBadPass": false,
+      "knownGoodPass": true,
+      "seed": 1618033
+    },
+    {
+      "artifactSha256": "898b4f5ce1e3c495fb05f8f18c8ae02d1d281090db6342d4d45f490efcb5ca2d",
+      "candidateClipPass": false,
+      "candidatePass": false,
+      "candidateSameQualityClass": false,
+      "controlsRankedCorrectly": true,
+      "knownBadPass": false,
+      "knownGoodPass": true,
+      "seed": 8675309
+    }
+  ],
+  "g2ReportSha256": "c2450588ba7986512be813129c31527c6766dd40d44b3272c32508aa80358c77",
+  "knownBadControls": [
+    {
+      "id": "stride-corruption",
+      "metrics": {
+        "channelOrder": [
+          "left",
+          "right"
+        ],
+        "channels": 2,
+        "clippedSampleRatio": 0.0,
+        "durationSeconds": 22.08,
+        "envelopePulseShare4To16Hz": 0.30961644649505615,
+        "finiteRatio": 1.0,
+        "interchannelResidualRMSRatio": 0.8742467164993286,
+        "leftRightCorrelation": 0.6179310400814486,
+        "longestNearZeroRunSeconds": 2.0833333333333333e-05,
+        "maxChunkBoundaryAbsJump": 0.017334185540676117,
+        "peakAmplitude": 0.6616127490997314,
+        "promptAdherence": 0.08053935392175174,
+        "sampleRateHz": 48000
+      },
+      "rejected": true,
+      "rejectionReasons": [
+        "stereo-correlation",
+        "prompt-adherence",
+        "periodic-envelope"
+      ],
+      "sha256": "2cbcac2ef31b8edd890e5ddaab0f3f4b1842066d49c2be1accb6001055141ee1"
+    },
+    {
+      "id": "missing-temporal-feedback",
+      "metrics": {
+        "channelOrder": [
+          "left",
+          "right"
+        ],
+        "channels": 2,
+        "clippedSampleRatio": 0.0011565836298932384,
+        "durationSeconds": 44.96,
+        "envelopePulseShare4To16Hz": 0.3264189064502716,
+        "finiteRatio": 1.0,
+        "interchannelResidualRMSRatio": 1.3815038204193115,
+        "leftRightCorrelation": 0.04577418875967324,
+        "longestNearZeroRunSeconds": 2.0833333333333333e-05,
+        "maxChunkBoundaryAbsJump": 0.13405397534370422,
+        "peakAmplitude": 2.116318464279175,
+        "promptAdherence": 0.1062892565043108,
+        "sampleRateHz": 48000
+      },
+      "rejected": true,
+      "rejectionReasons": [
+        "clipping",
+        "chunk-boundary",
+        "stereo-correlation",
+        "prompt-adherence",
+        "periodic-envelope"
+      ],
+      "sha256": "39f5d883a8bad83cab452f7c467f8daa5c0fd0ed3547b145f96652dfb0d27be4"
+    },
+    {
+      "id": "write-only-state",
+      "metrics": {
+        "channelOrder": [
+          "left",
+          "right"
+        ],
+        "channels": 2,
+        "clippedSampleRatio": 0.0,
+        "durationSeconds": 29.96,
+        "envelopePulseShare4To16Hz": 0.09032770991325378,
+        "finiteRatio": 1.0,
+        "interchannelResidualRMSRatio": 0.41505807638168335,
+        "leftRightCorrelation": 0.9142121675850996,
+        "longestNearZeroRunSeconds": 2.0833333333333333e-05,
+        "maxChunkBoundaryAbsJump": 0.029091808944940567,
+        "peakAmplitude": 0.7991893887519836,
+        "promptAdherence": 0.28748324353084015,
+        "sampleRateHz": 48000
+      },
+      "rejected": true,
+      "rejectionReasons": [
+        "stereo-correlation",
+        "prompt-adherence",
+        "periodic-envelope"
+      ],
+      "sha256": "18e20670bcf8b27711db642a15ca7ac5c724b680caadfdb6f0dbb5e88cac9e01"
+    },
+    {
+      "id": "click-comb",
+      "metrics": {
+        "channelOrder": [
+          "left",
+          "right"
+        ],
+        "channels": 2,
+        "clippedSampleRatio": 0.0,
+        "durationSeconds": 49.92,
+        "envelopePulseShare4To16Hz": 0.13836601376533508,
+        "finiteRatio": 1.0,
+        "interchannelResidualRMSRatio": 0.35646769404411316,
+        "leftRightCorrelation": 0.9368369087671677,
+        "longestNearZeroRunSeconds": 4.1666666666666665e-05,
+        "maxChunkBoundaryAbsJump": 0.029228556901216507,
+        "peakAmplitude": 0.38214111328125,
+        "promptAdherence": 0.27667229535935445,
+        "sampleRateHz": 48000
+      },
+      "rejected": true,
+      "rejectionReasons": [
+        "stereo-correlation",
+        "prompt-adherence",
+        "periodic-envelope"
+      ],
+      "sha256": "04bc3af79a35bf389c96f4cb28f8d1141fe5ddb52f6a5301dfd5b8f2880c1b05"
+    },
+    {
+      "id": "channel-collapse",
+      "metrics": {
+        "channelOrder": [
+          "left",
+          "right"
+        ],
+        "channels": 2,
+        "clippedSampleRatio": 3.5763888888888888e-06,
+        "durationSeconds": 600.0,
+        "envelopePulseShare4To16Hz": 0.13642817735671997,
+        "finiteRatio": 1.0,
+        "interchannelResidualRMSRatio": 0.0,
+        "leftRightCorrelation": 1.0,
+        "longestNearZeroRunSeconds": 2.0833333333333333e-05,
+        "maxChunkBoundaryAbsJump": 0.006433981005102396,
+        "peakAmplitude": 4.924163818359375,
+        "promptAdherence": 0.3119396245541303,
+        "sampleRateHz": 48000
+      },
+      "rejected": true,
+      "rejectionReasons": [
+        "periodic-envelope",
+        "channel-collapse"
+      ],
+      "sha256": "b1c68c55ec9f8e1e16a91c728a70f5d76d54dec858cff9cdf27d746fcd55ee2d"
+    },
+    {
+      "id": "dropout-injection",
+      "metrics": {
+        "channelOrder": [
+          "left",
+          "right"
+        ],
+        "channels": 2,
+        "clippedSampleRatio": 4.045138888888889e-06,
+        "durationSeconds": 600.0,
+        "envelopePulseShare4To16Hz": 0.20118945837020874,
+        "finiteRatio": 1.0,
+        "interchannelResidualRMSRatio": 0.17052757740020752,
+        "leftRightCorrelation": 0.9861086471925552,
+        "longestNearZeroRunSeconds": 0.1,
+        "maxChunkBoundaryAbsJump": 0.058357689529657364,
+        "peakAmplitude": 5.2006754875183105,
+        "promptAdherence": 0.2338902744962267,
+        "sampleRateHz": 48000
+      },
+      "rejected": true,
+      "rejectionReasons": [
+        "prompt-adherence",
+        "periodic-envelope",
+        "dropout"
+      ],
+      "sha256": "cb2f6f10f5ada1ae41dc5c515f7fea7df58547f8f23afc287e62dbca42e6c1da"
+    }
+  ],
+  "maxDropped": 0,
+  "maxUnderruns": 0,
+  "objectiveMetrics": {
+    "channelOrder": [
+      "left",
+      "right"
+    ],
+    "channels": 2,
+    "clippedSampleRatio": 4.045138888888889e-06,
+    "durationSeconds": 600.0,
+    "embeddingSimilarityToReference": 0.8540971698158815,
+    "envelopePulseShare4To16Hz": 0.13642817735671997,
+    "finiteRatio": 1.0,
+    "interchannelResidualRMSRatio": 0.16933971643447876,
+    "leftRightCorrelation": 0.9863065259790376,
+    "longestNearZeroRunSeconds": 2.0833333333333333e-05,
+    "maxChunkBoundaryAbsJump": 0.006092826835811138,
+    "peakAmplitude": 5.2006754875183105,
+    "promptAdherence": 0.3119396245541303,
+    "sampleRateHz": 48000
+  },
+  "protocol": {
+    "blindOrderSeeds": [
+      1729,
+      31415,
+      271828,
+      1618033,
+      8675309
+    ],
+    "prompt": "warm ambient texture",
+    "temperature": 1.0,
+    "topK": 40,
+    "trajectoryRefreshSeconds": 10.0
+  },
+  "schema": "mrt2-system-paper-g3-v1"
+}

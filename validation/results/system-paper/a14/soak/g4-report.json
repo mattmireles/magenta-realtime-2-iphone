@@ -1,0 +1,141 @@
+{
+  "checks": [
+    {
+      "expected": "mrt2-system-paper-g4-v1",
+      "name": "schema",
+      "passed": true,
+      "value": "mrt2-system-paper-g4-v1"
+    },
+    {
+      "expected": "iPhone13,3",
+      "name": "a14_device",
+      "passed": true,
+      "value": "iPhone13,3"
+    },
+    {
+      "expected": [
+        "native-real-time",
+        "reservoir-tier",
+        "bounded-reservoir"
+      ],
+      "name": "outcome_selected",
+      "passed": true,
+      "value": "bounded-reservoir"
+    },
+    {
+      "name": "reservoir_foreground_screen_on",
+      "passed": true,
+      "value": {
+        "foreground": true,
+        "screenOn": true
+      }
+    },
+    {
+      "expected": ">=600.0",
+      "name": "reservoir_measured_window",
+      "passed": true,
+      "value": 610.040431022644
+    },
+    {
+      "expected": "measured underflow boundary below 600 s",
+      "name": "bounded_reservoir_failure_measured",
+      "passed": true,
+      "value": {
+        "continuousPlaySecondsBeforeFirstUnderrun": 294.0775580406189,
+        "maxUnderruns": 7952,
+        "maximumStartReservoirSeconds": 20.16,
+        "pcmCaptureSeconds": 568.32
+      }
+    },
+    {
+      "expected": 0,
+      "name": "reservoir_zero_dropped",
+      "passed": true,
+      "value": 0
+    },
+    {
+      "expected": "startup>=prime>0",
+      "name": "reservoir_startup_reported",
+      "passed": true,
+      "value": {
+        "primeSeconds": 19.41944694519043,
+        "startupToFirstAudioSeconds": 24.194828987121582
+      }
+    },
+    {
+      "expected": "0<p50<=p90<=p99",
+      "name": "reservoir_latency_distribution",
+      "passed": true,
+      "value": [
+        43.875960000000006,
+        47.24796,
+        58.586438400000006
+      ]
+    },
+    {
+      "expected": "temporal+depth+sampling+decoder/decoded_frames",
+      "name": "reservoir_effective_frame_definition",
+      "passed": true,
+      "value": "temporal+depth+sampling+decoder/decoded_frames"
+    },
+    {
+      "expected": ">=10000",
+      "name": "reservoir_effective_frame_count",
+      "passed": true,
+      "value": 13675
+    },
+    {
+      "expected": ">0 (reported, not gated)",
+      "name": "reservoir_rate_reported",
+      "passed": true,
+      "value": 0.8966618803987042
+    },
+    {
+      "name": "reservoir_slope_reported",
+      "passed": true,
+      "value": -1557.3000602721304
+    },
+    {
+      "expected": "coverage>=600.0s",
+      "name": "reservoir_thermal_timeline",
+      "passed": true,
+      "value": [
+        {
+          "elapsedSeconds": 0.0,
+          "state": "nominal"
+        },
+        {
+          "elapsedSeconds": 51.081053018569946,
+          "state": "fair"
+        },
+        {
+          "elapsedSeconds": 106.06230700016022,
+          "state": "serious"
+        },
+        {
+          "elapsedSeconds": 610.040431022644,
+          "state": "serious"
+        }
+      ]
+    },
+    {
+      "expected": false,
+      "name": "reservoir_unqualified_claim_forbidden",
+      "passed": true,
+      "value": false
+    },
+    {
+      "name": "reservoir_artifacts_hashed",
+      "passed": true,
+      "value": {
+        "event-trace": "bde5015d47ad1f831420b0bcc45932281caa54fc1716b256c6232e99bd6167bd",
+        "pcm-capture": "e838d69736d50aa6c8cdb8e8b2527dd8e206df90ae9b6b3dd743add470f5c71b",
+        "runtime-log": "16cd1497cd8b38e0a4b0a2ea2ceaf8eeea9bc13b9a1edaa177b1353b4e0db4da"
+      }
+    }
+  ],
+  "gate": "G4",
+  "manifestSha256": "22cdcaf971b07862c62cc745552ba84718984eff7b761cc972223105fd42724e",
+  "passed": true,
+  "schema": "mrt2-system-paper-gate-report-v1"
+}

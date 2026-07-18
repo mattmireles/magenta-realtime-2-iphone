@@ -1,7 +1,8 @@
 # MRT2 System Paper Plan — "Live: Real-Time Streaming Music Generation on iPhone, GPU-Free"
 
 **Date:** 2026-07-15
-**Status:** Active — Phases 0–2 complete; Phase 3 in progress
+**Status:** Active — Phases 0–3 complete; Phase 4 evidence consolidation and
+Phase 5 manuscript in progress
 
 ## Executive Summary
 
@@ -289,26 +290,33 @@ and the clicking/stutter/dropout defects are root-caused and closed.
 
 **Tasks:**
 
-- [ ] Root-cause the periodic clicking/stutter (Crossfade): candidate causes
+- [x] Root-cause the periodic clicking/stutter (Crossfade): candidate causes
       already implicated are temporal state handling and chunk-boundary
       buffering (decoder lookahead carry). Write-notes per defect; regression
       test per fix (bit-level chunk-boundary continuity check on rendered
       PCM).
-- [ ] Controlled soak matrix using the existing soak instrumentation
+- [x] Controlled soak matrix using the existing soak instrumentation
       (Crossfade `e00faff`): {A17 Pro, A14} × {screen on foreground} ×
       {ANE placement, GPU control arm} × 10 min. Record thermal state
       timeline, ring depth, underruns, per-frame p50/p99 over time.
-- [ ] If A17 Pro soak still fails after Phases 1–2: measure the residual —
+- [x] If A17 Pro soak still fails after Phases 1–2: measure the residual —
       UI Metal load (test with minimal UI), decoder cadence, producer
       scheduling — before touching the model again. The duty-cycle math says
       ANE + fewer bytes should clear it; verify rather than assume.
-- [ ] A14 tier decision (G4): under budget → report as second passing device;
+- [x] A14 tier decision (G4): under budget → report as second passing device;
       not under budget → measure the reservoir tier honestly (startup
       latency, sustained zero-underrun proof) and report as a tier.
 
-**Verification:** Soak receipts (JSON + md) checked in showing A17 Pro
-≥1.0× real time for 600 s, 0 underruns, thermal timeline included; audio
-gates pass on soak-run audio; defect notes closed with regression tests.
+**Verification (2026-07-18): COMPLETE, with one failed scientific gate.** The
+A17 candidate passes G2: 610.19 s, 1.0308x, p99 21.66 ms, zero
+underruns/drops, and a growing reservoir while serious-thermal throughout.
+The matched `.cpuAndGPU` temporal-policy control reaches p99 49.23 ms and
+drains its banked reservoir after minute six. A14 passes G4 only as a measured
+bounded-reservoir failure: p99 58.59 ms, 0.8967x, first underflow at 294.08 s
+despite a maximum 20.16 s reservoir. The recorder stride bug is fixed and
+regression-tested. G3 fails its frozen pulse-share and calibrated-vote
+requirements; a lower-temperature full-run ablation fails four other bands.
+The gate is retained, not weakened. Crossfade commit: `97b35f3`.
 
 ---
 
@@ -320,29 +328,35 @@ matrix.
 
 **Tasks:**
 
-- [ ] Latency: per-stage and composed p50/p90/p99, both phones, N≥5 repeat
+- [x] Latency: per-stage and composed p50/p90/p99, both phones, N≥5 repeat
       runs per cell for dispersion (the *Surgical Inference* dispersion
       discipline).
-- [ ] Placement: per-run placement-gate artifacts; Instruments Core ML traces
+- [x] Placement: per-run placement-gate artifacts; Instruments Core ML traces
       (ANE interval tables + empty app GPU tables) archived for both phones.
 - [ ] Power: paired ANE-vs-GPU Power Profiler captures **re-run on the
       corrected pipeline** (the existing pair predates the §6.6 fixes and the
       paper flags it; the sequel must not inherit that asterisk), plus
       duty-cycle analysis.
-- [ ] Sustain: the Phase 3 soak matrix is the sustain evidence; add one
+- [x] Sustain: the Phase 3 soak matrix is the sustain evidence; add one
       long-form run (≥30 min, A17 Pro) if the venue's story benefits and
       thermal permits.
-- [ ] Audio quality: blind audio-judge/embedding-adherence gates on
+- [x] Audio quality: blind audio-judge/embedding-adherence gates on
       corrected-pipeline audio vs. the MLX reference cluster, with known-bad
       controls; L/R correlation and prompt-adherence bands as in paper §6.6.
-- [ ] Startup: cold-start to first audio (model load + compile + prime), both
+- [x] Startup: cold-start to first audio (model load + compile + prime), both
       phones — a system paper gets asked this.
 - [ ] Check all receipts into `validation/results/` (and mirror on HF);
       update `docs/validation-receipts.md` with a new "corrected composed
       pipeline" section superseding §0's open-items paragraph.
 
-**Verification:** Every claims-ledger row has a receipt path; a skeptical
-read of `docs/validation-receipts.md` finds no number without provenance.
+**Current evidence:** `evaluation-manifest.json` contains four five-process
+cells with run-level dispersion and startup. Matched 610 s control manifests
+exist for both phones. Placement, sustain, A14, audio, and compression paths
+are public and the receipts ledger is updated. Power recapture remains the one
+open measurement: the first corrected-bundle attempt is invalid because
+`warm.bin` was omitted and the app exited at preflight; subsequent xctrace
+attempts found the phones offline over USB. No power claim is taken from those
+attempts.
 
 ---
 
@@ -352,27 +366,27 @@ read of `docs/validation-receipts.md` finds no number without provenance.
 
 **Tasks:**
 
-- [ ] Outline against the claims ledger. Working structure: intro (the
+- [x] Outline against the claims ledger. Working structure: intro (the
       real-time contract), background (MRT2 + heterogeneous SoC, cite
       *Surgical Inference* for the admission findings), system design
       (pipeline, delivery architecture, host-owned state), deployment
       reality (admission fragility + falsification — the §6.7 story with its
       Phase 1 resolution), evaluation (Phase 4 matrix), negative results,
       related work, artifact statement.
-- [ ] Draft in markdown first (`paper/draft.md`), then convert — reuse the
+- [x] Draft in markdown first (`paper/draft.md`), then convert — reuse the
       kokoro-coreml toolchain verbatim: `tectonic`, `natbib`, `booktabs`,
       `\usepackage{float}` + `[H]` figure placement from day one (lesson
       learned), Okabe-Ito figure palette, figure sources under
       `paper/figures/src/`.
-- [ ] Figures: system/dataflow diagram (TikZ), soak timeline (thermal state +
+- [x] Figures: system/dataflow diagram (TikZ), soak timeline (thermal state +
       ms/frame vs. time — the money figure), latency-per-stage bars both
       phones, paired power/duty-cycle chart, weight-bytes-vs-latency ladder
       from Phase 2.
-- [ ] Related work: on-device audio generation, streaming codecs
+- [x] Related work: on-device audio generation, streaming codecs
       (SoundStream/EnCodec lineage), mobile inference systems, ANE
       deployment literature (share `refs.bib` ancestry with paper 1 where
       applicable).
-- [ ] Cross-check no claim overlap with *Surgical Inference* — every shared
+- [x] Cross-check no claim overlap with *Surgical Inference* — every shared
       finding is cited, not restated as a contribution.
 
 **Verification:** `tectonic paper/main.tex` builds clean; figures placed

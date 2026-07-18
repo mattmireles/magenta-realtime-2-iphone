@@ -315,6 +315,39 @@ class SystemPaperGateTests(unittest.TestCase):
         }
         self.assertFalse(verify_g4(manifest)["passed"])
 
+    def test_g4_accepts_measured_bounded_reservoir_failure(self) -> None:
+        """G4 accepts an honest underflow boundary without relabeling it real time."""
+        manifest = {
+            "schema": G4_SCHEMA,
+            "device": {"modelIdentifier": "iPhone13,3"},
+            "outcome": "bounded-reservoir",
+            "evidence": {
+                "foreground": True,
+                "screenOn": True,
+                "measuredWindowSeconds": 610.0,
+                "pulledAudioSeconds": 610.0,
+                "pcmCaptureSeconds": 568.0,
+                "continuousPlaySecondsBeforeFirstUnderrun": 315.0,
+                "maximumStartReservoirSeconds": 20.16,
+                "maxUnderruns": 800,
+                "maxDropped": 0,
+                "primeSeconds": 21.0,
+                "startupToFirstAudioSeconds": 23.0,
+                "p50EffectiveFrameMs": 41.0,
+                "p90EffectiveFrameMs": 43.0,
+                "p99EffectiveFrameMs": 47.0,
+                "effectiveFrameDefinition": "temporal+depth+sampling+decoder/decoded_frames",
+                "effectiveFrameCount": 13_675,
+                "generationRate": 0.9,
+                "reservoirSlopeFramesPerSecond": -1_500.0,
+                "reservoirEndFrames": 0,
+                "thermalTimeline": _thermal_timeline(),
+                "unqualifiedRealTimeClaimAllowed": False,
+                "artifactSha256": _artifact_hashes(),
+            },
+        }
+        self.assertTrue(verify_g4(manifest)["passed"])
+
 
 if __name__ == "__main__":
     unittest.main()

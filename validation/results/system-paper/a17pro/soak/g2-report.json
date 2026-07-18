@@ -1,0 +1,115 @@
+{
+  "checks": [
+    {
+      "expected": "mrt2-system-paper-g2-v1",
+      "name": "schema",
+      "passed": true,
+      "value": "mrt2-system-paper-g2-v1"
+    },
+    {
+      "expected": "iPhone16,2",
+      "name": "device",
+      "passed": true,
+      "value": "iPhone16,2"
+    },
+    {
+      "name": "foreground_screen_on",
+      "passed": true,
+      "value": {
+        "foreground": true,
+        "screenOn": true
+      }
+    },
+    {
+      "expected": ">=600.0",
+      "name": "measured_window",
+      "passed": true,
+      "value": 610.1859140396118
+    },
+    {
+      "expected": ">=600.0",
+      "name": "pulled_audio",
+      "passed": true,
+      "value": 610.208
+    },
+    {
+      "expected": ">=1.0",
+      "name": "generation_rate",
+      "passed": true,
+      "value": 1.0308333665650087
+    },
+    {
+      "expected": 0,
+      "name": "zero_underruns",
+      "passed": true,
+      "value": 0
+    },
+    {
+      "expected": 0,
+      "name": "zero_dropped",
+      "passed": true,
+      "value": 0
+    },
+    {
+      "expected": "temporal+depth+sampling+decoder/decoded_frames",
+      "name": "effective_frame_definition",
+      "passed": true,
+      "value": "temporal+depth+sampling+decoder/decoded_frames"
+    },
+    {
+      "expected": ">=15000",
+      "name": "effective_frame_count",
+      "passed": true,
+      "value": 15725
+    },
+    {
+      "expected": "<40.0",
+      "name": "p99_frame_budget",
+      "passed": true,
+      "value": 21.660494400000005
+    },
+    {
+      "expected": "end>=start and slope>=0",
+      "name": "reservoir_not_draining",
+      "passed": true,
+      "value": {
+        "endFrames": 1030656,
+        "slopeFramesPerSecond": 1462.531303110459,
+        "startFrames": 138240
+      }
+    },
+    {
+      "expected": "coverage>=600.0s",
+      "name": "thermal_timeline",
+      "passed": true,
+      "value": [
+        {
+          "elapsedSeconds": 0.0,
+          "state": "serious"
+        },
+        {
+          "elapsedSeconds": 610.1859140396118,
+          "state": "serious"
+        }
+      ]
+    },
+    {
+      "name": "g1_receipt_hashed",
+      "passed": true,
+      "value": "2452f35e7da7a4b5357a080dde1a6eb179f4418e22648fd5701b3d028fe3cca4"
+    },
+    {
+      "name": "run_artifacts_hashed",
+      "passed": true,
+      "value": {
+        "event-trace": "8159a2947af94171be69ca2e068b168b7b9e3b51a52e482727295a598362cbe3",
+        "pcm-capture": "fe29f0f24bd8550348e45fa242505de93f7eff8add209a46ad84b4872428e975",
+        "runtime-log": "7ff23ec373381c2eb71ab7c06c57cfeadb771690bec0182556d7fdffa18ed8b8"
+      }
+    }
+  ],
+  "gate": "G2",
+  "manifestSha256": "2d21601dd00679e5a7439442611e95218e5e94a788e225ae92dc0eb709a6027b",
+  "passed": true,
+  "schema": "mrt2-system-paper-gate-report-v1"
+}

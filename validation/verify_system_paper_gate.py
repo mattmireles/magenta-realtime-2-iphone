@@ -705,9 +705,9 @@ def verify_g4(manifest: dict[str, Any]) -> dict[str, Any]:
     _check(
         checks,
         "outcome_selected",
-        outcome in {"native-real-time", "reservoir-tier"},
+        outcome in {"native-real-time", "reservoir-tier", "bounded-reservoir"},
         value=outcome,
-        expected=["native-real-time", "reservoir-tier"],
+        expected=["native-real-time", "reservoir-tier", "bounded-reservoir"],
     )
     evidence = manifest.get("evidence")
     evidence = copy.deepcopy(evidence) if isinstance(evidence, dict) else {}
@@ -718,7 +718,7 @@ def verify_g4(manifest: dict[str, Any]) -> dict[str, Any]:
                 evidence, expected_device=A14_DEVICE, require_nondraining_reservoir=True
             )
         )
-    elif outcome == "reservoir-tier":
+    elif outcome in {"reservoir-tier", "bounded-reservoir"}:
         _check(
             checks,
             "reservoir_foreground_screen_on",
@@ -737,20 +737,45 @@ def verify_g4(manifest: dict[str, Any]) -> dict[str, Any]:
             value=measured,
             expected=f">={MIN_SOAK_SECONDS}",
         )
-        _check(
-            checks,
-            "reservoir_pulled_audio",
-            _is_finite_number(pulled) and pulled >= MIN_SOAK_SECONDS,
-            value=pulled,
-            expected=f">={MIN_SOAK_SECONDS}",
-        )
-        _check(
-            checks,
-            "reservoir_zero_underruns",
-            evidence.get("maxUnderruns") == 0,
-            value=evidence.get("maxUnderruns"),
-            expected=0,
-        )
+        if outcome == "reservoir-tier":
+            _check(
+                checks,
+                "reservoir_pulled_audio",
+                _is_finite_number(pulled) and pulled >= MIN_SOAK_SECONDS,
+                value=pulled,
+                expected=f">={MIN_SOAK_SECONDS}",
+            )
+            _check(
+                checks,
+                "reservoir_zero_underruns",
+                evidence.get("maxUnderruns") == 0,
+                value=evidence.get("maxUnderruns"),
+                expected=0,
+            )
+        else:
+            continuous = evidence.get("continuousPlaySecondsBeforeFirstUnderrun")
+            capture = evidence.get("pcmCaptureSeconds")
+            maximum_reservoir = evidence.get("maximumStartReservoirSeconds")
+            _check(
+                checks,
+                "bounded_reservoir_failure_measured",
+                evidence.get("maxUnderruns", 0) > 0
+                and _is_finite_number(continuous)
+                and continuous > 0
+                and continuous < MIN_SOAK_SECONDS
+                and _is_finite_number(capture)
+                and capture > 0
+                and capture < MIN_SOAK_SECONDS
+                and _is_finite_number(maximum_reservoir)
+                and maximum_reservoir > 0,
+                value={
+                    "maxUnderruns": evidence.get("maxUnderruns"),
+                    "continuousPlaySecondsBeforeFirstUnderrun": continuous,
+                    "pcmCaptureSeconds": capture,
+                    "maximumStartReservoirSeconds": maximum_reservoir,
+                },
+                expected="measured underflow boundary below 600 s",
+            )
         _check(
             checks,
             "reservoir_zero_dropped",
@@ -795,12 +820,17 @@ def verify_g4(manifest: dict[str, Any]) -> dict[str, Any]:
             expected=EXPECTED_EFFECTIVE_FRAME_DEFINITION,
         )
         frame_count = evidence.get("effectiveFrameCount")
+        minimum_frame_count = (
+            MIN_EFFECTIVE_FRAME_COUNT
+            if outcome == "reservoir-tier"
+            else 10_000
+        )
         _check(
             checks,
             "reservoir_effective_frame_count",
-            isinstance(frame_count, int) and frame_count >= MIN_EFFECTIVE_FRAME_COUNT,
+            isinstance(frame_count, int) and frame_count >= minimum_frame_count,
             value=frame_count,
-            expected=f">={MIN_EFFECTIVE_FRAME_COUNT}",
+            expected=f">={minimum_frame_count}",
         )
         _check(
             checks,
@@ -816,14 +846,15 @@ def verify_g4(manifest: dict[str, Any]) -> dict[str, Any]:
             _is_finite_number(evidence.get("reservoirSlopeFramesPerSecond")),
             value=evidence.get("reservoirSlopeFramesPerSecond"),
         )
-        _check(
-            checks,
-            "reservoir_remains_nonempty",
-            _is_finite_number(evidence.get("reservoirEndFrames"))
-            and evidence["reservoirEndFrames"] > 0,
-            value=evidence.get("reservoirEndFrames"),
-            expected=">0",
-        )
+        if outcome == "reservoir-tier":
+            _check(
+                checks,
+                "reservoir_remains_nonempty",
+                _is_finite_number(evidence.get("reservoirEndFrames"))
+                and evidence["reservoirEndFrames"] > 0,
+                value=evidence.get("reservoirEndFrames"),
+                expected=">0",
+            )
         _check(
             checks,
             "reservoir_thermal_timeline",
