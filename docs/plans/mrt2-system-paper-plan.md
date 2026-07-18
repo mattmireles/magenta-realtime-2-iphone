@@ -1,7 +1,7 @@
 # MRT2 System Paper Plan — "Live: Real-Time Streaming Music Generation on iPhone, GPU-Free"
 
 **Date:** 2026-07-15
-**Status:** Planned
+**Status:** Active — Phase 0 complete; Phase 1 in progress
 
 ## Executive Summary
 
@@ -12,7 +12,7 @@ a **25 Hz / 40 ms-per-frame real-time contract on iPhone with zero
 app-attributed GPU time**, sustained under thermal soak, with receipts. The
 paper is the reward for closing three named engineering gaps; the plan covers
 both the engineering and the writing, ending with an arXiv-ready PDF and a
-conference submission.
+  publication bundle suitable for expert academic review.
 
 ## Problem Statement
 
@@ -46,7 +46,7 @@ conference submission.
       rejected).
 - [ ] Full evaluation matrix with dispersion (repeat runs) and checked-in
       receipts for every number the paper states.
-- [ ] arXiv-ready PDF built and submitted; venue submission prepared.
+- [ ] arXiv-ready PDF and source bundle built, audited, and submitted.
 
 ### Non-Goals
 
@@ -159,29 +159,32 @@ freeze claims  →   temporal on ANE    →   cut weight bytes  →   soak + aud
 > land in Crossfade (each as its own numbered Crossfade plan per that repo's
 > convention); this plan is the paper-level tracker.
 
-### Phase 0: Freeze Claims, Gates, and Venue
+### Phase 0: Freeze Claims, Gates, and Publication Target
 
 **Goal:** A one-page claims ledger the whole plan is accountable to, before
 any engineering.
 
 **Tasks:**
 
-- [ ] Write the claims ledger: every headline sentence the paper intends to
+- [x] Write the claims ledger: every headline sentence the paper intends to
       make, each mapped to a gate and a receipt path. File:
       `docs/plans/mrt2-system-paper-claims.md` (this repo).
-- [ ] Define the four hard gates (G1 ANE-in-app, G2 A17 soak, G3 audio
+- [x] Define the four hard gates (G1 ANE-in-app, G2 A17 soak, G3 audio
       integrity, G4 A14 tier decision) with exact pass criteria and the
       command/artifact that proves each.
-- [ ] Venue decision: ISMIR / ICASSP (audio-first) vs. a mobile-systems venue
-      (thermal/power-first). Pick one primary + arXiv; record deadline and
-      page budget — they set the evaluation matrix size.
-- [ ] Artifact-story decision: what of Crossfade must become public (or be
+- [x] Publication decision: arXiv-first, venue-neutral, 10–12 pages of main
+      text plus references and a compact reproducibility appendix. Conference
+      selection and submission rules are out of scope by user direction.
+- [x] Artifact-story decision: what of Crossfade must become public (or be
       excerpted into this repo) for the paper's artifact statement. Options:
       publish `Sources/CrossfadeRuntime*` subset here; keep private and state
       so (as *Surgical Inference* Appendix A.2 already does). Owner: user.
 
-**Verification:** Claims ledger checked in; every claim has a gate; user has
-signed off on venue and artifact story.
+**Verification:** `docs/plans/mrt2-system-paper-claims.md` freezes every claim,
+gate, publication target, and artifact boundary. Under the user's 2026-07-18
+authority to execute the plan and do what is required for immediate
+publication, the execution choice is a venue-neutral arXiv paper, with the
+Crossfade runtime kept private and available from the author.
 
 ---
 
@@ -358,10 +361,10 @@ PDF greps back to a receipt.
 
 ---
 
-### Phase 6: Artifacts, Audit, Submit
+### Phase 6: Artifacts, Audit, and arXiv Publication
 
-**Goal:** Public artifact story executed, final audit passed, PDF on arXiv,
-venue submission in.
+**Goal:** Public artifact story executed, final audit passed, and the PDF plus
+source bundle published on arXiv.
 
 **Tasks:**
 
@@ -373,19 +376,19 @@ venue submission in.
       contradictions, abstract-vs-body claim parity).
 - [ ] arXiv package: PDF metadata (`hyperref` pdftitle/author/keywords),
       source tarball if submitting TeX, license choice.
-- [ ] Venue submission per Phase 0 decision (formatting to venue template is
-      a mechanical re-flow of `main.tex` — budget a day, not an hour).
+- [ ] Produce a compact reviewer packet (PDF, source, claims-to-receipts map,
+      and artifact URLs) without reformatting to any specific venue.
 - [ ] Update `docs/validation-receipts.md` §0 and this plan's status to
       Complete.
 
-**Verification:** arXiv ID exists; venue confirmation email; repo docs
-self-consistent with the published PDF.
+**Verification:** arXiv ID exists; the submitted source bundle rebuilds the
+same PDF; repo docs and reviewer packet are self-consistent with it.
 
 ## Executable Memory
 
 - Regression test (parity, no checkpoint needed):
-  `python validation/validate_temporal_body.py --skip-pytorch --reference-npz fixtures/reference_temporal_unrolled.npz`
-- Regression test (carry path): `python validation/validate_temporal_body_carry.py` against its checked-in receipt.
+  `python3 validation/validate_temporal_body.py --skip-pytorch --reference-npz fixtures/reference_temporal_unrolled.npz`
+- Regression test (carry path): `python3 validation/validate_temporal_body_carry.py` against its checked-in receipt.
 - Not testable by command: ANE placement and soak gates require the two
   physical phones; the manual proof is the checked-in per-run placement-gate
   artifact + soak receipt named in each phase.
@@ -411,7 +414,7 @@ self-consistent with the published PDF.
 - [ ] All gates green and receipted
 - [ ] Paper PDF builds clean and passes final audit
 - [ ] arXiv submission live
-- [ ] Venue submission confirmed
+- [ ] arXiv source bundle independently rebuilds the published PDF
 
 ## Open Questions
 
@@ -421,18 +424,20 @@ self-consistent with the published PDF.
 - **A:** No — those are spent in *Surgical Inference* §6.3–6.5. The second
   paper is the composed real-time system; the findings are cited method.
 
-### Unresolved
+### Resolved for this execution
 
-- **Q:** Venue — ISMIR/ICASSP (audio) vs. mobile-systems (MobiSys/EMDL-style)?
-- **Options:** Audio venue leads with the music result; systems venue leads
-  with thermal/power/placement. Current lean: **audio venue + arXiv**, because
-  the demo is the differentiator and the systems content survives as a strong
-  method section. Decide in Phase 0.
+- **Q:** Which conference and format should drive the paper?
+- **A:** None for this execution. Publish a venue-neutral arXiv paper with
+  10–12 pages of main text, references, and a compact reproducibility appendix.
+  Judge it by expert scientific scrutiny, not compliance with a CFP.
 - **Q:** Does any of Crossfade go public for the artifact statement?
-- **Options:** (a) publish a runtime subset into this repo, (b) keep private
-  and state so. Lean: (a) for the delivery-architecture core (SPSC ring,
-  reservoir, placement gate) — reviewers reward it — but this is the user's
-  call.
+- **A:** No runtime source extraction in this execution. Keep Crossfade
+  private; publish exporters, validators, fixtures, paper source, model hashes,
+  machine-readable result summaries, exact commands, and runtime pseudocode in
+  this repo. State that the private runtime is available from the author for
+  artifact review.
+
+### Still open
 - **Q:** Do we add a third, newer device (A18/A19-class) to the matrix?
 - **Options:** Strengthens generality; costs a device and a full matrix
   column. Lean: only if one is already on hand by Phase 4.
@@ -474,9 +479,9 @@ self-consistent with the published PDF.
 - **Scope creep from the Aperture product:** paper stalls → Phases 1–3 land
   as narrow, numbered Crossfade plans; product features are out of scope
   here.
-- **Anonymity conflict at review time:** public repos name the author → check
-  venue's double-blind policy in Phase 0; arXiv-first venues (ISMIR allows
-  preprints; check the year's policy) preferred.
+- **Paper bloat:** a venue-neutral draft can expand without discipline → keep
+  the main narrative within 10–12 pages and move command/schema detail to the
+  reproducibility appendix.
 
 ---
 
