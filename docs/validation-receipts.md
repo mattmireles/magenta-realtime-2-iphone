@@ -10,6 +10,86 @@ The working rule throughout: **do not infer Core ML or ANE behavior from
 hope.** Every claim points to a command, a receipt file, or an explicit
 failure.
 
+## System paper — corrected composed runtime (2026-07-18)
+
+The current end-to-end result is the evidence package under
+`validation/results/system-paper/`. It supersedes the older composed-runtime
+status in Sections 0 and 4 while retaining those sections as experiment
+history. The paper is
+`paper/main.pdf`; its claim contract is
+`docs/plans/mrt2-system-paper-claims.md`.
+
+### Placement and state (G1)
+
+The selected temporal boundary is one fixed-shape pure Core ML function with
+48 ordinary K/V inputs and 48 one-token K/V updates. Swift owns a preallocated
+41-frame ring. A 64-step fixture crosses the ring boundary by 23 predictions.
+
+- A17 Pro and A14 each pass 10/10 cold app processes with the same artifact
+  hashes, temporal ANE cost weight at least 0.95, zero temporal GPU plan cost,
+  fresh/warmed divergence, and the 64-step state proof.
+- The A17 process trace records 653 temporal and 24 decoder ANE predictions;
+  the app's Metal GPU interval table is empty. Depth is deliberate CPU work.
+- Public receipts:
+  `validation/results/system-paper/{a17pro,a14}/placement/g1-{manifest,report}.json`.
+
+The supported language is **GPU-free**, not **all-ANE**.
+
+### Sustained runtime and matched policy control (G2/G4)
+
+| Device / policy | Window | p50 / p90 / p99 (ms/frame) | Production | Underruns | Reservoir outcome |
+| --- | ---: | ---: | ---: | ---: | --- |
+| A17 Pro, selected ANE policy | 610.19 s | 20.26 / 20.81 / 21.66 | 1.0308x | 0 | grows 2.88 → 21.47 s |
+| A17 Pro, matched `.cpuAndGPU` temporal policy | 610.03 s | 23.56 / 43.55 / 49.23 | 1.0081x | 0 | banks near 21 s, then drains to 7.65 s |
+| A14, selected ANE policy + FLOAT32 decoder | 610.04 s | 43.88 / 47.25 / 58.59 | 0.8967x | 7,952 | maximum 20.16 s reservoir first underflows at 294.08 s |
+| A14, matched `.cpuAndGPU` temporal policy | 610.03 s | 50.85 / 53.46 / 64.14 | 0.7721x | 25,655 | 2.88 s reservoir first underflows after 13.18 s |
+
+The selected A17 run begins in `serious` thermal state and keeps per-minute
+p99 within 21.21–23.08 ms. The matched CPU/GPU-policy control begins `fair`,
+reaches `serious` after 40.12 s, crosses the 40 ms p99 deadline after minute
+six, and drains its banked reservoir. A final zero-underrun counter therefore
+does not substitute for the compute clock.
+
+The A14 result is a **bounded-reservoir failure**, not a real-time tier. Its
+FP16 decoder also has two retained device-specific numerical failures; the
+final run uses the certified 136 MB FLOAT32 decoder (weight SHA-256 prefix
+`38cbdf5c`).
+
+Receipts:
+
+- `validation/results/system-paper/a17pro/soak/g2-{manifest,report}.json`
+- `validation/results/system-paper/a14/soak/g4-{manifest,report}.json`
+- `validation/results/system-paper/evaluation/{a17pro,a14}-cpugpu-control-soak.json`
+- `validation/results/system-paper/evaluation/evaluation-manifest.json`
+  (five independent processes for each of four device/policy cells, including
+  startup and per-stage median/IQR)
+
+### Long-horizon audio quality (G3): failed, retained
+
+The corrected 600 s A17 WAV is finite 48 kHz stereo and has zero associated
+runtime underruns/drops. It passes clipped-sample ratio (`4.05e-6`), normalized
+chunk-boundary jump (`0.0061`), L/R correlation (`0.9863`), prompt adherence
+(`0.3119`), reference similarity (`0.8541`), and rejection of all six frozen
+known-bad controls. It fails two independent predeclared requirements:
+
+- last-window 4–16 Hz envelope-pulse share is `0.1364` against `≤0.070`;
+- only 2/5 calibrated blind votes accept the candidate, although all five
+  votes correctly accept the reference and reject/rank the click control.
+
+A temperature-0.5 full-run intervention lowers pulse share to `0.0417` but
+fails clipping, stereo, prompt, and reference-similarity bands. The gate is not
+retuned. The supported conclusion is sustained inference and delivery, not
+arbitrary-horizon musical validity. Receipt:
+`validation/results/system-paper/audio/g3-{manifest,report}.json`.
+
+### Compression ladder: negative result
+
+Int8 linear quantization and 6-/4-bit palettization reduce temporal and depth
+package bytes to roughly 50%, 38%, and 25% of baseline. All six artifacts stay
+finite and all six fail deterministic parity; early stopping prevents device
+timing or listening. Receipt:
+`validation/results/MRT2WeightCompressionLadder.{json,md}`.
+
 ## 0. Correction — the corrected artifact generation (paper §6.3–6.5)
 
 **The ledger in sections 1+ below documents the earlier, superseded artifact
@@ -56,13 +136,10 @@ artifact table and receipts.
   (`validation/results/MRT2DepthBodyRollout_f16_validation.*`) and ships at
   12.7 ms/frame (A14) / 8.4 ms (A17 Pro).
 
-**End-to-end perceptual status (§6.6–6.7).** The three findings above are
-artifact-level results, certified by numerical parity and on-device
-`MLComputePlan`/Instruments placement. The *composed* real-time device pipeline
-still has open runtime issues (periodic clicking/stutter/dropouts from temporal
-state and buffering, and an unmet 10-minute thermal-soak gate on A17 Pro); the
-paper reports these as open, and they live in the private streaming runtime, not
-in this conversion/validation layer.
+**End-to-end status.** This historical paragraph is superseded by the system-
+paper section above. The corrected A17 compute and delivery clocks now pass;
+the separately frozen 600 s generative-quality clock fails and remains an
+explicit result.
 
 ---
 

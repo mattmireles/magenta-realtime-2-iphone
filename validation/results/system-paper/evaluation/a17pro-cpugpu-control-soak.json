@@ -1,0 +1,195 @@
+{
+  "artifactSha256": {
+    "event-trace": "ac6dba8871c4dcd9a6617c3b407240069dc61bdec4d1057e2c3d298c532e8877",
+    "runtime-log": "c91a0d05b1dd64e0a2fa27dd2c7ddbd3deaa795735cfc8987783b9078b3c383c"
+  },
+  "continuousPlaySecondsBeforeFirstUnderrun": 610.030799984932,
+  "controlRole": "matched-temporal-cpuAndGPU-policy",
+  "device": {
+    "chip": "A17 Pro",
+    "marketingName": "iPhone 15 Pro Max",
+    "modelIdentifier": "iPhone16,2",
+    "name": "Commas",
+    "osVersion": "26.5.2"
+  },
+  "effectiveFrameCount": 15375,
+  "effectiveFrameDefinition": "temporal+depth+sampling+decoder/decoded_frames",
+  "foreground": true,
+  "generatedAudioSeconds": 615,
+  "generationRate": 1.0081458182360477,
+  "maxDropped": 0,
+  "maxUnderruns": 0,
+  "measuredWindowSeconds": 610.030799984932,
+  "minuteBins": [
+    {
+      "endReservoirFrames": 1028608,
+      "endSeconds": 60.0,
+      "generationIterations": 78,
+      "minReservoirFrames": 156416,
+      "p50EffectiveFrameMs": 23.05462,
+      "p99EffectiveFrameMs": 26.266096800000003,
+      "startSeconds": 0.0,
+      "thermalStates": [
+        "fair",
+        "serious"
+      ]
+    },
+    {
+      "endReservoirFrames": 1016576,
+      "endSeconds": 120.0,
+      "generationIterations": 60,
+      "minReservoirFrames": 1016576,
+      "p50EffectiveFrameMs": 22.92058,
+      "p99EffectiveFrameMs": 23.912402399999998,
+      "startSeconds": 60.0,
+      "thermalStates": [
+        "serious"
+      ]
+    },
+    {
+      "endReservoirFrames": 1028864,
+      "endSeconds": 180.0,
+      "generationIterations": 60,
+      "minReservoirFrames": 1016832,
+      "p50EffectiveFrameMs": 22.8913,
+      "p99EffectiveFrameMs": 23.927571999999994,
+      "startSeconds": 120.0,
+      "thermalStates": [
+        "serious"
+      ]
+    },
+    {
+      "endReservoirFrames": 1016832,
+      "endSeconds": 240.0,
+      "generationIterations": 60,
+      "minReservoirFrames": 1016576,
+      "p50EffectiveFrameMs": 22.896259999999998,
+      "p99EffectiveFrameMs": 24.1347452,
+      "startSeconds": 180.0,
+      "thermalStates": [
+        "serious"
+      ]
+    },
+    {
+      "endReservoirFrames": 1028608,
+      "endSeconds": 300.0,
+      "generationIterations": 60,
+      "minReservoirFrames": 1016832,
+      "p50EffectiveFrameMs": 22.978980000000004,
+      "p99EffectiveFrameMs": 24.2182564,
+      "startSeconds": 240.0,
+      "thermalStates": [
+        "serious"
+      ]
+    },
+    {
+      "endReservoirFrames": 1015552,
+      "endSeconds": 360.0,
+      "generationIterations": 60,
+      "minReservoirFrames": 1015552,
+      "p50EffectiveFrameMs": 23.54628,
+      "p99EffectiveFrameMs": 24.64821,
+      "startSeconds": 300.0,
+      "thermalStates": [
+        "serious"
+      ]
+    },
+    {
+      "endReservoirFrames": 1025536,
+      "endSeconds": 420.0,
+      "generationIterations": 60,
+      "minReservoirFrames": 1000704,
+      "p50EffectiveFrameMs": 24.728719999999996,
+      "p99EffectiveFrameMs": 41.56411919999999,
+      "startSeconds": 360.0,
+      "thermalStates": [
+        "serious"
+      ]
+    },
+    {
+      "endReservoirFrames": 994304,
+      "endSeconds": 480.0,
+      "generationIterations": 60,
+      "minReservoirFrames": 994304,
+      "p50EffectiveFrameMs": 28.31266,
+      "p99EffectiveFrameMs": 40.758430000000004,
+      "startSeconds": 420.0,
+      "thermalStates": [
+        "serious"
+      ]
+    },
+    {
+      "endReservoirFrames": 767744,
+      "endSeconds": 540.0,
+      "generationIterations": 55,
+      "minReservoirFrames": 767744,
+      "p50EffectiveFrameMs": 42.75144,
+      "p99EffectiveFrameMs": 51.462964799999995,
+      "startSeconds": 480.0,
+      "thermalStates": [
+        "serious"
+      ]
+    },
+    {
+      "endReservoirFrames": 442112,
+      "endSeconds": 600.0,
+      "generationIterations": 53,
+      "minReservoirFrames": 442112,
+      "p50EffectiveFrameMs": 43.977399999999996,
+      "p99EffectiveFrameMs": 51.208411199999986,
+      "startSeconds": 540.0,
+      "thermalStates": [
+        "serious"
+      ]
+    },
+    {
+      "endReservoirFrames": 367360,
+      "endSeconds": 610.030799984932,
+      "generationIterations": 9,
+      "minReservoirFrames": 367360,
+      "p50EffectiveFrameMs": 44.92871999999999,
+      "p99EffectiveFrameMs": 51.431751999999996,
+      "startSeconds": 600.0,
+      "thermalStates": [
+        "serious"
+      ]
+    }
+  ],
+  "p50EffectiveFrameMs": 23.558079999999997,
+  "p90EffectiveFrameMs": 43.548592,
+  "p99EffectiveFrameMs": 49.23135360000001,
+  "primeSeconds": 1.6901119947433472,
+  "protocol": {
+    "computeUnits": {
+      "decoder": "cpuAndNeuralEngine",
+      "depth": "cpuOnly",
+      "temporal": "cpuAndGPU"
+    },
+    "prompt": "warm ambient texture",
+    "temperature": 1.0,
+    "temporalMode": "streamingCarry",
+    "topK": 40,
+    "trajectoryRefreshSeconds": 10.0
+  },
+  "pulledAudioSeconds": 609.6266666666667,
+  "requestedPolicyIsPlacementProof": false,
+  "reservoirEndFrames": 367360,
+  "reservoirSlopeFramesPerSecond": 375.58759329145244,
+  "reservoirStartFrames": 138240,
+  "schema": "mrt2-system-paper-control-soak-v1",
+  "screenOn": true,
+  "thermalTimeline": [
+    {
+      "elapsedSeconds": 0.0,
+      "state": "fair"
+    },
+    {
+      "elapsedSeconds": 40.11589705944061,
+      "state": "serious"
+    },
+    {
+      "elapsedSeconds": 610.030799984932,
+      "state": "serious"
+    }
+  ]
+}
