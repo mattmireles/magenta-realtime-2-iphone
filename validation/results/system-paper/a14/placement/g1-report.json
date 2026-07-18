@@ -1,0 +1,365 @@
+{
+  "checks": [
+    {
+      "expected": "mrt2-system-paper-g1-v2",
+      "name": "schema",
+      "passed": true,
+      "value": "mrt2-system-paper-g1-v2"
+    },
+    {
+      "expected": {
+        "cross-device": "iPhone13,3",
+        "primary": "iPhone16,2"
+      },
+      "name": "device_role",
+      "passed": true,
+      "value": {
+        "modelIdentifier": "iPhone13,3",
+        "role": "cross-device"
+      }
+    },
+    {
+      "expected": ">=10",
+      "name": "cold_launch_count",
+      "passed": true,
+      "value": 10
+    },
+    {
+      "name": "unique_run_ids",
+      "passed": true,
+      "value": [
+        "cold-01",
+        "cold-02",
+        "cold-03",
+        "cold-04",
+        "cold-05",
+        "cold-06",
+        "cold-07",
+        "cold-08",
+        "cold-09",
+        "cold-10"
+      ]
+    },
+    {
+      "name": "all_launches_cold",
+      "passed": true,
+      "value": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "name": "launch_artifacts_hashed",
+      "passed": true,
+      "value": [
+        {
+          "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+          "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+          "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+        },
+        {
+          "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+          "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+          "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+        },
+        {
+          "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+          "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+          "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+        },
+        {
+          "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+          "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+          "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+        },
+        {
+          "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+          "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+          "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+        },
+        {
+          "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+          "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+          "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+        },
+        {
+          "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+          "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+          "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+        },
+        {
+          "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+          "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+          "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+        },
+        {
+          "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+          "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+          "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+        },
+        {
+          "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+          "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+          "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+        }
+      ]
+    },
+    {
+      "name": "all_launches_pass_temporal_plan_and_state",
+      "passed": true,
+      "value": null
+    },
+    {
+      "name": "model_hashes_invariant",
+      "passed": true,
+      "value": [
+        {
+          "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+          "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+          "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+        },
+        {
+          "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+          "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+          "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+        },
+        {
+          "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+          "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+          "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+        },
+        {
+          "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+          "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+          "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+        },
+        {
+          "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+          "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+          "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+        },
+        {
+          "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+          "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+          "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+        },
+        {
+          "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+          "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+          "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+        },
+        {
+          "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+          "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+          "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+        },
+        {
+          "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+          "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+          "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+        },
+        {
+          "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+          "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+          "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+        }
+      ]
+    },
+    {
+      "expected": {
+        "decoder": "cpuAndNeuralEngine",
+        "depth": "cpuAndNeuralEngine",
+        "temporal": "cpuAndNeuralEngine"
+      },
+      "name": "compute_policy_invariant_and_ane_only",
+      "passed": true,
+      "value": [
+        {
+          "decoder": "cpuAndNeuralEngine",
+          "depth": "cpuAndNeuralEngine",
+          "temporal": "cpuAndNeuralEngine"
+        },
+        {
+          "decoder": "cpuAndNeuralEngine",
+          "depth": "cpuAndNeuralEngine",
+          "temporal": "cpuAndNeuralEngine"
+        },
+        {
+          "decoder": "cpuAndNeuralEngine",
+          "depth": "cpuAndNeuralEngine",
+          "temporal": "cpuAndNeuralEngine"
+        },
+        {
+          "decoder": "cpuAndNeuralEngine",
+          "depth": "cpuAndNeuralEngine",
+          "temporal": "cpuAndNeuralEngine"
+        },
+        {
+          "decoder": "cpuAndNeuralEngine",
+          "depth": "cpuAndNeuralEngine",
+          "temporal": "cpuAndNeuralEngine"
+        },
+        {
+          "decoder": "cpuAndNeuralEngine",
+          "depth": "cpuAndNeuralEngine",
+          "temporal": "cpuAndNeuralEngine"
+        },
+        {
+          "decoder": "cpuAndNeuralEngine",
+          "depth": "cpuAndNeuralEngine",
+          "temporal": "cpuAndNeuralEngine"
+        },
+        {
+          "decoder": "cpuAndNeuralEngine",
+          "depth": "cpuAndNeuralEngine",
+          "temporal": "cpuAndNeuralEngine"
+        },
+        {
+          "decoder": "cpuAndNeuralEngine",
+          "depth": "cpuAndNeuralEngine",
+          "temporal": "cpuAndNeuralEngine"
+        },
+        {
+          "decoder": "cpuAndNeuralEngine",
+          "depth": "cpuAndNeuralEngine",
+          "temporal": "cpuAndNeuralEngine"
+        }
+      ]
+    },
+    {
+      "expected": [
+        "temporal",
+        "decoder"
+      ],
+      "name": "trace_required_models_have_ane_predictions",
+      "passed": true,
+      "value": {
+        "decoder": {
+          "anePredictionCount": 19,
+          "anePredictionTotalNs": 487815371
+        },
+        "temporal": {
+          "anePredictionCount": 546,
+          "anePredictionTotalNs": 6138642710
+        }
+      }
+    },
+    {
+      "expected": [
+        "temporal",
+        "depth",
+        "decoder"
+      ],
+      "name": "trace_pipeline_models_have_coreml_predictions",
+      "passed": true,
+      "value": {
+        "decoder": {
+          "coremlPredictionCount": 19,
+          "coremlPredictionTotalNs": 502878623
+        },
+        "depth": {
+          "coremlPredictionCount": 479,
+          "coremlPredictionTotalNs": 6167590175
+        },
+        "temporal": {
+          "coremlPredictionCount": 546,
+          "coremlPredictionTotalNs": 7441787130
+        }
+      }
+    },
+    {
+      "name": "trace_has_zero_app_gpu",
+      "passed": true,
+      "value": null
+    },
+    {
+      "expected": {
+        "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+        "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+        "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+      },
+      "name": "trace_artifact_matches_launches",
+      "passed": true,
+      "value": {
+        "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+        "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+        "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+      }
+    },
+    {
+      "name": "trace_artifacts_hashed",
+      "passed": true,
+      "value": {
+        "crossfade-private/Scratchpad/crossfade_runtime_host_device_logs/20260718T113251Z-system-paper-final-a14/ane-hw-intervals.xml": "54c94fc67c4b5cd8fc25d83a03e0bc346ce1901f0296b30f5a3a23d0f2be0a84",
+        "crossfade-private/Scratchpad/crossfade_runtime_host_device_logs/20260718T113251Z-system-paper-final-a14/coreml-os-signpost.xml": "cf2c30a40468b4f75a89f9cbe6d9e7825433dc93ea9496d8593fb91a0f1d26a6",
+        "crossfade-private/Scratchpad/crossfade_runtime_host_device_logs/20260718T113251Z-system-paper-final-a14/metal-gpu-intervals.xml": "e38becf7b2ff947862b461da0876541c7b45dcc101d86ee9c841cf334b00abe1",
+        "crossfade-private/Scratchpad/crossfade_runtime_host_device_logs/20260718T113251Z-system-paper-final-a14/placement-evidence.json": "4b152635f8ffb8b99cfd869e9792f8b02703dd2557dbbb6686155015997f2961"
+      }
+    },
+    {
+      "expected": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64",
+      "name": "state_artifact_matches_launch",
+      "passed": true,
+      "value": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+    },
+    {
+      "expected": ">0.0001",
+      "name": "state_is_read",
+      "passed": true,
+      "value": 5.343500000000001
+    },
+    {
+      "expected": {
+        "streamingFrames": ">=42",
+        "windowFrames": 41
+      },
+      "name": "streaming_test_past_window",
+      "passed": true,
+      "value": {
+        "streamingFrames": 64,
+        "windowFrames": 41
+      }
+    },
+    {
+      "expected": ">=0.999",
+      "name": "streaming_reference_match",
+      "passed": true,
+      "value": 0.9995
+    },
+    {
+      "expected": "<=2.5",
+      "name": "streaming_absolute_error_bounded",
+      "passed": true,
+      "value": 0.7635
+    },
+    {
+      "expected": 1.0,
+      "name": "state_output_finite",
+      "passed": true,
+      "value": 1.0
+    },
+    {
+      "name": "state_artifacts_hashed",
+      "passed": true,
+      "value": {
+        "fixtures/temporal_streaming_carry_64.npz": "a0d2c15903ac290026106d04c6e83a5cfdd9a436e57d63c8212c0d9835a74145",
+        "fixtures/temporal_streaming_carry_64_reference_outputs_f32.bin": "1b9418aa575ec08aecffe6296fb7fbe11cba3674088d04b6f141cfa2892e8c5c",
+        "fixtures/temporal_streaming_carry_64_source_encoded_f32.bin": "6b839dc691c7f2f13329edd239a15edc1740d0fecbd184d6a907ac7d550114f7",
+        "fixtures/temporal_streaming_carry_64_temporal_inputs_f32.bin": "ab885186a3685853ab7902c476ee97d4014ff65fa994cdcc206d172fcb60fa66",
+        "validation/results/MRT2TemporalBodyStreamingCarry_validation.json": "156f626f12072608129f5a49c829008d9ea0cee48050b5fbcb565696c52bc26c"
+      }
+    }
+  ],
+  "gate": "G1",
+  "manifestSha256": "4fcb84e9bff4a3fc36519d857a368e32d2d6b790121a7800169102d2a9d5bc45",
+  "passed": true,
+  "schema": "mrt2-system-paper-gate-report-v1"
+}

@@ -89,9 +89,7 @@ def _attention_query_scale(per_dim_scale: torch.Tensor) -> torch.Tensor:
   """Return the learned SequenceLayers per-dimension query scale."""
   query_scale = 1.0 / math.sqrt(MRT2_HEAD_DIM)
   return (
-      QUERY_SCALE_SOFTPLUS_ZERO_RECIP
-      * query_scale
-      * F.softplus(per_dim_scale)
+      QUERY_SCALE_SOFTPLUS_ZERO_RECIP * query_scale * F.softplus(per_dim_scale)
   ).reshape(1, 1, 1, MRT2_HEAD_DIM)
 
 
@@ -100,7 +98,9 @@ def _project_heads(x: torch.Tensor, kernel: torch.Tensor) -> torch.Tensor:
   return torch.einsum("btd,dnh->btnh", x.to(dtype=torch.float32), kernel)
 
 
-def _output_projection(context: torch.Tensor, kernel: torch.Tensor) -> torch.Tensor:
+def _output_projection(
+    context: torch.Tensor, kernel: torch.Tensor
+) -> torch.Tensor:
   """Project attention context ``[B, T, N, H]`` back to ``[B, T, D]``."""
   return torch.einsum("btnh,dnh->btd", context, kernel)
 
@@ -160,8 +160,12 @@ class TemporalAttentionBlock(nn.Module):
       raise ValueError(f"Unsupported temporal attention kind: {kind}")
     self.kind = kind
     prefix = f"{TEMPORAL_BODY_PREFIX}/x_layers_{layer_index}/{kind}"
-    self.register_buffer("pre_norm_scale", _tensor(arrays[f"{prefix}/pre_norm/scale"]))
-    self.register_buffer("post_norm_scale", _tensor(arrays[f"{prefix}/post_norm/scale"]))
+    self.register_buffer(
+        "pre_norm_scale", _tensor(arrays[f"{prefix}/pre_norm/scale"])
+    )
+    self.register_buffer(
+        "post_norm_scale", _tensor(arrays[f"{prefix}/post_norm/scale"])
+    )
     self.register_buffer(
         "query_kernel",
         _tensor(arrays[f"{prefix}/attention/query_projection/kernel"]),
@@ -202,7 +206,9 @@ class TemporalAttentionBlock(nn.Module):
     return TemporalAttentionState(
         key_cache=torch.zeros(key_shape, dtype=torch.float32),
         value_cache=torch.zeros(key_shape, dtype=torch.float32),
-        mask=torch.zeros((batch_size, MRT2_LOCAL_WINDOW_FRAMES), dtype=torch.bool),
+        mask=torch.zeros(
+            (batch_size, MRT2_LOCAL_WINDOW_FRAMES), dtype=torch.bool
+        ),
         step=torch.zeros((batch_size,), dtype=torch.int32),
     )
 
@@ -224,12 +230,16 @@ class TemporalAttentionBlock(nn.Module):
     input_mask = torch.ones(
         (x.shape[0], x.shape[1]), dtype=torch.bool, device=x.device
     )
-    combined_mask = torch.cat([state.mask.to(device=x.device), input_mask], dim=1)
+    combined_mask = torch.cat(
+        [state.mask.to(device=x.device), input_mask], dim=1
+    )
     valid_mask = combined_mask[:, None, None, :]
     if self.kind == "self_attention":
       valid_mask = valid_mask & self._self_visibility_mask(state, x.shape[1])
     else:
-      valid_mask = valid_mask & self._cross_visibility_mask(x.shape[1], combined_key.shape[1])
+      valid_mask = valid_mask & self._cross_visibility_mask(
+          x.shape[1], combined_key.shape[1]
+      )
 
     context = _scaled_dot_product_attention(
         query=query,
@@ -244,7 +254,9 @@ class TemporalAttentionBlock(nn.Module):
     output = x + _rms_norm(projected, self.post_norm_scale)
 
     if self.kind == "self_attention":
-      next_key, next_value, next_mask = self._ring_update(state, key, value, input_mask)
+      next_key, next_value, next_mask = self._ring_update(
+          state, key, value, input_mask
+      )
     else:
       next_key = combined_key[:, -MRT2_LOCAL_WINDOW_FRAMES:]
       next_value = combined_value[:, -MRT2_LOCAL_WINDOW_FRAMES:]
@@ -306,12 +318,24 @@ class TemporalFFNBlock(nn.Module):
   def __init__(self, arrays, layer_index: int):
     super().__init__()
     prefix = f"{TEMPORAL_BODY_PREFIX}/x_layers_{layer_index}/ffn"
-    self.register_buffer("pre_norm_scale", _tensor(arrays[f"{prefix}/pre_norm/scale"]))
-    self.register_buffer("post_norm_scale", _tensor(arrays[f"{prefix}/post_norm/scale"]))
-    self.register_buffer("layer1_kernel", _tensor(arrays[f"{prefix}/ffn_layer1/kernel"]))
-    self.register_buffer("layer1_bias", _tensor(arrays[f"{prefix}/ffn_layer1/bias"]))
-    self.register_buffer("layer2_kernel", _tensor(arrays[f"{prefix}/ffn_layer2/kernel"]))
-    self.register_buffer("layer2_bias", _tensor(arrays[f"{prefix}/ffn_layer2/bias"]))
+    self.register_buffer(
+        "pre_norm_scale", _tensor(arrays[f"{prefix}/pre_norm/scale"])
+    )
+    self.register_buffer(
+        "post_norm_scale", _tensor(arrays[f"{prefix}/post_norm/scale"])
+    )
+    self.register_buffer(
+        "layer1_kernel", _tensor(arrays[f"{prefix}/ffn_layer1/kernel"])
+    )
+    self.register_buffer(
+        "layer1_bias", _tensor(arrays[f"{prefix}/ffn_layer1/bias"])
+    )
+    self.register_buffer(
+        "layer2_kernel", _tensor(arrays[f"{prefix}/ffn_layer2/kernel"])
+    )
+    self.register_buffer(
+        "layer2_bias", _tensor(arrays[f"{prefix}/ffn_layer2/bias"])
+    )
 
   def forward(self, x: torch.Tensor) -> torch.Tensor:
     """Apply RMSNorm, GELU MLP, post RMSNorm, and residual add."""
@@ -327,8 +351,12 @@ class TemporalTransformerLayer(nn.Module):
 
   def __init__(self, arrays, layer_index: int):
     super().__init__()
-    self.self_attention = TemporalAttentionBlock(arrays, layer_index, "self_attention")
-    self.cross_attention = TemporalAttentionBlock(arrays, layer_index, "cross_attention")
+    self.self_attention = TemporalAttentionBlock(
+        arrays, layer_index, "self_attention"
+    )
+    self.cross_attention = TemporalAttentionBlock(
+        arrays, layer_index, "cross_attention"
+    )
     self.ffn = TemporalFFNBlock(arrays, layer_index)
 
   def initial_state(self, batch_size: int = 1) -> TemporalLayerState:
@@ -363,14 +391,14 @@ class TemporalBodyStepWrapper(nn.Module):
   def __init__(self):
     super().__init__()
     arrays = load_checkpoint_arrays()
-    self.layers = nn.ModuleList(
-        [
-            TemporalTransformerLayer(arrays, layer_index)
-            for layer_index in range(MRT2_TEMPORAL_LAYERS)
-        ]
-    )
+    self.layers = nn.ModuleList([
+        TemporalTransformerLayer(arrays, layer_index)
+        for layer_index in range(MRT2_TEMPORAL_LAYERS)
+    ])
 
-  def initial_state(self, batch_size: int = 1) -> tuple[TemporalLayerState, ...]:
+  def initial_state(
+      self, batch_size: int = 1
+  ) -> tuple[TemporalLayerState, ...]:
     """Return empty temporal K/V state for all 12 layers."""
     return tuple(layer.initial_state(batch_size) for layer in self.layers)
 
@@ -409,16 +437,15 @@ class TemporalBodyCoreMLSlotWrapper(nn.Module):
     super().__init__()
     if not 0 <= slot_index < TEMPORAL_COREML_SLOT_COUNT:
       raise ValueError(
-          f"slot_index must be in [0, {TEMPORAL_COREML_SLOT_COUNT}), got {slot_index}"
+          f"slot_index must be in [0, {TEMPORAL_COREML_SLOT_COUNT}), got"
+          f" {slot_index}"
       )
     self.slot_index = int(slot_index)
     arrays = load_checkpoint_arrays()
-    self.layers = nn.ModuleList(
-        [
-            TemporalTransformerLayer(arrays, layer_index)
-            for layer_index in range(MRT2_TEMPORAL_LAYERS)
-        ]
-    )
+    self.layers = nn.ModuleList([
+        TemporalTransformerLayer(arrays, layer_index)
+        for layer_index in range(MRT2_TEMPORAL_LAYERS)
+    ])
     self._register_state_buffers()
 
   def _register_state_buffers(self) -> None:
@@ -455,10 +482,16 @@ class TemporalBodyCoreMLSlotWrapper(nn.Module):
           names.append(cls._state_name(layer_index, kind, role))
     return tuple(names)
 
-  def _state(self, layer_index: int, kind: str) -> tuple[torch.Tensor, torch.Tensor]:
+  def _state(
+      self, layer_index: int, kind: str
+  ) -> tuple[torch.Tensor, torch.Tensor]:
     """Read one attention cache pair as float32 for attention math."""
-    key = getattr(self, self._state_name(layer_index, kind, "key")).to(torch.float32)
-    value = getattr(self, self._state_name(layer_index, kind, "value")).to(torch.float32)
+    key = getattr(self, self._state_name(layer_index, kind, "key")).to(
+        torch.float32
+    )
+    value = getattr(self, self._state_name(layer_index, kind, "value")).to(
+        torch.float32
+    )
     return key, value
 
   def _write_state(
@@ -608,8 +641,8 @@ class TemporalBodyCoreMLUnrolledWrapper(TemporalBodyCoreMLSlotWrapper):
   def __init__(self, frame_count: int):
     if not 1 <= frame_count <= TEMPORAL_COREML_SLOT_COUNT:
       raise ValueError(
-          "frame_count must be in "
-          f"[1, {TEMPORAL_COREML_SLOT_COUNT}], got {frame_count}"
+          f"frame_count must be in [1, {TEMPORAL_COREML_SLOT_COUNT}], got"
+          f" {frame_count}"
       )
     self.frame_count = int(frame_count)
     super().__init__(slot_index=0)
@@ -622,8 +655,12 @@ class TemporalBodyCoreMLUnrolledWrapper(TemporalBodyCoreMLSlotWrapper):
     """Run ``frame_count`` no-wrap temporal steps and mutate 48 K/V states."""
     outputs = []
     for slot_index in range(self.frame_count):
-      x = temporal_inputs[:, slot_index : slot_index + 1].to(dtype=torch.float32)
-      source = source_encoded[:, slot_index : slot_index + 1].to(dtype=torch.float32)
+      x = temporal_inputs[:, slot_index : slot_index + 1].to(
+          dtype=torch.float32
+      )
+      source = source_encoded[:, slot_index : slot_index + 1].to(
+          dtype=torch.float32
+      )
       for layer_index, layer in enumerate(self.layers):
         self_key, self_value = self._state(layer_index, "self")
         x, new_self_key, new_self_value = self._run_attention(
@@ -677,8 +714,8 @@ class TemporalBodyCoreMLCarryWrapper(TemporalBodyCoreMLSlotWrapper):
   def __init__(self, frame_count: int, history_length: int = 0):
     if not 1 <= frame_count <= TEMPORAL_COREML_SLOT_COUNT:
       raise ValueError(
-          "frame_count must be in "
-          f"[1, {TEMPORAL_COREML_SLOT_COUNT}], got {frame_count}"
+          f"frame_count must be in [1, {TEMPORAL_COREML_SLOT_COUNT}], got"
+          f" {frame_count}"
       )
     if not 0 <= history_length <= TEMPORAL_COREML_SLOT_COUNT:
       raise ValueError(
@@ -686,7 +723,9 @@ class TemporalBodyCoreMLCarryWrapper(TemporalBodyCoreMLSlotWrapper):
           f"[0, {TEMPORAL_COREML_SLOT_COUNT}], got {history_length}"
       )
     if history_length + frame_count > TEMPORAL_COREML_SLOT_COUNT:
-      raise ValueError("history_length + frame_count must fit in the local window")
+      raise ValueError(
+          "history_length + frame_count must fit in the local window"
+      )
     self.frame_count = int(frame_count)
     self.history_length = int(history_length)
     super().__init__(slot_index=0)
@@ -730,6 +769,7 @@ class TemporalBodyCoreMLCarryWrapper(TemporalBodyCoreMLSlotWrapper):
       new_keys: list[torch.Tensor],
       new_values: list[torch.Tensor],
       frame_index: int,
+      valid_bias: torch.Tensor | None = None,
   ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
     """Run one attention block using host cache plus in-burst K/V updates."""
     normed = _rms_norm(x, block.pre_norm_scale)
@@ -747,11 +787,16 @@ class TemporalBodyCoreMLCarryWrapper(TemporalBodyCoreMLSlotWrapper):
         query=query,
         key=combined_key,
         value=combined_value,
-        valid_mask=self._attention_visibility_mask(
-            device=x.device,
-            history_length=self.history_length,
-            frame_index=frame_index,
+        valid_mask=(
+            None
+            if valid_bias is not None
+            else self._attention_visibility_mask(
+                device=x.device,
+                history_length=self.history_length,
+                frame_index=frame_index,
+            )
         ),
+        valid_bias=valid_bias,
         per_dim_scale=block.per_dim_scale,
         sink_key=block.sink_key,
         sink_value=block.sink_value,
@@ -770,7 +815,8 @@ class TemporalBodyCoreMLCarryWrapper(TemporalBodyCoreMLSlotWrapper):
     expected_cache_count = len(self.cache_input_names())
     if len(cache_inputs) != expected_cache_count:
       raise ValueError(
-          f"Expected {expected_cache_count} cache inputs, got {len(cache_inputs)}"
+          f"Expected {expected_cache_count} cache inputs, got"
+          f" {len(cache_inputs)}"
       )
     cache_by_name = {
         name: cache.to(dtype=torch.float32)
@@ -781,8 +827,12 @@ class TemporalBodyCoreMLCarryWrapper(TemporalBodyCoreMLSlotWrapper):
     }
     outputs = []
     for frame_index in range(self.frame_count):
-      x = temporal_inputs[:, frame_index : frame_index + 1].to(dtype=torch.float32)
-      source = source_encoded[:, frame_index : frame_index + 1].to(dtype=torch.float32)
+      x = temporal_inputs[:, frame_index : frame_index + 1].to(
+          dtype=torch.float32
+      )
+      source = source_encoded[:, frame_index : frame_index + 1].to(
+          dtype=torch.float32
+      )
       for layer_index, layer in enumerate(self.layers):
         self_key_name = self._state_name(layer_index, "self", "key")
         self_value_name = self._state_name(layer_index, "self", "value")
@@ -797,7 +847,9 @@ class TemporalBodyCoreMLCarryWrapper(TemporalBodyCoreMLSlotWrapper):
             frame_index=frame_index,
         )
         updates_by_name[self_key_name].append(new_self_key.to(torch.float16))
-        updates_by_name[self_value_name].append(new_self_value.to(torch.float16))
+        updates_by_name[self_value_name].append(
+            new_self_value.to(torch.float16)
+        )
 
         cross_key_name = self._state_name(layer_index, "cross", "key")
         cross_value_name = self._state_name(layer_index, "cross", "value")
@@ -812,13 +864,101 @@ class TemporalBodyCoreMLCarryWrapper(TemporalBodyCoreMLSlotWrapper):
             frame_index=frame_index,
         )
         updates_by_name[cross_key_name].append(new_cross_key.to(torch.float16))
-        updates_by_name[cross_value_name].append(new_cross_value.to(torch.float16))
+        updates_by_name[cross_value_name].append(
+            new_cross_value.to(torch.float16)
+        )
         x = layer.ffn(x)
       outputs.append(x)
 
     temporal_outputs = torch.cat(outputs, dim=1)
     cache_updates = tuple(
-        torch.cat(updates_by_name[name], dim=1)
-        for name in self.state_names()
+        torch.cat(updates_by_name[name], dim=1) for name in self.state_names()
     )
     return (temporal_outputs, *cache_updates)
+
+
+class TemporalBodyCoreMLStreamingCarryWrapper(TemporalBodyCoreMLCarryWrapper):
+  """One-frame pure-function temporal step with host-owned rolling state.
+
+  The fixed-history carry exports are useful compiler probes but require one
+  separately compiled model for every history bucket. This shipping boundary
+  instead accepts a static-shape additive attention bias. The host changes the
+  *values* of that tensor while every graph shape remains fixed, so one model
+  handles cold start, the 41-frame fill, and steady-state wraparound.
+
+  Cache inputs are chronological: during warmup, valid entries occupy the
+  prefix selected by ``cache_valid_bias``; once full, the host shifts each
+  cache left by one frame and appends the returned update. The graph itself
+  never mutates, gathers, scatters, rolls, or concatenates cache outputs.
+  """
+
+  cache_valid_bias_name = "cache_valid_bias"
+  attention_extent = TEMPORAL_SINKS + MRT2_LOCAL_WINDOW_FRAMES + 1
+
+  def __init__(self):
+    super().__init__(frame_count=1, history_length=0)
+
+  def forward(
+      self,
+      temporal_inputs: torch.Tensor,
+      source_encoded: torch.Tensor,
+      cache_valid_bias: torch.Tensor,
+      *cache_inputs: torch.Tensor,
+  ) -> tuple[torch.Tensor, ...]:
+    """Run one temporal frame and return 48 K/V update slices."""
+    expected_cache_count = len(self.cache_input_names())
+    if len(cache_inputs) != expected_cache_count:
+      raise ValueError(
+          f"Expected {expected_cache_count} cache inputs, got"
+          f" {len(cache_inputs)}"
+      )
+    cache_by_name = {
+        name: cache.to(dtype=torch.float32)
+        for name, cache in zip(self.state_names(), cache_inputs, strict=True)
+    }
+    updates_by_name: dict[str, list[torch.Tensor]] = {
+        name: [] for name in self.state_names()
+    }
+    x = temporal_inputs[:, :1].to(dtype=torch.float32)
+    source = source_encoded[:, :1].to(dtype=torch.float32)
+    bias = cache_valid_bias.to(dtype=torch.float32)
+    for layer_index, layer in enumerate(self.layers):
+      self_key_name = self._state_name(layer_index, "self", "key")
+      self_value_name = self._state_name(layer_index, "self", "value")
+      x, new_self_key, new_self_value = self._run_carry_attention(
+          block=layer.self_attention,
+          x=x,
+          source=source,
+          old_key=cache_by_name[self_key_name],
+          old_value=cache_by_name[self_value_name],
+          new_keys=updates_by_name[self_key_name],
+          new_values=updates_by_name[self_value_name],
+          frame_index=0,
+          valid_bias=bias,
+      )
+      updates_by_name[self_key_name].append(new_self_key.to(torch.float16))
+      updates_by_name[self_value_name].append(new_self_value.to(torch.float16))
+
+      cross_key_name = self._state_name(layer_index, "cross", "key")
+      cross_value_name = self._state_name(layer_index, "cross", "value")
+      x, new_cross_key, new_cross_value = self._run_carry_attention(
+          block=layer.cross_attention,
+          x=x,
+          source=source,
+          old_key=cache_by_name[cross_key_name],
+          old_value=cache_by_name[cross_value_name],
+          new_keys=updates_by_name[cross_key_name],
+          new_values=updates_by_name[cross_value_name],
+          frame_index=0,
+          valid_bias=bias,
+      )
+      updates_by_name[cross_key_name].append(new_cross_key.to(torch.float16))
+      updates_by_name[cross_value_name].append(
+          new_cross_value.to(torch.float16)
+      )
+      x = layer.ffn(x)
+
+    cache_updates = tuple(
+        torch.cat(updates_by_name[name], dim=1) for name in self.state_names()
+    )
+    return (x, *cache_updates)

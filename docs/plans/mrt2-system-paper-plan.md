@@ -1,7 +1,7 @@
 # MRT2 System Paper Plan — "Live: Real-Time Streaming Music Generation on iPhone, GPU-Free"
 
 **Date:** 2026-07-15
-**Status:** Active — Phase 0 complete; Phase 1 in progress
+**Status:** Active — Phases 0–1 complete; Phase 2 in progress
 
 ## Executive Summary
 
@@ -198,33 +198,37 @@ paper's "GPU-free" headline.
 
 **Tasks:**
 
-- [ ] New Crossfade plan (`README/Plans/015-...`): integrate the carry-boundary
+- [x] New Crossfade plan (`README/Plans/015-...`): integrate the carry-boundary
       artifact (`exporters/convert_temporal_body_carry.py` output) into
       `Sources/CrossfadeRuntime*`, replacing the rolling GPU temporal path
       behind a runtime flag (kill switch — see Rollback).
-- [ ] Root-cause the harness-vs-app admission delta from §6.7. Falsify one
+- [x] Root-cause the harness-vs-app admission delta from §6.7. Falsify one
       variable at a time, same discipline as receipts §5.3: model load order,
       concurrent Metal/UI load at compile time, memory pressure, compilation
       cache state (`.mlmodelc` precompiled vs on-device), app entitlements /
       background state. Each experiment gets a note in Crossfade
       `README/Notes/`.
-- [ ] Implement host-owned K/V mutation in Swift (48 in / 48 out, strided
+- [x] Implement host-owned K/V mutation in Swift (48 in / 48 out, strided
       reads, preallocated buffers — no per-frame allocation on the producer
       thread).
-- [ ] Wire the placement-evidence gate to run in-app at session start and
+- [x] Wire the placement-evidence gate to run in-app at session start and
       record its artifact per run; a CPU-fallback session must be *detected*,
       not discovered in Instruments later.
-- [ ] Cross-prediction state test for the carry path in the app (fresh vs.
+- [x] Cross-prediction state test for the carry path in the app (fresh vs.
       warmed divergence; N-frame streaming match vs. fixtures past the
       41-slot window).
 
-**Verification:** On both phones, 10 consecutive cold app launches each pass
-the placement gate (temporal ANE intervals present, zero app-attributed GPU
-rows); composed p50/p99 re-measured; parity receipt for the in-app path
-matches `validation/results/MRT2TemporalBodyCarry_validation.*`. If reliable
-admission is NOT achievable, the falsification notes become paper content
-(deployment-reality section) and G1 degrades to "ANE with documented
-admission preconditions" — a user decision, recorded in the claims ledger.
+**Verification (2026-07-18): PASS.** Crossfade commit `9798f47` implements the
+one-model boundary. A17 Pro and A14 each pass 10/10 cold-process compute-plan
+and 64-frame state gates. The A17 trace records 653 temporal and 24 decoder
+ANE predictions; the A14 trace records 546 and 19 respectively. Both traces
+contain Core ML predictions for temporal, CPU depth, and decoder and contain
+zero app-attributed GPU intervals. Public manifests and verifier reports are
+under `validation/results/system-paper/{a17pro,a14}/placement/`; the readable
+64-step parity receipt is
+`validation/results/MRT2TemporalBodyStreamingCarry_validation.*`. Phase audit:
+PASS (Swift tests 32/32, Python gate tests 15/15, signed device build, two
+10-launch matrices, two model-attributed process traces).
 
 ---
 
@@ -397,7 +401,7 @@ same PDF; repo docs and reviewer packet are self-consistent with it.
 
 ### Hard Requirements (Must Pass)
 
-- [ ] G1: in-app placement gate green for the temporal stack on ≥1 phone
+- [x] G1: in-app placement gate green for the temporal stack on ≥1 phone
       across 10 consecutive cold launches (or the documented-preconditions
       fallback explicitly accepted by the user).
 - [ ] G2: A17 Pro 600 s foreground soak, ≥1.0× real time, 0 underruns,

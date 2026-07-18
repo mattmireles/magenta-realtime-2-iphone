@@ -1,0 +1,37 @@
+{
+  "arrays": {
+    "reference_outputs": {
+      "byte_count": 262144,
+      "path": "temporal_streaming_carry_64_reference_outputs_f32.bin",
+      "shape": [
+        1,
+        64,
+        1024
+      ]
+    },
+    "source_encoded": {
+      "byte_count": 65536,
+      "path": "temporal_streaming_carry_64_source_encoded_f32.bin",
+      "shape": [
+        64,
+        1,
+        1,
+        256
+      ]
+    },
+    "temporal_inputs": {
+      "byte_count": 262144,
+      "path": "temporal_streaming_carry_64_temporal_inputs_f32.bin",
+      "shape": [
+        64,
+        1,
+        1,
+        1024
+      ]
+    }
+  },
+  "dtype": "little-endian-float32",
+  "schema": "mrt2-temporal-streaming-device-fixture-v1",
+  "steps": 64,
+  "window_frames": 41
+}

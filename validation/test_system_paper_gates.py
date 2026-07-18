@@ -55,14 +55,14 @@ def _passing_g1(
                     "depth": "cpuAndNeuralEngine",
                     "decoder": "cpuAndNeuralEngine",
                 },
-                "placementEvidence": {
-                    "modelFamilies": {
-                        name: {"anePredictionCount": 10, "anePredictionTotalNs": 1_000}
-                        for name in ("temporal", "depth", "decoder")
-                    },
-                    "appGpuIntervalCount": 0,
-                    "appGpuTotalNs": 0,
+                "temporalComputePlan": {
+                    "passed": True,
+                    "aneEstimatedCostWeight": 1.0,
+                    "gpuOperationCount": 0,
+                    "gpuEstimatedCostWeight": 0.0,
                 },
+                "stateProofPassed": True,
+                "fixtureProofPassed": True,
                 "artifactSha256": _artifact_hashes(),
             }
         )
@@ -71,12 +71,34 @@ def _passing_g1(
         "device": {"modelIdentifier": model_identifier},
         "deviceRole": device_role,
         "launches": launches,
+        "traceEvidence": {
+            "aneModelFamilies": {
+                name: {"anePredictionCount": 10, "anePredictionTotalNs": 1_000}
+                for name in ("temporal", "decoder")
+            },
+            "runtimeModelFamilies": {
+                name: {
+                    "coremlPredictionCount": 10,
+                    "coremlPredictionTotalNs": 1_000,
+                }
+                for name in ("temporal", "depth", "decoder")
+            },
+            "appGpuIntervalCount": 0,
+            "appGpuTotalNs": 0,
+            "modelSha256": {
+                "temporal": HASH_A,
+                "depth": HASH_B,
+                "decoder": HASH_C,
+            },
+            "artifactSha256ByPath": _artifact_hashes(),
+        },
         "stateEvidence": {
             "artifactSha256": HASH_A,
             "freshWarmedMaxAbsDelta": 0.5,
             "streamingFrames": 64,
             "windowFrames": 41,
-            "relativeMaxError": 0.008,
+            "correlation": 0.9995,
+            "maxAbsoluteError": 2.0,
             "finiteRatio": 1.0,
             "artifactSha256ByPath": _artifact_hashes(),
         },
@@ -159,7 +181,21 @@ class SystemPaperGateTests(unittest.TestCase):
     def test_g1_rejects_one_app_gpu_interval(self) -> None:
         """Any app-attributed GPU interval invalidates the GPU-free claim."""
         manifest = _passing_g1()
-        manifest["launches"][4]["placementEvidence"]["appGpuIntervalCount"] = 1
+        manifest["traceEvidence"]["appGpuIntervalCount"] = 1
+        self.assertFalse(verify_g1(manifest)["passed"])
+
+    def test_g1_rejects_depth_labeled_as_ane_requirement(self) -> None:
+        """G1 requires runtime depth activity, but not false ANE attribution."""
+        manifest = _passing_g1()
+        manifest["traceEvidence"]["runtimeModelFamilies"]["depth"][
+            "coremlPredictionCount"
+        ] = 0
+        self.assertFalse(verify_g1(manifest)["passed"])
+
+    def test_g1_rejects_one_cold_launch_plan_fallback(self) -> None:
+        """One temporal plan fallback invalidates the 10-launch admission result."""
+        manifest = _passing_g1()
+        manifest["launches"][4]["temporalComputePlan"]["aneEstimatedCostWeight"] = 0.0
         self.assertFalse(verify_g1(manifest)["passed"])
 
     def test_g1_rejects_hash_drift(self) -> None:

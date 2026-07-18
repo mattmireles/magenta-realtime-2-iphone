@@ -1,0 +1,360 @@
+{
+  "crossfadeSourceCommit": "9798f4703c6bcde0d4807f2930d3287710261f95",
+  "device": {
+    "chip": "A14",
+    "modelIdentifier": "iPhone13,3",
+    "osVersion": "26.5"
+  },
+  "deviceRole": "cross-device",
+  "launches": [
+    {
+      "artifactSha256": {
+        "crossfade-private/Scratchpad/system_paper_device_logs/20260718T113139Z-a14-final-cold-launches/launch-01.log": "10552a5350c09f0e0ce2fe4d7ab9862bbe0432b3bffbc9fccb2522d3677ba22a"
+      },
+      "coldLaunch": true,
+      "computePolicy": {
+        "decoder": "cpuAndNeuralEngine",
+        "depth": "cpuAndNeuralEngine",
+        "temporal": "cpuAndNeuralEngine"
+      },
+      "durationSeconds": 2.0364014580000003,
+      "fixtureProofPassed": true,
+      "modelSha256": {
+        "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+        "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+        "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+      },
+      "runId": "cold-01",
+      "stateProofPassed": true,
+      "temporalComputePlan": {
+        "aneEstimatedCostWeight": 1.0,
+        "aneOperationCount": 1105,
+        "cpuEstimatedCostWeight": 0.0,
+        "cpuOperationCount": 2,
+        "gpuEstimatedCostWeight": 0.0,
+        "gpuOperationCount": 0,
+        "passed": true
+      }
+    },
+    {
+      "artifactSha256": {
+        "crossfade-private/Scratchpad/system_paper_device_logs/20260718T113139Z-a14-final-cold-launches/launch-02.log": "2925319d8d772db50f29a178a75352445b11d43e6f4ccb44327ec5459ba221f8"
+      },
+      "coldLaunch": true,
+      "computePolicy": {
+        "decoder": "cpuAndNeuralEngine",
+        "depth": "cpuAndNeuralEngine",
+        "temporal": "cpuAndNeuralEngine"
+      },
+      "durationSeconds": 1.6808554580000004,
+      "fixtureProofPassed": true,
+      "modelSha256": {
+        "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+        "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+        "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+      },
+      "runId": "cold-02",
+      "stateProofPassed": true,
+      "temporalComputePlan": {
+        "aneEstimatedCostWeight": 1.0,
+        "aneOperationCount": 1105,
+        "cpuEstimatedCostWeight": 0.0,
+        "cpuOperationCount": 2,
+        "gpuEstimatedCostWeight": 0.0,
+        "gpuOperationCount": 0,
+        "passed": true
+      }
+    },
+    {
+      "artifactSha256": {
+        "crossfade-private/Scratchpad/system_paper_device_logs/20260718T113139Z-a14-final-cold-launches/launch-03.log": "8eb89b7afdad677f4c9873a2a7fa00cdacf766853d510e107171fc1bc2441685"
+      },
+      "coldLaunch": true,
+      "computePolicy": {
+        "decoder": "cpuAndNeuralEngine",
+        "depth": "cpuAndNeuralEngine",
+        "temporal": "cpuAndNeuralEngine"
+      },
+      "durationSeconds": 1.696079042,
+      "fixtureProofPassed": true,
+      "modelSha256": {
+        "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+        "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+        "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+      },
+      "runId": "cold-03",
+      "stateProofPassed": true,
+      "temporalComputePlan": {
+        "aneEstimatedCostWeight": 1.0,
+        "aneOperationCount": 1105,
+        "cpuEstimatedCostWeight": 0.0,
+        "cpuOperationCount": 2,
+        "gpuEstimatedCostWeight": 0.0,
+        "gpuOperationCount": 0,
+        "passed": true
+      }
+    },
+    {
+      "artifactSha256": {
+        "crossfade-private/Scratchpad/system_paper_device_logs/20260718T113139Z-a14-final-cold-launches/launch-04.log": "610afde974f47a0b473c2d647d2c72b407c147ac7cb8334b529e9d5e333c2b8a"
+      },
+      "coldLaunch": true,
+      "computePolicy": {
+        "decoder": "cpuAndNeuralEngine",
+        "depth": "cpuAndNeuralEngine",
+        "temporal": "cpuAndNeuralEngine"
+      },
+      "durationSeconds": 1.7046825420000005,
+      "fixtureProofPassed": true,
+      "modelSha256": {
+        "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+        "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+        "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+      },
+      "runId": "cold-04",
+      "stateProofPassed": true,
+      "temporalComputePlan": {
+        "aneEstimatedCostWeight": 1.0,
+        "aneOperationCount": 1105,
+        "cpuEstimatedCostWeight": 0.0,
+        "cpuOperationCount": 2,
+        "gpuEstimatedCostWeight": 0.0,
+        "gpuOperationCount": 0,
+        "passed": true
+      }
+    },
+    {
+      "artifactSha256": {
+        "crossfade-private/Scratchpad/system_paper_device_logs/20260718T113139Z-a14-final-cold-launches/launch-05.log": "b30863e35b8e0cfcefb3043ef1d87c13555bb76976bd5819b6ccef0c68bc8e68"
+      },
+      "coldLaunch": true,
+      "computePolicy": {
+        "decoder": "cpuAndNeuralEngine",
+        "depth": "cpuAndNeuralEngine",
+        "temporal": "cpuAndNeuralEngine"
+      },
+      "durationSeconds": 1.6986859999999986,
+      "fixtureProofPassed": true,
+      "modelSha256": {
+        "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+        "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+        "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+      },
+      "runId": "cold-05",
+      "stateProofPassed": true,
+      "temporalComputePlan": {
+        "aneEstimatedCostWeight": 1.0,
+        "aneOperationCount": 1105,
+        "cpuEstimatedCostWeight": 0.0,
+        "cpuOperationCount": 2,
+        "gpuEstimatedCostWeight": 0.0,
+        "gpuOperationCount": 0,
+        "passed": true
+      }
+    },
+    {
+      "artifactSha256": {
+        "crossfade-private/Scratchpad/system_paper_device_logs/20260718T113139Z-a14-final-cold-launches/launch-06.log": "3035a98a23f0b3d7ebc2c545167d9280fc474ed149a327cd363462762000cd32"
+      },
+      "coldLaunch": true,
+      "computePolicy": {
+        "decoder": "cpuAndNeuralEngine",
+        "depth": "cpuAndNeuralEngine",
+        "temporal": "cpuAndNeuralEngine"
+      },
+      "durationSeconds": 1.6682222499999995,
+      "fixtureProofPassed": true,
+      "modelSha256": {
+        "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+        "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+        "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+      },
+      "runId": "cold-06",
+      "stateProofPassed": true,
+      "temporalComputePlan": {
+        "aneEstimatedCostWeight": 1.0,
+        "aneOperationCount": 1105,
+        "cpuEstimatedCostWeight": 0.0,
+        "cpuOperationCount": 2,
+        "gpuEstimatedCostWeight": 0.0,
+        "gpuOperationCount": 0,
+        "passed": true
+      }
+    },
+    {
+      "artifactSha256": {
+        "crossfade-private/Scratchpad/system_paper_device_logs/20260718T113139Z-a14-final-cold-launches/launch-07.log": "e0023d1ca7805d877a6c0030b79625027db40409a832cc83f0285c6afb738ed9"
+      },
+      "coldLaunch": true,
+      "computePolicy": {
+        "decoder": "cpuAndNeuralEngine",
+        "depth": "cpuAndNeuralEngine",
+        "temporal": "cpuAndNeuralEngine"
+      },
+      "durationSeconds": 1.7180987079999994,
+      "fixtureProofPassed": true,
+      "modelSha256": {
+        "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+        "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+        "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+      },
+      "runId": "cold-07",
+      "stateProofPassed": true,
+      "temporalComputePlan": {
+        "aneEstimatedCostWeight": 1.0,
+        "aneOperationCount": 1105,
+        "cpuEstimatedCostWeight": 0.0,
+        "cpuOperationCount": 2,
+        "gpuEstimatedCostWeight": 0.0,
+        "gpuOperationCount": 0,
+        "passed": true
+      }
+    },
+    {
+      "artifactSha256": {
+        "crossfade-private/Scratchpad/system_paper_device_logs/20260718T113139Z-a14-final-cold-launches/launch-08.log": "f52c495b2f00806c5cc380af8896998c3277a027e3f6d4b13d417fbe8b6ce68e"
+      },
+      "coldLaunch": true,
+      "computePolicy": {
+        "decoder": "cpuAndNeuralEngine",
+        "depth": "cpuAndNeuralEngine",
+        "temporal": "cpuAndNeuralEngine"
+      },
+      "durationSeconds": 1.687510958999999,
+      "fixtureProofPassed": true,
+      "modelSha256": {
+        "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+        "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+        "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+      },
+      "runId": "cold-08",
+      "stateProofPassed": true,
+      "temporalComputePlan": {
+        "aneEstimatedCostWeight": 1.0,
+        "aneOperationCount": 1105,
+        "cpuEstimatedCostWeight": 0.0,
+        "cpuOperationCount": 2,
+        "gpuEstimatedCostWeight": 0.0,
+        "gpuOperationCount": 0,
+        "passed": true
+      }
+    },
+    {
+      "artifactSha256": {
+        "crossfade-private/Scratchpad/system_paper_device_logs/20260718T113139Z-a14-final-cold-launches/launch-09.log": "3aebef5443c4060a3e9ce2ae766ee085fb192cf81b5bc668fffc98972fce6585"
+      },
+      "coldLaunch": true,
+      "computePolicy": {
+        "decoder": "cpuAndNeuralEngine",
+        "depth": "cpuAndNeuralEngine",
+        "temporal": "cpuAndNeuralEngine"
+      },
+      "durationSeconds": 1.716925584000002,
+      "fixtureProofPassed": true,
+      "modelSha256": {
+        "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+        "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+        "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+      },
+      "runId": "cold-09",
+      "stateProofPassed": true,
+      "temporalComputePlan": {
+        "aneEstimatedCostWeight": 1.0,
+        "aneOperationCount": 1105,
+        "cpuEstimatedCostWeight": 0.0,
+        "cpuOperationCount": 2,
+        "gpuEstimatedCostWeight": 0.0,
+        "gpuOperationCount": 0,
+        "passed": true
+      }
+    },
+    {
+      "artifactSha256": {
+        "crossfade-private/Scratchpad/system_paper_device_logs/20260718T113139Z-a14-final-cold-launches/launch-10.log": "4f0ca74148bc947a509ebbf42ed245e53e7ef82ec36e578922cc0f7597a0f313"
+      },
+      "coldLaunch": true,
+      "computePolicy": {
+        "decoder": "cpuAndNeuralEngine",
+        "depth": "cpuAndNeuralEngine",
+        "temporal": "cpuAndNeuralEngine"
+      },
+      "durationSeconds": 1.661291833,
+      "fixtureProofPassed": true,
+      "modelSha256": {
+        "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+        "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+        "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+      },
+      "runId": "cold-10",
+      "stateProofPassed": true,
+      "temporalComputePlan": {
+        "aneEstimatedCostWeight": 1.0,
+        "aneOperationCount": 1105,
+        "cpuEstimatedCostWeight": 0.0,
+        "cpuOperationCount": 2,
+        "gpuEstimatedCostWeight": 0.0,
+        "gpuOperationCount": 0,
+        "passed": true
+      }
+    }
+  ],
+  "schema": "mrt2-system-paper-g1-v2",
+  "stateEvidence": {
+    "artifactSha256": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64",
+    "artifactSha256ByPath": {
+      "fixtures/temporal_streaming_carry_64.npz": "a0d2c15903ac290026106d04c6e83a5cfdd9a436e57d63c8212c0d9835a74145",
+      "fixtures/temporal_streaming_carry_64_reference_outputs_f32.bin": "1b9418aa575ec08aecffe6296fb7fbe11cba3674088d04b6f141cfa2892e8c5c",
+      "fixtures/temporal_streaming_carry_64_source_encoded_f32.bin": "6b839dc691c7f2f13329edd239a15edc1740d0fecbd184d6a907ac7d550114f7",
+      "fixtures/temporal_streaming_carry_64_temporal_inputs_f32.bin": "ab885186a3685853ab7902c476ee97d4014ff65fa994cdcc206d172fcb60fa66",
+      "validation/results/MRT2TemporalBodyStreamingCarry_validation.json": "156f626f12072608129f5a49c829008d9ea0cee48050b5fbcb565696c52bc26c"
+    },
+    "boundsIncludeLoggingRounding": true,
+    "correlation": 0.9995,
+    "finiteRatio": 1.0,
+    "freshWarmedMaxAbsDelta": 5.343500000000001,
+    "loggedMetricDecimals": 3,
+    "maxAbsoluteError": 0.7635,
+    "meanAbsoluteError": 0.0345,
+    "streamingFrames": 64,
+    "windowFrames": 41
+  },
+  "traceEvidence": {
+    "aneModelFamilies": {
+      "decoder": {
+        "anePredictionCount": 19,
+        "anePredictionTotalNs": 487815371
+      },
+      "temporal": {
+        "anePredictionCount": 546,
+        "anePredictionTotalNs": 6138642710
+      }
+    },
+    "appGpuIntervalCount": 0,
+    "appGpuTotalNs": 0,
+    "artifactSha256ByPath": {
+      "crossfade-private/Scratchpad/crossfade_runtime_host_device_logs/20260718T113251Z-system-paper-final-a14/ane-hw-intervals.xml": "54c94fc67c4b5cd8fc25d83a03e0bc346ce1901f0296b30f5a3a23d0f2be0a84",
+      "crossfade-private/Scratchpad/crossfade_runtime_host_device_logs/20260718T113251Z-system-paper-final-a14/coreml-os-signpost.xml": "cf2c30a40468b4f75a89f9cbe6d9e7825433dc93ea9496d8593fb91a0f1d26a6",
+      "crossfade-private/Scratchpad/crossfade_runtime_host_device_logs/20260718T113251Z-system-paper-final-a14/metal-gpu-intervals.xml": "e38becf7b2ff947862b461da0876541c7b45dcc101d86ee9c841cf334b00abe1",
+      "crossfade-private/Scratchpad/crossfade_runtime_host_device_logs/20260718T113251Z-system-paper-final-a14/placement-evidence.json": "4b152635f8ffb8b99cfd869e9792f8b02703dd2557dbbb6686155015997f2961"
+    },
+    "modelSha256": {
+      "decoder": "ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d",
+      "depth": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8",
+      "temporal": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+    },
+    "runtimeModelFamilies": {
+      "decoder": {
+        "coremlPredictionCount": 19,
+        "coremlPredictionTotalNs": 502878623
+      },
+      "depth": {
+        "coremlPredictionCount": 479,
+        "coremlPredictionTotalNs": 6167590175
+      },
+      "temporal": {
+        "coremlPredictionCount": 546,
+        "coremlPredictionTotalNs": 7441787130
+      }
+    }
+  }
+}

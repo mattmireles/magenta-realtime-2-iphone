@@ -41,6 +41,7 @@ from mrt2_coreml.depthformer_wrapper import (
 from mrt2_coreml.temporal_body_wrapper import (
     TEMPORAL_SOURCE_DIM,
     TemporalBodyCoreMLCarryWrapper,
+    TemporalBodyCoreMLStreamingCarryWrapper,
 )
 
 
@@ -48,9 +49,19 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_OUTPUT_DIR = REPO_ROOT / "build" / "models"
 DEFAULT_PACKAGE_TEMPLATE = "mrt2_temporal_body_carry_{frames:02d}.mlpackage"
 DEFAULT_COMPILED_TEMPLATE = "mrt2_temporal_body_carry_{frames:02d}.mlmodelc"
-DEFAULT_METADATA_TEMPLATE = "mrt2_temporal_body_carry_{frames:02d}_export_metadata.json"
+DEFAULT_METADATA_TEMPLATE = (
+    "mrt2_temporal_body_carry_{frames:02d}_export_metadata.json"
+)
+STREAMING_PACKAGE_TEMPLATE = "mrt2_temporal_body_streaming_carry_01.mlpackage"
+STREAMING_COMPILED_TEMPLATE = "mrt2_temporal_body_streaming_carry_01.mlmodelc"
+STREAMING_METADATA_TEMPLATE = (
+    "mrt2_temporal_body_streaming_carry_01_export_metadata.json"
+)
 TEMPORAL_INPUT_NAME = "temporal_inputs"
 SOURCE_INPUT_NAME = "source_encoded"
+CACHE_VALID_BIAS_NAME = (
+    TemporalBodyCoreMLStreamingCarryWrapper.cache_valid_bias_name
+)
 OUTPUT_NAME = "temporal_outputs"
 DEPLOYMENT_TARGET = "iOS18"
 
@@ -94,7 +105,9 @@ def _compile_model(package_path: Path, compiled_path: Path) -> dict[str, Any]:
         text=True,
         stderr=subprocess.STDOUT,
     )
-    default_compiled = compiled_path.parent / package_path.with_suffix(".mlmodelc").name
+    default_compiled = (
+        compiled_path.parent / package_path.with_suffix(".mlmodelc").name
+    )
     if default_compiled.exists() and default_compiled != compiled_path:
       if compiled_path.exists():
         shutil.rmtree(compiled_path)
@@ -115,7 +128,16 @@ def _compile_model(package_path: Path, compiled_path: Path) -> dict[str, Any]:
 
 def _format_template(template: str, args: argparse.Namespace) -> str:
   """Format artifact template fields for carry frame/history buckets."""
-  formatted = template.format(frames=args.frames, history_length=args.history_length)
+  if args.streaming:
+    replacements = {
+        DEFAULT_PACKAGE_TEMPLATE: STREAMING_PACKAGE_TEMPLATE,
+        DEFAULT_COMPILED_TEMPLATE: STREAMING_COMPILED_TEMPLATE,
+        DEFAULT_METADATA_TEMPLATE: STREAMING_METADATA_TEMPLATE,
+    }
+    template = replacements.get(template, template)
+  formatted = template.format(
+      frames=args.frames, history_length=args.history_length
+  )
   if args.history_length == 0 or "history_length" in template:
     return formatted
   path = Path(formatted)
@@ -149,6 +171,8 @@ def _output_tensor_types(args: argparse.Namespace) -> list[ct.TensorType]:
 
 def convert(args: argparse.Namespace) -> dict[str, Any]:
   """Trace, convert, save, optionally compile, and return export metadata."""
+  if args.streaming and args.frames != 1:
+    raise ValueError("--streaming requires --frames 1")
   _ensure_coreml_runtime_path()
   output_dir = Path(args.output_dir)
   output_dir.mkdir(parents=True, exist_ok=True)
@@ -156,12 +180,20 @@ def convert(args: argparse.Namespace) -> dict[str, Any]:
   compiled_path = output_dir / _format_template(args.compiled_template, args)
   metadata_path = output_dir / _format_template(args.metadata_template, args)
 
-  model = TemporalBodyCoreMLCarryWrapper(
-      frame_count=args.frames,
-      history_length=args.history_length,
+  model = (
+      TemporalBodyCoreMLStreamingCarryWrapper()
+      if args.streaming
+      else TemporalBodyCoreMLCarryWrapper(
+          frame_count=args.frames,
+          history_length=args.history_length,
+      )
   ).eval()
-  temporal_inputs = torch.zeros((1, args.frames, MRT2_MODEL_DIM), dtype=torch.float32)
-  source_encoded = torch.zeros((1, args.frames, TEMPORAL_SOURCE_DIM), dtype=torch.float32)
+  temporal_inputs = torch.zeros(
+      (1, args.frames, MRT2_MODEL_DIM), dtype=torch.float32
+  )
+  source_encoded = torch.zeros(
+      (1, args.frames, TEMPORAL_SOURCE_DIM), dtype=torch.float32
+  )
   cache_inputs = [
       torch.zeros(
           (
@@ -175,8 +207,26 @@ def convert(args: argparse.Namespace) -> dict[str, Any]:
       for _ in model.cache_input_names()
   ]
 
+  trace_inputs: tuple[torch.Tensor, ...]
+  if args.streaming:
+    cache_valid_bias = torch.full(
+        (1, 1, 1, TemporalBodyCoreMLStreamingCarryWrapper.attention_extent),
+        -1e4,
+        dtype=torch.float16,
+    )
+    cache_valid_bias[..., 0] = 0
+    cache_valid_bias[..., -1] = 0
+    trace_inputs = (
+        temporal_inputs,
+        source_encoded,
+        cache_valid_bias,
+        *cache_inputs,
+    )
+  else:
+    trace_inputs = (temporal_inputs, source_encoded, *cache_inputs)
+
   start_trace = time.perf_counter()
-  traced = torch.jit.trace(model, (temporal_inputs, source_encoded, *cache_inputs))
+  traced = torch.jit.trace(model, trace_inputs)
   trace_seconds = time.perf_counter() - start_trace
 
   stderr_buffer = io.StringIO()
@@ -198,6 +248,22 @@ def convert(args: argparse.Namespace) -> dict[str, Any]:
                   shape=(1, args.frames, TEMPORAL_SOURCE_DIM),
                   dtype=np.float32,
               ),
+              *(
+                  [
+                      ct.TensorType(
+                          name=CACHE_VALID_BIAS_NAME,
+                          shape=(
+                              1,
+                              1,
+                              1,
+                              TemporalBodyCoreMLStreamingCarryWrapper.attention_extent,
+                          ),
+                          dtype=np.float16,
+                      )
+                  ]
+                  if args.streaming
+                  else []
+              ),
               *_cache_tensor_types(),
           ],
           outputs=_output_tensor_types(args),
@@ -210,14 +276,24 @@ def convert(args: argparse.Namespace) -> dict[str, Any]:
     shutil.rmtree(package_path)
   mlmodel.save(str(package_path))
 
-  compile_report = _compile_model(package_path, compiled_path) if args.compile else None
+  compile_report = (
+      _compile_model(package_path, compiled_path) if args.compile else None
+  )
   metadata: dict[str, Any] = {
-      "schema": "mrt2-temporal-body-carry-coreml-export-v1",
+      "schema": (
+          "mrt2-temporal-body-streaming-carry-coreml-export-v1"
+          if args.streaming
+          else "mrt2-temporal-body-carry-coreml-export-v1"
+      ),
       "source_commit": _git_commit(),
       "frames": args.frames,
       "history_length": args.history_length,
-      "wrapper": "mrt2_coreml.temporal_body_wrapper.TemporalBodyCoreMLCarryWrapper",
-      "boundary": "host_owned_kv_cache_inputs_and_update_outputs",
+      "wrapper": f"{model.__class__.__module__}.{model.__class__.__name__}",
+      "boundary": (
+          "host_owned_chronological_kv_ring_with_validity_bias"
+          if args.streaming
+          else "host_owned_kv_cache_inputs_and_update_outputs"
+      ),
       "inputs": [
           {
               "name": TEMPORAL_INPUT_NAME,
@@ -229,6 +305,23 @@ def convert(args: argparse.Namespace) -> dict[str, Any]:
               "shape": [1, args.frames, TEMPORAL_SOURCE_DIM],
               "dtype": "float32",
           },
+          *(
+              [{
+                  "name": CACHE_VALID_BIAS_NAME,
+                  "shape": [
+                      1,
+                      1,
+                      1,
+                      TemporalBodyCoreMLStreamingCarryWrapper.attention_extent,
+                  ],
+                  "dtype": "float16",
+                  "semantics": (
+                      "sink + 41 chronological cache slots + current frame"
+                  ),
+              }]
+              if args.streaming
+              else []
+          ),
           *[
               {
                   "name": name,
@@ -255,7 +348,9 @@ def convert(args: argparse.Namespace) -> dict[str, Any]:
                   "shape": [1, args.frames, MRT2_TEMPORAL_HEADS, MRT2_HEAD_DIM],
                   "dtype": "float16",
               }
-              for name in TemporalBodyCoreMLCarryWrapper.cache_update_output_names()
+              for name in (
+                  TemporalBodyCoreMLCarryWrapper.cache_update_output_names()
+              )
           ],
       ],
       "conversion": {
@@ -282,14 +377,35 @@ def convert(args: argparse.Namespace) -> dict[str, Any]:
       },
       "compile": compile_report,
       "known_limits": [
-          "This first carry proof uses a fixed no-wrap history_length bucket.",
+          *(
+              [
+                  (
+                      "The host must keep cache entries chronological and"
+                      " mutate all 48 arrays in lockstep."
+                  ),
+                  (
+                      "Warmup validity is supplied as a static-shape additive"
+                      " bias; after 41 frames all cache slots are valid."
+                  ),
+              ]
+              if args.streaming
+              else [
+                  "This first carry proof uses a fixed no-wrap history_length"
+                  " bucket."
+              ]
+          ),
           "Host code owns K/V cache lifetime and ring-buffer placement.",
           "The graph returns K/V update slices, not full copied cache tensors.",
-          "Conditioning encoder remains host-owned; source_encoded is an input.",
+          (
+              "Conditioning encoder remains host-owned; source_encoded is an"
+              " input."
+          ),
           "Depth-body logits remain a separate Core ML package for this phase.",
       ],
   }
-  metadata_path.write_text(json.dumps(metadata, indent=2, sort_keys=True) + "\n")
+  metadata_path.write_text(
+      json.dumps(metadata, indent=2, sort_keys=True) + "\n"
+  )
   return metadata
 
 
@@ -299,10 +415,20 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument("--output-dir", default=str(DEFAULT_OUTPUT_DIR))
   parser.add_argument("--frames", type=int, default=2)
   parser.add_argument("--history-length", type=int, default=0)
+  parser.add_argument(
+      "--streaming",
+      action="store_true",
+      help=(
+          "Export the one-frame chronological host-ring boundary with a"
+          " validity-bias input."
+      ),
+  )
   parser.add_argument("--package-template", default=DEFAULT_PACKAGE_TEMPLATE)
   parser.add_argument("--compiled-template", default=DEFAULT_COMPILED_TEMPLATE)
   parser.add_argument("--metadata-template", default=DEFAULT_METADATA_TEMPLATE)
-  parser.add_argument("--compile", action=argparse.BooleanOptionalAction, default=True)
+  parser.add_argument(
+      "--compile", action=argparse.BooleanOptionalAction, default=True
+  )
   return parser.parse_args()
 
 

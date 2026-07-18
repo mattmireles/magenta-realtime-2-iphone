@@ -72,8 +72,11 @@ but the claims and evidence gates below may not be weakened silently.
   the 41-frame attention window.
 - **Placement gate:** requested compute units are metadata, not evidence. A
   passing receipt requires Instruments ANE prediction intervals for every
-  claimed model family and zero GPU interval rows attributed to the app
-  process.
+  model family claimed as ANE-resident, Core ML prediction intervals for every
+  composed model family, and zero GPU interval rows attributed to the app
+  process. The current pipeline claims ANE residency for temporal and decoder;
+  its FLOAT32 depth rollout is deliberately CPU-resident and is reported as
+  such rather than mislabeled.
 - **Dispersion:** at least five independent runs per latency cell; report the
   median of run-level p50/p90/p99 values and IQR (or all run values when N=5).
 - **Power:** report process-attributed impact scores, CPU instructions, and
@@ -83,14 +86,27 @@ but the claims and evidence gates below may not be weakened silently.
 
 ### G1 — Shipping-process ANE placement and GPU absence
 
-**Pass:** On `Commas`, 10/10 consecutive cold app launches produce a valid
-placement receipt with:
+**Pass:** On `Commas`, 10/10 consecutive cold app launches produce an
+in-process temporal compute-plan and state receipt with:
 
-1. an ANE prediction count greater than zero for the temporal, depth-rollout,
-   and decoder model families actually loaded by the shipping runtime;
-2. app-attributed Metal GPU interval count and duration both equal to zero;
-3. the same model hashes and compute policy recorded in all 10 runs; and
-4. a successful cross-prediction temporal-state test for that exact artifact.
+1. temporal ANE estimated cost weight at least 0.95 and zero temporal GPU
+   operations/cost;
+2. the same model hashes and compute policy recorded in all 10 runs; and
+3. fresh-vs-warmed divergence plus a successful 64-frame frozen-fixture match
+   for that exact artifact (23 predictions after the 41-frame ring wraps).
+
+An Instruments trace from the same signed artifact must additionally show:
+
+1. temporal and decoder ANE prediction intervals greater than zero;
+2. temporal, depth-rollout, and decoder Core ML prediction intervals greater
+   than zero; and
+3. app-attributed Metal GPU interval count and duration both equal to zero.
+
+This separates two questions cleanly: the ten-launch matrix establishes
+admission reliability for the temporal artifact, while the process trace
+establishes actual hot-path accelerator activity and GPU absence. One trace is
+not repeated ten times because the model hash, signed app artifact, and
+in-process plan are invariant and each repeat would answer no new question.
 
 `Webcam` repeats the 10-launch matrix as cross-device evidence. An A14 failure
 is reported rather than allowed to invalidate an A17-only headline.
@@ -104,8 +120,10 @@ mismatch.
 python3 scripts/summarize_coreml_xctrace_exports.py RUN_EXPORT_DIR \
   --placement-evidence-json RUN_EXPORT_DIR/placement-evidence.json \
   --required-model ACTUAL_TEMPORAL_MODEL \
-  --required-model ACTUAL_DEPTH_MODEL \
   --required-model ACTUAL_DECODER_MODEL \
+  --required-runtime-model ACTUAL_TEMPORAL_MODEL \
+  --required-runtime-model ACTUAL_DEPTH_MODEL \
+  --required-runtime-model ACTUAL_DECODER_MODEL \
   --app-process CrossfadeRuntimeHost
 
 python3 scripts/verify_crossfade_placement_policy.py \
@@ -222,15 +240,15 @@ python3 validation/verify_system_paper_gate.py g4 \
 
 | ID | Candidate paper claim | Required gate / receipt | Current disposition |
 | --- | --- | --- | --- |
-| C1 | A complete `mrt2_small` pipeline generates 48 kHz stereo music continuously at 25 Hz on an iPhone 15 Pro Max with zero app-attributed GPU time. | G1 + G2 + G3; A17 placement, soak, and audio roots | **Blocked pending new device evidence.** This is the headline only if all three gates pass. |
+| C1 | A complete `mrt2_small` pipeline generates 48 kHz stereo music continuously at 25 Hz on an iPhone 15 Pro Max with zero app-attributed GPU time. | G1 + G2 + G3; A17 placement, soak, and audio roots | **G1 passed; blocked on G2/G3.** The composed A17 trace is GPU-empty and the observed short-run cost is below budget, but the headline still requires the 600 s and audio gates. |
 | C2 | The system sustains the 40 ms/frame contract for 10 foreground minutes with zero underruns. | G2; five-run latency dispersion plus the 600 s soak | **Blocked.** Prior corrected-pipeline soak fails around minutes 5–7 and is negative-result context only. |
-| C3 | A stateless host-owned K/V boundary makes the full temporal math island reliably ANE-resident in the shipping app. | G1 plus fresh/warm and >41-frame state receipts | **Blocked.** The public artifact has parity proof; prior in-app carry attempts fell back. |
+| C3 | A stateless host-owned K/V boundary makes the full temporal math island reliably ANE-resident in the shipping app. | G1 plus fresh/warm and >41-frame state receipts | **Passed on A17 Pro and A14.** Both phones pass 10/10 cold-process plan/state gates; both model-attributed traces show temporal ANE predictions and zero app GPU intervals. |
 | C4 | Reducing temporal weight bytes improves frame cost and sustained headroom in the bandwidth-bound regime without changing audible behavior. | Quantization ladder: artifact bytes, finite/parity/audio gates, device latency and soak pair | **Hypothesis.** Report the full ladder, including rejected variants; do not imply causality without the paired measurements. |
 | C5 | The delivery architecture converts measured jitter into bounded startup latency without blocking the audio render thread. | Runtime log, ring/reservoir trace, zero-underrun soak, pseudocode | **Supported historically, must be re-proven on the corrected pipeline.** |
 | C6 | GPU-free placement lowers process GPU impact and producer duty cycle relative to a temporal-GPU control. | Corrected-pipeline, counterbalanced Power Profiler pair; placement receipts | **Blocked pending re-run.** The old 0.57-vs-0.93 duty-cycle pair predates correctness fixes. |
 | C7 | The same pipeline has a measured, honest deployment tier on an A14 iPhone. | G4 | **Guaranteed as a reporting result, not guaranteed as a real-time pass.** |
 | C8 | Cold start to first audible PCM is measured on both phones. | Five cold launches/device with load, compile, prime, and first-render timestamps | **Unmeasured.** No responsiveness claim until receipts exist. |
-| C9 | Placement reliability is a deployment property distinct from graph convertibility and one-off harness success. | Ten cold launches/device plus falsification matrix | **Expected contribution; blocked pending Phase 1.** |
+| C9 | Placement reliability is a deployment property distinct from graph convertibility and one-off harness success. | Ten cold launches/device plus falsification matrix | **Passed.** The first post-install A14 process costs 39.498 s while warmed gate processes cost about 1.7 s, yet all 10/10 on each device preserve the same ANE plan and state result. |
 | C10 | Negative results identify where state, precision, compression, placement, or thermal behavior break. | Failed variants retained with commands, hashes, and failure text | **Mandatory regardless of headline outcome.** |
 
 ## Claims Explicitly Forbidden

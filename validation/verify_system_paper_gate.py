@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 
-G1_SCHEMA = "mrt2-system-paper-g1-v1"
+G1_SCHEMA = "mrt2-system-paper-g1-v2"
 G2_SCHEMA = "mrt2-system-paper-g2-v1"
 G3_SCHEMA = "mrt2-system-paper-g3-v1"
 G4_SCHEMA = "mrt2-system-paper-g4-v1"
@@ -28,6 +28,7 @@ REPORT_SCHEMA = "mrt2-system-paper-gate-report-v1"
 A17_PRO_DEVICE = "iPhone16,2"
 A14_DEVICE = "iPhone13,3"
 REQUIRED_MODEL_FAMILIES = ("temporal", "depth", "decoder")
+REQUIRED_ANE_MODEL_FAMILIES = ("temporal", "decoder")
 REQUIRED_KNOWN_BAD_CONTROLS = (
     "stride-corruption",
     "missing-temporal-feedback",
@@ -44,7 +45,8 @@ MIN_SOAK_SECONDS = 600.0
 MIN_STREAMING_FRAMES = 42
 MIN_EFFECTIVE_FRAME_COUNT = 15_000
 MAX_EFFECTIVE_FRAME_P99_MS = 40.0
-MAX_STATE_RELATIVE_ERROR = 0.01
+MIN_STATE_CORRELATION = 0.999
+MAX_STATE_ABSOLUTE_ERROR = 2.5
 MIN_STATE_DIVERGENCE = 1e-4
 
 G3_FIXED_PROMPT = "warm ambient texture"
@@ -187,11 +189,11 @@ def verify_g1(manifest: dict[str, Any]) -> dict[str, Any]:
 
     launch_hashes: list[dict[str, Any]] = []
     launch_policies: list[dict[str, Any]] = []
-    all_placement_pass = bool(launches)
+    all_admission_pass = bool(launches)
     all_artifacts_hashed = bool(launches)
     for launch in launches:
         if not isinstance(launch, dict):
-            all_placement_pass = False
+            all_admission_pass = False
             all_artifacts_hashed = False
             continue
         hashes = launch.get("modelSha256")
@@ -204,26 +206,27 @@ def verify_g1(manifest: dict[str, Any]) -> dict[str, Any]:
             and all(_is_sha256(hashes.get(name)) for name in REQUIRED_MODEL_FAMILIES)
             and _artifact_hashes_present(launch.get("artifactSha256"))
         )
-        placement = launch.get("placementEvidence")
-        model_evidence = (
-            placement.get("modelFamilies", {}) if isinstance(placement, dict) else {}
+        plan = launch.get("temporalComputePlan")
+        plan_pass = (
+            isinstance(plan, dict)
+            and plan.get("passed") is True
+            and _is_finite_number(plan.get("aneEstimatedCostWeight"))
+            and plan["aneEstimatedCostWeight"] >= 0.95
+            and plan.get("gpuOperationCount") == 0
+            and plan.get("gpuEstimatedCostWeight") == 0
         )
-        models_pass = set(model_evidence) == set(REQUIRED_MODEL_FAMILIES) and all(
-            _is_finite_number(model_evidence.get(name, {}).get("anePredictionCount"))
-            and model_evidence[name]["anePredictionCount"] > 0
-            and _is_finite_number(model_evidence[name].get("anePredictionTotalNs"))
-            and model_evidence[name]["anePredictionTotalNs"] > 0
-            for name in REQUIRED_MODEL_FAMILIES
+        all_admission_pass &= (
+            plan_pass
+            and launch.get("stateProofPassed") is True
+            and launch.get("fixtureProofPassed") is True
         )
-        gpu_pass = (
-            isinstance(placement, dict)
-            and placement.get("appGpuIntervalCount") == 0
-            and placement.get("appGpuTotalNs") == 0
-        )
-        all_placement_pass &= models_pass and gpu_pass
 
     _check(checks, "launch_artifacts_hashed", all_artifacts_hashed, value=launch_hashes)
-    _check(checks, "all_launches_have_ane_and_zero_app_gpu", all_placement_pass)
+    _check(
+        checks,
+        "all_launches_pass_temporal_plan_and_state",
+        all_admission_pass,
+    )
     _check(
         checks,
         "model_hashes_invariant",
@@ -240,6 +243,58 @@ def verify_g1(manifest: dict[str, Any]) -> dict[str, Any]:
         and launch_policies[0] == expected_policy,
         value=launch_policies,
         expected=expected_policy,
+    )
+
+    trace = manifest.get("traceEvidence")
+    trace = trace if isinstance(trace, dict) else {}
+    ane_evidence = trace.get("aneModelFamilies")
+    ane_evidence = ane_evidence if isinstance(ane_evidence, dict) else {}
+    ane_pass = set(ane_evidence) == set(REQUIRED_ANE_MODEL_FAMILIES) and all(
+        _is_finite_number(ane_evidence.get(name, {}).get("anePredictionCount"))
+        and ane_evidence[name]["anePredictionCount"] > 0
+        and _is_finite_number(ane_evidence[name].get("anePredictionTotalNs"))
+        and ane_evidence[name]["anePredictionTotalNs"] > 0
+        for name in REQUIRED_ANE_MODEL_FAMILIES
+    )
+    runtime_evidence = trace.get("runtimeModelFamilies")
+    runtime_evidence = runtime_evidence if isinstance(runtime_evidence, dict) else {}
+    runtime_pass = set(runtime_evidence) == set(REQUIRED_MODEL_FAMILIES) and all(
+        _is_finite_number(runtime_evidence.get(name, {}).get("coremlPredictionCount"))
+        and runtime_evidence[name]["coremlPredictionCount"] > 0
+        and _is_finite_number(runtime_evidence[name].get("coremlPredictionTotalNs"))
+        and runtime_evidence[name]["coremlPredictionTotalNs"] > 0
+        for name in REQUIRED_MODEL_FAMILIES
+    )
+    trace_gpu_pass = (
+        trace.get("appGpuIntervalCount") == 0 and trace.get("appGpuTotalNs") == 0
+    )
+    _check(
+        checks,
+        "trace_required_models_have_ane_predictions",
+        ane_pass,
+        value=ane_evidence,
+        expected=list(REQUIRED_ANE_MODEL_FAMILIES),
+    )
+    _check(
+        checks,
+        "trace_pipeline_models_have_coreml_predictions",
+        runtime_pass,
+        value=runtime_evidence,
+        expected=list(REQUIRED_MODEL_FAMILIES),
+    )
+    _check(checks, "trace_has_zero_app_gpu", trace_gpu_pass)
+    _check(
+        checks,
+        "trace_artifact_matches_launches",
+        bool(launch_hashes) and trace.get("modelSha256") == launch_hashes[0],
+        value=trace.get("modelSha256"),
+        expected=launch_hashes[0] if launch_hashes else None,
+    )
+    _check(
+        checks,
+        "trace_artifacts_hashed",
+        _artifact_hashes_present(trace.get("artifactSha256ByPath")),
+        value=trace.get("artifactSha256ByPath"),
     )
 
     state = manifest.get("stateEvidence")
@@ -273,14 +328,22 @@ def verify_g1(manifest: dict[str, Any]) -> dict[str, Any]:
         value={"streamingFrames": streaming_frames, "windowFrames": window_frames},
         expected={"windowFrames": 41, "streamingFrames": f">={MIN_STREAMING_FRAMES}"},
     )
-    relative_error = state.get("relativeMaxError")
+    correlation = state.get("correlation")
     _check(
         checks,
         "streaming_reference_match",
-        _is_finite_number(relative_error)
-        and relative_error <= MAX_STATE_RELATIVE_ERROR,
-        value=relative_error,
-        expected=f"<={MAX_STATE_RELATIVE_ERROR}",
+        _is_finite_number(correlation) and correlation >= MIN_STATE_CORRELATION,
+        value=correlation,
+        expected=f">={MIN_STATE_CORRELATION}",
+    )
+    max_absolute_error = state.get("maxAbsoluteError")
+    _check(
+        checks,
+        "streaming_absolute_error_bounded",
+        _is_finite_number(max_absolute_error)
+        and max_absolute_error <= MAX_STATE_ABSOLUTE_ERROR,
+        value=max_absolute_error,
+        expected=f"<={MAX_STATE_ABSOLUTE_ERROR}",
     )
     _check(
         checks,

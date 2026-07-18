@@ -1,0 +1,43 @@
+{
+  "cache_input_count": 48,
+  "cache_update_output_count": 48,
+  "coreml_cpu_only_timing_ms": {
+    "iterations": 64,
+    "p50": 11.322603997541592,
+    "p99": 34.99977717008717,
+    "scope": "Mac CPU_ONLY validation only; not device evidence"
+  },
+  "coreml_fresh_vs_warmed_diverged": true,
+  "coreml_vs_pytorch_streaming": {
+    "correlation": 0.9993117380261826,
+    "finite_ratio": 1.0,
+    "max_abs_error": 2.1356544494628906,
+    "mean_abs_error": 0.1379318056392833
+  },
+  "coreml_vs_reference": {
+    "correlation": 0.9993118839366119,
+    "finite_ratio": 1.0,
+    "max_abs_error": 2.135465621948242,
+    "mean_abs_error": 0.1379177275365322
+  },
+  "device_fixture_paths": {
+    "metadata": "/Users/mm/Documents/GitHub/magenta-realtime-2-iphone/fixtures/temporal_streaming_carry_64_device_fixture.json",
+    "reference_outputs": "/Users/mm/Documents/GitHub/magenta-realtime-2-iphone/fixtures/temporal_streaming_carry_64_reference_outputs_f32.bin",
+    "source_encoded": "/Users/mm/Documents/GitHub/magenta-realtime-2-iphone/fixtures/temporal_streaming_carry_64_source_encoded_f32.bin",
+    "temporal_inputs": "/Users/mm/Documents/GitHub/magenta-realtime-2-iphone/fixtures/temporal_streaming_carry_64_temporal_inputs_f32.bin"
+  },
+  "fixture_path": "/Users/mm/Documents/GitHub/magenta-realtime-2-iphone/fixtures/temporal_streaming_carry_64.npz",
+  "model_path": "/Users/mm/Documents/GitHub/magenta-realtime-2-iphone/build/models/mrt2_temporal_body_streaming_carry_01.mlpackage",
+  "pytorch_fresh_vs_warmed_diverged": true,
+  "pytorch_streaming_vs_reference": {
+    "correlation": 0.9999999961590288,
+    "finite_ratio": 1.0,
+    "max_abs_error": 0.008143424987792969,
+    "mean_abs_error": 0.00028177372563220615
+  },
+  "schema": "mrt2-temporal-body-streaming-carry-validation-v1",
+  "seed": 20260718,
+  "steps": 64,
+  "window_frames": 41,
+  "wrapped_steps": 23
+}
