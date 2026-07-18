@@ -1,0 +1,27 @@
+\begin{tikzpicture}[
+  font=\small,
+  node distance=6mm and 5mm,
+  box/.style={draw, rounded corners=2pt, minimum height=10mm, text width=23mm, align=center, inner sep=3pt},
+  ane/.style={box, fill=blue!9, draw=blue!55!black},
+  cpu/.style={box, fill=orange!12, draw=orange!65!black},
+  io/.style={box, fill=green!10, draw=green!50!black},
+  arrow/.style={-{Latex[length=2mm]}, thick}
+]
+\node[io] (prompt) {text/audio\\conditioning};
+\node[ane, right=of prompt] (temporal) {temporal\\12 layers\\ANE};
+\node[cpu, right=of temporal] (depth) {12-level RVQ\\rollout\\CPU};
+\node[cpu, right=of depth] (lookup) {RVQ lookup\\host};
+\node[ane, right=of lookup] (decoder) {SpectroStream\\decoder\\ANE};
+\node[cpu, right=of decoder] (render) {iSTFT + overlap\\SPSC ring\\CPU};
+\node[io, right=of render] (audio) {48 kHz\\stereo};
+\draw[arrow] (prompt) -- (temporal);
+\draw[arrow] (temporal) -- node[above, font=\scriptsize] {1 frame} (depth);
+\draw[arrow] (depth) -- node[above, font=\scriptsize] {12 codes} (lookup);
+\draw[arrow] (lookup) -- (decoder);
+\draw[arrow] (decoder) -- node[above, font=\scriptsize] {STFT} (render);
+\draw[arrow] (render) -- (audio);
+\draw[arrow, blue!70!black] (depth.south) to[out=-90,in=-90,looseness=1.2]
+  node[below, font=\scriptsize, align=center] {mean token embedding\\next-frame feedback} (temporal.south);
+\draw[arrow, blue!70!black] (temporal.north) to[out=90,in=90,looseness=1.15]
+  node[above, font=\scriptsize, align=center] {48 K/V updates; host-owned 41-frame ring} (temporal.north east);
+\end{tikzpicture}

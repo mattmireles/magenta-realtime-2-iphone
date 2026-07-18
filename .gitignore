@@ -7,3 +7,12 @@ __pycache__/
 *.pyc
 .DS_Store
 .venv/
+
+# Paper build intermediates (archival main.tex and main.pdf are tracked).
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/*.xdv
+tmp/

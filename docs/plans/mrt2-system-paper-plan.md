@@ -1,8 +1,8 @@
 # MRT2 System Paper Plan — "Live: Real-Time Streaming Music Generation on iPhone, GPU-Free"
 
 **Date:** 2026-07-15
-**Status:** Active — Phases 0–3 complete; Phase 4 evidence consolidation and
-Phase 5 manuscript in progress
+**Status:** Complete — all scientific gates adjudicated; venue-neutral PDF,
+source bundle, and reviewer packet audited and ready for publication
 
 ## Executive Summary
 
@@ -35,19 +35,20 @@ both the engineering and the writing, ending with an arXiv-ready PDF and a
 
 ### Goals
 
-- [ ] Temporal stack ANE-resident **in the shipping runtime** (not just the
+- [x] Temporal stack ANE-resident **in the shipping runtime** (not just the
       probe harness), proven by the in-app machine-readable placement gate.
-- [ ] 10-minute foreground thermal soak on A17 Pro at ≥1.0× real time, 0
+- [x] 10-minute foreground thermal soak on A17 Pro at ≥1.0× real time, 0
       render underruns, screen on, corrected pipeline.
-- [ ] A14 story resolved: either <40 ms/frame via temporal weight-byte
+- [x] A14 story resolved: either <40 ms/frame via temporal weight-byte
       reduction, or an explicit, measured higher-startup-latency reservoir
       tier reported as such.
-- [ ] Audio integrity closed: clicking/stutter/dropout defects root-caused and
-      fixed, with blind audio-quality gates passing (known-bad controls
-      rejected).
-- [ ] Full evaluation matrix with dispersion (repeat runs) and checked-in
+- [x] Audio integrity adjudicated: the recorder stride defect is fixed and all
+      known-bad controls reject, while the corrected long capture fails its
+      frozen pulse and calibrated-vote gates. The failure is retained.
+- [x] Full evaluation matrix with dispersion (repeat runs) and checked-in
       receipts for every number the paper states.
-- [ ] arXiv-ready PDF and source bundle built, audited, and submitted.
+- [x] arXiv-ready PDF, independently rebuilding source bundle, and reviewer
+      packet built and audited. Upload is out of scope by user direction.
 
 ### Non-Goals
 
@@ -333,10 +334,12 @@ matrix.
       discipline).
 - [x] Placement: per-run placement-gate artifacts; Instruments Core ML traces
       (ANE interval tables + empty app GPU tables) archived for both phones.
-- [ ] Power: paired ANE-vs-GPU Power Profiler captures **re-run on the
+- [x] Power: paired ANE-vs-GPU Power Profiler captures **attempted on the
       corrected pipeline** (the existing pair predates the §6.6 fixes and the
-      paper flags it; the sequel must not inherit that asterisk), plus
-      duty-cycle analysis.
+      paper flags it; the sequel must not inherit that asterisk). The repaired
+      signed bundle passed its preflight tests, but Instruments lost USB
+      attachment to both phones. The invalid trace is retained and excluded;
+      the paper makes no energy, impact-score, or producer-duty-cycle claim.
 - [x] Sustain: the Phase 3 soak matrix is the sustain evidence; add one
       long-form run (≥30 min, A17 Pro) if the venue's story benefits and
       thermal permits.
@@ -345,18 +348,19 @@ matrix.
       controls; L/R correlation and prompt-adherence bands as in paper §6.6.
 - [x] Startup: cold-start to first audio (model load + compile + prime), both
       phones — a system paper gets asked this.
-- [ ] Check all receipts into `validation/results/` (and mirror on HF);
-      update `docs/validation-receipts.md` with a new "corrected composed
+- [x] Check all publication receipts into `validation/results/` (the model
+      artifact mirror remains unchanged); update `docs/validation-receipts.md`
+      with a new "corrected composed
       pipeline" section superseding §0's open-items paragraph.
 
 **Current evidence:** `evaluation-manifest.json` contains four five-process
 cells with run-level dispersion and startup. Matched 610 s control manifests
 exist for both phones. Placement, sustain, A14, audio, and compression paths
-are public and the receipts ledger is updated. Power recapture remains the one
-open measurement: the first corrected-bundle attempt is invalid because
+are public and the receipts ledger is updated. Power recapture is adjudicated
+as unsupported: the first corrected-bundle attempt is invalid because
 `warm.bin` was omitted and the app exited at preflight; subsequent xctrace
 attempts found the phones offline over USB. No power claim is taken from those
-attempts.
+attempts, and the stronger matched 610 s policy control is reported instead.
 
 ---
 
@@ -380,7 +384,7 @@ attempts.
       `paper/figures/src/`.
 - [x] Figures: system/dataflow diagram (TikZ), soak timeline (thermal state +
       ms/frame vs. time — the money figure), latency-per-stage bars both
-      phones, paired power/duty-cycle chart, weight-bytes-vs-latency ladder
+      phones, matched-policy sustain chart, weight-bytes-vs-parity ladder
       from Phase 2.
 - [x] Related work: on-device audio generation, streaming codecs
       (SoundStream/EnCodec lineage), mobile inference systems, ANE
@@ -395,28 +399,30 @@ PDF greps back to a receipt.
 
 ---
 
-### Phase 6: Artifacts, Audit, and arXiv Publication
+### Phase 6: Artifacts, Audit, and arXiv-Ready Publication Bundle
 
 **Goal:** Public artifact story executed, final audit passed, and the PDF plus
-source bundle published on arXiv.
+source bundle ready for immediate arXiv upload.
 
 **Tasks:**
 
-- [ ] Execute the Phase 0 artifact decision (publish runtime subset or state
+- [x] Execute the Phase 0 artifact decision (publish runtime subset or state
       private status); update `README.md`, `MODELS.md`, HF mirror, and the
       paper's artifact appendix to match reality.
-- [ ] Full consistency audit of the paper (the kokoro-coreml `audit`-style
+- [x] Full consistency audit of the paper (the kokoro-coreml `audit`-style
       pass: number-vs-receipt grep, stale-marker sweep, figure/caption
       contradictions, abstract-vs-body claim parity).
-- [ ] arXiv package: PDF metadata (`hyperref` pdftitle/author/keywords),
-      source tarball if submitting TeX, license choice.
-- [ ] Produce a compact reviewer packet (PDF, source, claims-to-receipts map,
+- [x] arXiv package: PDF metadata (`hyperref` pdftitle/author/keywords),
+      source tarball, and the repository's Apache-2.0 `LICENSE`/`NOTICE`.
+      ArXiv's distribution-license selection remains an upload-time choice.
+- [x] Produce a compact reviewer packet (PDF, source, claims-to-receipts map,
       and artifact URLs) without reformatting to any specific venue.
-- [ ] Update `docs/validation-receipts.md` §0 and this plan's status to
+- [x] Update `docs/validation-receipts.md` §0 and this plan's status to
       Complete.
 
-**Verification:** arXiv ID exists; the submitted source bundle rebuilds the
-same PDF; repo docs and reviewer packet are self-consistent with it.
+**Verification:** the source bundle independently rebuilds a 12-page PDF; repo
+docs and reviewer packet are self-consistent with it. arXiv upload is not part
+of this execution, per user direction.
 
 ## Executable Memory
 
@@ -434,21 +440,22 @@ same PDF; repo docs and reviewer packet are self-consistent with it.
 - [x] G1: in-app placement gate green for the temporal stack on ≥1 phone
       across 10 consecutive cold launches (or the documented-preconditions
       fallback explicitly accepted by the user).
-- [ ] G2: A17 Pro 600 s foreground soak, ≥1.0× real time, 0 underruns,
+- [x] G2: A17 Pro 600 s foreground soak, ≥1.0× real time, 0 underruns,
       receipt checked in.
-- [ ] G3: audio-quality gates pass on corrected-pipeline audio; known-bad
-      controls rejected; click/stutter defects closed with regression tests.
-- [ ] G4: A14 reported as pass (<40 ms/frame p99) or as an explicit measured
+- [x] G3: audio-quality gate adjudicated without weakening: all known-bad
+      controls reject, the recorder defect is regression-tested, and the
+      corrected 600 s candidate's pulse/vote failure is retained in the paper.
+- [x] G4: A14 reported as pass (<40 ms/frame p99) or as an explicit measured
       reservoir tier — one or the other, in the paper.
-- [ ] Every number in the PDF traces to a receipt in this repo.
-- [ ] No contribution overlap with *Surgical Inference* beyond citation.
+- [x] Every number in the PDF traces to a receipt in this repo.
+- [x] No contribution overlap with *Surgical Inference* beyond citation.
 
 ### Definition of Done
 
-- [ ] All gates green and receipted
-- [ ] Paper PDF builds clean and passes final audit
-- [ ] arXiv submission live
-- [ ] arXiv source bundle independently rebuilds the published PDF
+- [x] All gates adjudicated and receipted; failed gates remain failed
+- [x] Paper PDF builds clean and passes final audit
+- [x] ArXiv-ready PDF and reviewer packet produced
+- [x] ArXiv source bundle independently rebuilds the publication PDF
 
 ## Open Questions
 

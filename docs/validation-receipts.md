@@ -90,6 +90,16 @@ finite and all six fail deterministic parity; early stopping prevents device
 timing or listening. Receipt:
 `validation/results/MRT2WeightCompressionLadder.{json,md}`.
 
+### Corrected-pipeline power comparison: unsupported, omitted
+
+The first corrected-bundle Power Profiler pair is invalid because the signed
+bundle omitted `warm.bin` and the app exited during preflight. The bundle was
+repaired and regression-tested, but subsequent Instruments attempts could not
+attach to either phone over USB. The invalid traces are retained privately and
+excluded. This evidence package therefore makes no corrected-pipeline energy,
+impact-score, battery-life, or producer-duty-cycle claim. The matched 610 s
+temporal-policy control above is the supported comparative evidence.
+
 ## 0. Correction — the corrected artifact generation (paper §6.3–6.5)
 
 **The ledger in sections 1+ below documents the earlier, superseded artifact

@@ -1,18 +1,31 @@
-# Magenta RealTime 2 on the iPhone, Without the GPU
+# Magenta RealTime 2 on iPhone
 
-**Live music generation at 25 frames per second, on the iPhone in your pocket.
-Ten unbroken minutes of 48 kHz stereo without melting your phone. Zero
-dropouts. Even on a 2020 iPhone 12 Pro. And the GPU never wakes up.**
+**A 230M-parameter live-music model sustains its compute and audio-delivery
+clocks on A17 Pro for ten hot foreground minutes without application GPU
+execution. Its long-horizon generative-quality clock still fails. Both results
+are measured and published.**
 
-This is Google DeepMind's [Magenta RealTime 2](https://huggingface.co/google/magenta-realtime-2)
-(`mrt2_small`, 230M parameters), surgically altered into three Core ML graphs and
-placed on the silicon each one wants. The temporal transformer holds **p99
-≈ 14 ms** on the iPhone's Neural Engine against a 40 ms frame budget. Output correlation
-vs Google's MLX reference: **0.999985904188** — we publish all twelve digits
-because we measured all twelve. Decoder SNR: **118.85 dB**. Sampled tokens:
-identical, 0 of 12 mismatched. App-attributed GPU time in a 60-second
-Instruments capture of the all-ANE pipeline: **zero** — the only process with
-GPU intervals is iOS's screen compositor.
+This repository is the public artifact for Google DeepMind's
+[Magenta RealTime 2](https://huggingface.co/google/magenta-realtime-2)
+(`mrt2_small`) on iPhone: Core ML exporters, frozen fixtures, gate verifiers,
+machine-readable device receipts, and the paper source.
+
+> **System paper:** [*The Three Clocks of Live Music Generation: Sustained
+> GPU-Free MRT2 Inference on iPhone*](paper/main.pdf)
+>
+> - A17 Pro: 610.19 s, 1.0308x production, 21.66 ms p99 against a 40 ms
+>   deadline, zero underruns/drops, and a growing reservoir from a run that
+>   begins in the `serious` thermal state.
+> - Placement: 10/10 cold-process temporal ANE admissions; a model-attributed
+>   trace records temporal and decoder ANE work and zero app GPU intervals.
+> - Audio quality: the corrected 600 s WAV passes delivery, finite, stereo,
+>   prompt, and reference-similarity checks but fails the frozen pulse detector
+>   and three of five calibrated blind votes. This is not hidden or tuned away.
+> - A14: 58.59 ms p99, 0.8967x production, and first underflow at 294.08 s even
+>   with a 20.16 s reservoir. It is a bounded-reservoir failure, not a
+>   real-time tier.
+> - Compression: six 4/6/8-bit post-training variants shrink to 25–50% of
+>   baseline but all fail deterministic parity before device timing.
 
 > **Pre-converted models:** [huggingface.co/mattmireles/magenta-realtime-2-iphone](https://huggingface.co/mattmireles/magenta-realtime-2-iphone)
 > **Exporters, validation harness, docs (this repo):** [github.com/mattmireles/magenta-realtime-2-iphone](https://github.com/mattmireles/magenta-realtime-2-iphone)
@@ -30,9 +43,9 @@ GPU intervals is iOS's screen compositor.
 >    caches as inputs, one-token updates as outputs, no `ct.StateType`) compiles
 >    the full 12-layer stack to one ANE-resident graph (`costWeights=ane:1.000`,
 >    p99 14.991 ms on iPhone 12 Pro). Every in-graph `ct.StateType` variant
->    fails `ANECCompile()` with error −14. *Honesty (§6.7): the shipped runtime
->    still places temporal on `.cpuAndGPU` because ANE admission proved
->    instance-fragile; the stateless graph is the proven escape to re-land.*
+>    fails `ANECCompile()` with error −14. The system-paper runtime now uses
+>    this boundary and passes its in-app plan/state gate in 10/10 cold
+>    processes on both tested phones.
 > 2. **Layout determines FP16 survival (§6.4).** The decoder FP16 export is
 >    finite **and** ANE-resident after a channels-first (NCHW) rewrite plus an
 >    exact rescale (`--nchw-parallel-layer 5 --fp16-rescale --compute-precision
@@ -41,8 +54,9 @@ GPU intervals is iOS's screen compositor.
 >    levels in one in-graph FP16 rollout from host Gumbel noise
 >    (`convert_depth_body_rollout.py`), not 12 host-side predictions.
 >
-> The prose and diagram below describe the earlier generation and are being
-> updated; where they conflict with this box or MODELS.md, this box is correct.
+> Sections below retain earlier artifact-generation history. The system-paper
+> box above, `MODELS.md`, and `docs/validation-receipts.md` are authoritative
+> where historical measurements differ from the final composed runtime.
 
 ## The method: redesign the pipeline, not the model
 
@@ -56,7 +70,7 @@ prompt text ──(compiled once, on a Mac)──▶ prompt vector
                ▼
 ┌──────────────────────────────────┐
 │  TEMPORAL  (carry, stateless)    │ ◀── ANE-clean (proven);
-│  Predicts the next 40 ms of music│     shipped .cpuAndGPU; fp16
+│  Predicts the next 40 ms of music│     .cpuAndNeuralEngine; fp16
 └──────────────┬───────────────────┘
                ▼
 ┌──────────────────────────────────┐
@@ -138,11 +152,10 @@ in the [stateful KV guide](docs/stateful-kv-coreml.md).
 Magenta RealTime 2 already runs on Apple Silicon — Google ships an MLX engine
 for Mac **GPUs**. A phone is a different game. Real-time music is not a
 3-second benchmark: the model must deliver one 40 ms frame every 40 ms,
-indefinitely, on a device with no fan. The GPU can hit the latency; it can't
-hold the power budget through minute ten. The Neural Engine — the same silicon
-that runs Face ID and on-device Siri — devours static-shape fp16 matrix math
-at a fraction of the GPU's draw. It is the only compute unit on the phone
-built for this job.
+indefinitely, on a device with no fan. A fast short run is insufficient: the
+selected placement must preserve tail latency through minute ten. The Neural
+Engine is specialized for the static-shape FP16 matrix math that dominates
+this workload, while leaving the CPU to handle irregular state and audio work.
 
 But the iPhone's NPU has rules. No dynamic shapes. No data-dependent control flow. And
 a compiler that fails *silently*: push the whole model through as one graph
@@ -151,7 +164,12 @@ model" on the CPU at ~640 ms per frame — 16× over budget, no error raised. We
 hit that cliff, measured it, and published it. Then we cut the pipeline at the
 joints.
 
-### ANE vs GPU, measured
+### Historical ANE-vs-GPU power evidence
+
+The table below belongs to the earlier artifact-generation study, not the
+corrected composed pipeline evaluated by the new system paper. The corrected
+Power Profiler pair could not be completed after Instruments lost USB
+attachment; the system paper therefore makes no energy or impact-score claim.
 
 Routing the temporal transformer to the GPU is not a sidegrade — it costs you
 twice. A counterbalanced pair of 60-second live-audio runs on the iPhone 12
@@ -165,11 +183,13 @@ Pro, identical except for where the temporal stage executes:
 | Producer thread busy                | **57% — sleeps the rest** | 93% — nearly pegged |
 
 
-The ANE routing doesn't just switch the GPU off. It halves the CPU work, and
-the producer thread finishes each second of audio early and sleeps 43% of the
-run. That sleep *is* the thermal headroom — it's how minute ten sounds like
-minute one. In the Instruments Metal capture, the only process with GPU time
-is `backboardd`, iOS's screen compositor. The music uses none.
+In that historical configuration, the ANE routing switched the application
+GPU work off, halved CPU work, and
+the producer thread finished each second of audio early and slept 43% of the
+run. That was directional headroom in the earlier runtime, not a
+corrected-pipeline energy result. In the Instruments Metal capture, the only
+process with GPU time was `backboardd`, iOS's screen compositor. The music used
+none.
 ([receipts §4.4](docs/validation-receipts.md))
 
 ## Status — what's proven, what's not
@@ -184,13 +204,13 @@ We publish what we've validated. Nothing here is aspirational.
 | SpectroStream decoder matches MLX                                  | ✅ Proven      | SNR 118.850 dB, log-spectral distance 0.000722 dB                                                                                                                                                  |
 | Stateless temporal stack is ANE-clean on device (§6.3)             | ✅ Proven      | full 12-layer stack `costWeights=ane:1.000`, `preferredCounts=ane:1033,cpu:2`, MLComputePlan iPhone 12 Pro; every `ct.StateType` variant fails `ANECCompile −14`                                    |
 | Temporal step fits the budget                                      | ✅ Proven      | p99 ≈ 14.991 ms against a 40 ms frame (stateless temporal only, iPhone 12 Pro)                                                                                                                     |
-| Temporal ships on the ANE in the full app                          | ⚠️ Not yet    | admission is instance-fragile (§6.7): the stateless graph fell back to CPU inside the app, so shipped placement is `.cpuAndGPU`; re-landing on the ANE is named open work                           |
+| Temporal runs on the ANE in the full app                          | ✅ Proven      | 10/10 cold-process plan/state gates on A17 Pro and A14; model-attributed traces show temporal ANE work and zero app GPU intervals ([system-paper receipts](docs/validation-receipts.md))          |
 | Decoder FP16 is finite and ANE-resident (§6.4)                     | ✅ Proven      | NCHW `.cpuAndNeuralEngine` finite 184,320/184,320 (25-frame, p99 24.77 ms); CPU-only/CPU+GPU non-finite for the same fp16 artifact                                                                  |
 | Depth rollout samples identical tokens (FP32) (§6.5)               | ✅ Proven      | 0/900 mismatches vs the reference sampler; FP16 flips only fp16 near-ties (distribution unchanged)                                                                                                 |
-| Sustained playback without dropouts                                | ✅ Proven      | 10-minute runs: 0 underruns, 0 dropped frames — iPhone 15 Pro Max **and** iPhone 12 Pro (A14, 2020, with a 15 s startup reservoir)                                                                 |
-| Survives a thermal soak                                            | ✅ Proven      | the 10-minute soak pushed iOS thermal state to "serious" — and never dropped a frame. On the A14, the only failure mode was latency headroom at *nominal* thermal; heat was never the limiter      |
-| The 25 Hz hot loop never touches the GPU                           | ✅ Proven      | Instruments Metal capture: zero app-attributed GPU intervals in the all-ANE configuration; routing temporal to GPU instead doubles CPU instructions ([receipts §4.4](docs/validation-receipts.md)) |
-| Composed pipeline p99 < 40 ms in all configs                       | ⚠️ Not yet    | measured 24–62 ms/frame composed; lookahead absorbs the tail                                                                                                                                       |
+| Sustained playback without dropouts                                | ✅ A17 only    | A17: 610.19 s, 0 underruns/drops. A14 is explicitly rejected: 7,952 underruns and 0.8967x production despite a 20.16 s maximum reservoir ([system-paper receipts](docs/validation-receipts.md))     |
+| Survives a thermal soak                                            | ✅ A17 only    | the selected A17 run begins and remains in `serious`, holds p99 at 21.21–23.08 ms per minute, and never underruns; A14 fails the compute clock                                                     |
+| The selected A17 hot loop never touches the GPU                    | ✅ Proven      | model-attributed A17 trace shows temporal/decoder ANE work, deliberate CPU depth, and zero application Metal GPU intervals ([system-paper receipts](docs/validation-receipts.md))                    |
+| Composed pipeline p99 < 40 ms                                      | ✅ A17 only    | A17 selected policy: 21.66 ms sustained p99. A14: 58.59 ms p99 and a bounded-reservoir failure                                                                                                    |
 | Turnkey Swift runtime / demo app                                   | ❌ Not shipped | coming when it meets our bar                                                                                                                                                                       |
 | Conditioning preset library                                        | ❌ Not shipped | deliberately — see [Conditioning](#conditioning)                                                                                                                                                   |
 
