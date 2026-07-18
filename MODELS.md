@@ -32,6 +32,32 @@ binaries moved to the mirror's `superseded/` directory.
 
 ## Corrected generation (paper §6.3–6.5)
 
+### System-paper compression ladder (2026-07-18)
+
+The real-time system uses the one-step
+`mrt2_temporal_body_streaming_carry_01` specialization: one ordinary-input /
+ordinary-output cache-update graph plus a host-owned 41-frame chronological
+ring. Post-training weight compression was tested only after the 64-step
+(23 post-wrap steps) state fixture was frozen.
+
+| Component | Variant | Package vs. baseline | Deterministic result | Decision |
+| --- | --- | ---: | --- | --- |
+| Temporal | int8 linear | 0.502x | corr 0.997328; max error 4.585 | Reject |
+| Temporal | 6-bit palette | 0.376x | corr 0.976950; max error 13.212 | Reject |
+| Temporal | 4-bit palette | 0.252x | corr 0.887407; max error 23.949 | Reject |
+| Depth | int8 linear | 0.505x | argmax token mismatch 0.463 | Reject |
+| Depth | 6-bit palette | 0.380x | argmax token mismatch 0.687 | Reject |
+| Depth | 4-bit palette | 0.256x | argmax token mismatch 0.940 | Reject |
+
+All candidates remained finite but failed deterministic-reference parity.
+Following the declared finite → parity → device → blind-audio gate order, none
+was installed on a phone or rendered for listening. The selected system stays
+uncompressed temporal plus the existing FP16 depth artifact. Consequently the
+HF mirror is unchanged and this work makes no compression-causes-speedup
+claim. Exact package bytes, weight hashes, all three depth arms, and early-stop
+statuses are in
+`validation/results/MRT2WeightCompressionLadder.{json,md}`.
+
 | Artifact | HF file | Exporter | Precision | Compute target | Role |
 | --- | --- | --- | --- | --- | --- |
 | `MRT2TemporalBodyCarry` | `MRT2TemporalBodyCarry.mlpackage` | `convert_temporal_body_carry.py` | FLOAT16 | **ANE-clean (proven); shipped runtime `.cpuAndGPU`** | Stateless temporal step function. 48 K/V caches are ordinary **inputs**, 48 one-token cache updates are ordinary **outputs**, the host owns mutation. No `ct.StateType`. Uploaded package is the 2-frame bucket (`--frames 2`). |

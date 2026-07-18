@@ -1,7 +1,7 @@
 # MRT2 System Paper Plan — "Live: Real-Time Streaming Music Generation on iPhone, GPU-Free"
 
 **Date:** 2026-07-15
-**Status:** Active — Phases 0–1 complete; Phase 2 in progress
+**Status:** Active — Phases 0–2 complete; Phase 3 in progress
 
 ## Executive Summary
 
@@ -241,20 +241,23 @@ composed <40 ms/frame; A17 Pro thermal headroom.
 
 **Tasks:**
 
-- [ ] Export ladder in this repo: new flags on the temporal/depth exporters
+- [x] Export ladder in this repo: new flags on the temporal/depth exporters
       (`exporters/convert_temporal_body_carry.py`,
       `exporters/convert_depth_body_rollout.py`) for 6-bit/4-bit palettized
       and int8-linear weight variants. One variant = one artifact = one
       receipt.
-- [ ] Per-variant validation, in gate order: `finite_ratio == 1.0` →
+- [x] Per-variant validation, in gate order: `finite_ratio == 1.0` →
       deterministic token mismatches vs. fixtures (temporal→depth composed,
       per receipts §2.1 methodology) → device latency p50/p99 → blind
       audio-quality gates on rendered audio (known-bad controls must still
       reject).
-- [ ] Per-variant device sweep on both phones: latency, `MLComputePlan`,
-      DRAM-traffic estimate; pick the smallest-byte variant that passes all
-      quality gates.
-- [ ] Update `MODELS.md` + HF mirror with the chosen variants and receipts.
+- [x] Apply the per-variant device-sweep admission gate on both phones. All
+      six candidates failed deterministic reference parity, so the predeclared
+      early-stop rule rejected them before installation, device timing,
+      `MLComputePlan`, DRAM estimation, or listening. No compressed candidate
+      was eligible for selection.
+- [x] Update `MODELS.md` with the ladder and decision. The HF mirror is
+      intentionally unchanged because no new variant was selected.
 
 **Verification:** Chosen variant's receipts checked into
 `validation/results/`; A14 composed p99 measured against the 40 ms budget
@@ -262,6 +265,19 @@ composed <40 ms/frame; A17 Pro thermal headroom.
 green. Kill criterion: if no compressed variant survives the audio gate, ship
 uncompressed and let G4 resolve as the reservoir tier — do not trade audible
 quality for the budget.
+
+**Verification (2026-07-18): PASS — negative result.** The exporter ladder
+produces int8-linear, 6-bit palettized, and 4-bit palettized variants for both
+temporal and depth. All six remain finite and reduce package bytes to roughly
+50%, 38%, and 25% of their respective baselines, but all six fail their
+declared deterministic-reference gate. Temporal correlation falls from the
+uncompressed 0.999312 to 0.997328, 0.976950, and 0.887407; max absolute error
+rises from 2.135 to 4.585, 13.212, and 23.949. Depth argmax mismatch rates rise
+from the existing FP16 baseline's 0.170 to 0.463, 0.687, and 0.940. The
+machine-readable early-stop receipt is
+`validation/results/MRT2WeightCompressionLadder.{json,md}`. Therefore the
+system retains the uncompressed streaming temporal artifact and existing FP16
+depth artifact. No causal speedup or audio-equivalence claim is made.
 
 ---
 

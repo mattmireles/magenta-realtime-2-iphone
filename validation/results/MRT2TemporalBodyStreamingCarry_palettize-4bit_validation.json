@@ -1,0 +1,36 @@
+{
+  "cache_input_count": 48,
+  "cache_update_output_count": 48,
+  "coreml_cpu_only_timing_ms": {
+    "iterations": 64,
+    "p50": 11.328603999572806,
+    "p99": 31.88386738329414,
+    "scope": "Mac CPU_ONLY validation only; not device evidence"
+  },
+  "coreml_fresh_vs_warmed_diverged": true,
+  "coreml_vs_pytorch_streaming": {
+    "correlation": 0.8874067695799824,
+    "finite_ratio": 1.0,
+    "max_abs_error": 23.947359085083008,
+    "mean_abs_error": 1.8098461977542684
+  },
+  "coreml_vs_reference": {
+    "correlation": 0.8874066521542747,
+    "finite_ratio": 1.0,
+    "max_abs_error": 23.948857307434082,
+    "mean_abs_error": 1.8098448650068661
+  },
+  "model_path": "build/models/mrt2_temporal_body_streaming_carry_01_palettize-4bit.mlpackage",
+  "pytorch_fresh_vs_warmed_diverged": true,
+  "pytorch_streaming_vs_reference": {
+    "correlation": 0.9999999961590288,
+    "finite_ratio": 1.0,
+    "max_abs_error": 0.008143424987792969,
+    "mean_abs_error": 0.00028177372563220615
+  },
+  "schema": "mrt2-temporal-body-streaming-carry-validation-v1",
+  "seed": 20260718,
+  "steps": 64,
+  "window_frames": 41,
+  "wrapped_steps": 23
+}

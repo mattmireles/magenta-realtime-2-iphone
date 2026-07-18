@@ -1,0 +1,223 @@
+{
+  "baselines": {
+    "depth": {
+      "acceptance_boundary": "prior distributional plus device-listening gate",
+      "artifact": "build/models/mrt2_depth_body_rollout_f16.mlpackage",
+      "artifact_bytes": 74457825,
+      "receipt": "validation/results/MRT2DepthBodyRollout_f16_validation.json",
+      "weight_sha256": "6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8"
+    },
+    "temporal": {
+      "artifact": "build/models/mrt2_temporal_body_streaming_carry_01.mlpackage",
+      "artifact_bytes": 365694560,
+      "receipt": "validation/results/MRT2TemporalBodyStreamingCarry_validation.json",
+      "weight_sha256": "02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64"
+    }
+  },
+  "candidates": [
+    {
+      "artifact": "build/models/mrt2_temporal_body_streaming_carry_01_int8-linear.mlpackage",
+      "artifact_bytes": 183586087,
+      "blind_audio_gate": {
+        "status": "not_run_due_to_parity_gate"
+      },
+      "component": "temporal",
+      "device_latency_gate": {
+        "status": "not_run_due_to_parity_gate"
+      },
+      "disposition": "rejected_at_parity_gate",
+      "finite_gate": {
+        "finite_ratio": 1.0,
+        "passed": true
+      },
+      "fraction_of_uncompressed": 0.5020202843597127,
+      "parity_gate": {
+        "correlation": 0.9973283731416843,
+        "criteria": "64 steps, 23 post-wrap; correlation >= 0.999 and max_abs_error <= 2.5",
+        "max_abs_error": 4.58510684967041,
+        "mean_abs_error": 0.2714934775650448,
+        "passed": false
+      },
+      "receipt": "validation/results/MRT2TemporalBodyStreamingCarry_int8-linear_validation.json",
+      "variant": "int8-linear",
+      "weight_sha256": "57a778743176362d4c6bed54474ee4064b56e46353930331b9a568d10a99d365"
+    },
+    {
+      "artifact": "build/models/mrt2_temporal_body_streaming_carry_01_palettize-6bit.mlpackage",
+      "artifact_bytes": 137669621,
+      "blind_audio_gate": {
+        "status": "not_run_due_to_parity_gate"
+      },
+      "component": "temporal",
+      "device_latency_gate": {
+        "status": "not_run_due_to_parity_gate"
+      },
+      "disposition": "rejected_at_parity_gate",
+      "finite_gate": {
+        "finite_ratio": 1.0,
+        "passed": true
+      },
+      "fraction_of_uncompressed": 0.37646067526954735,
+      "parity_gate": {
+        "correlation": 0.9769502376197661,
+        "criteria": "64 steps, 23 post-wrap; correlation >= 0.999 and max_abs_error <= 2.5",
+        "max_abs_error": 13.211878776550293,
+        "mean_abs_error": 0.7891958069555329,
+        "passed": false
+      },
+      "receipt": "validation/results/MRT2TemporalBodyStreamingCarry_palettize-6bit_validation.json",
+      "variant": "palettize-6bit",
+      "weight_sha256": "5e9549c6b8116c4306d98aaab24dd3993baa6cd80d03e71efd03033966d94a8b"
+    },
+    {
+      "artifact": "build/models/mrt2_temporal_body_streaming_carry_01_palettize-4bit.mlpackage",
+      "artifact_bytes": 92048880,
+      "blind_audio_gate": {
+        "status": "not_run_due_to_parity_gate"
+      },
+      "component": "temporal",
+      "device_latency_gate": {
+        "status": "not_run_due_to_parity_gate"
+      },
+      "disposition": "rejected_at_parity_gate",
+      "finite_gate": {
+        "finite_ratio": 1.0,
+        "passed": true
+      },
+      "fraction_of_uncompressed": 0.2517097328437153,
+      "parity_gate": {
+        "correlation": 0.8874066521542747,
+        "criteria": "64 steps, 23 post-wrap; correlation >= 0.999 and max_abs_error <= 2.5",
+        "max_abs_error": 23.948857307434082,
+        "mean_abs_error": 1.8098448650068661,
+        "passed": false
+      },
+      "receipt": "validation/results/MRT2TemporalBodyStreamingCarry_palettize-4bit_validation.json",
+      "variant": "palettize-4bit",
+      "weight_sha256": "64bef2d478518ff562d7da1ce45f5ac454b463fbd1e18d6a07d9e711693d2f10"
+    },
+    {
+      "artifact": "build/models/mrt2_depth_body_rollout_int8-linear.mlpackage",
+      "artifact_bytes": 37593021,
+      "blind_audio_gate": {
+        "status": "not_run_due_to_parity_gate"
+      },
+      "component": "depth",
+      "device_latency_gate": {
+        "status": "not_run_due_to_parity_gate"
+      },
+      "disposition": "rejected_at_parity_gate",
+      "finite_gate": {
+        "passed": true
+      },
+      "fraction_of_uncompressed": 0.5048901307552296,
+      "parity_gate": {
+        "arms": {
+          "argmax_frames": {
+            "mismatch_rate": 0.4633333333333333,
+            "temporal_feedback_max_abs_error": 1.8416674137115479
+          },
+          "noise_frames_t10": {
+            "mismatch_rate": 0.3333333333333333,
+            "temporal_feedback_max_abs_error": 2.5115580558776855
+          },
+          "noise_frames_t13": {
+            "mismatch_rate": 0.29,
+            "temporal_feedback_max_abs_error": 2.0824296474456787
+          }
+        },
+        "criteria": "FLOAT16: token mismatch rate <= 0.02 per arm (fp16 near-tie flips sample an equally-likely top-k neighbor; distribution unchanged); temporal_feedback max |err| <= 0.05",
+        "passed": false
+      },
+      "receipt": "validation/results/MRT2DepthBodyRollout_int8-linear_validation.json",
+      "variant": "int8-linear",
+      "weight_sha256": "6234013396c6bf763498de37d679ddaae86d11345cf767d3b3d1322214cf6ef8"
+    },
+    {
+      "artifact": "build/models/mrt2_depth_body_rollout_palettize-6bit.mlpackage",
+      "artifact_bytes": 28279207,
+      "blind_audio_gate": {
+        "status": "not_run_due_to_parity_gate"
+      },
+      "component": "depth",
+      "device_latency_gate": {
+        "status": "not_run_due_to_parity_gate"
+      },
+      "disposition": "rejected_at_parity_gate",
+      "finite_gate": {
+        "passed": true
+      },
+      "fraction_of_uncompressed": 0.37980167967570905,
+      "parity_gate": {
+        "arms": {
+          "argmax_frames": {
+            "mismatch_rate": 0.6866666666666666,
+            "temporal_feedback_max_abs_error": 1.944875955581665
+          },
+          "noise_frames_t10": {
+            "mismatch_rate": 0.5733333333333334,
+            "temporal_feedback_max_abs_error": 1.9712949991226196
+          },
+          "noise_frames_t13": {
+            "mismatch_rate": 0.48,
+            "temporal_feedback_max_abs_error": 2.583538055419922
+          }
+        },
+        "criteria": "FLOAT16: token mismatch rate <= 0.02 per arm (fp16 near-tie flips sample an equally-likely top-k neighbor; distribution unchanged); temporal_feedback max |err| <= 0.05",
+        "passed": false
+      },
+      "receipt": "validation/results/MRT2DepthBodyRollout_palettize-6bit_validation.json",
+      "variant": "palettize-6bit",
+      "weight_sha256": "d5c87047e7597f6150aecd3d1930e6cf299c6143a6e63dfcd907e9abaa4cde8f"
+    },
+    {
+      "artifact": "build/models/mrt2_depth_body_rollout_palettize-4bit.mlpackage",
+      "artifact_bytes": 19036227,
+      "blind_audio_gate": {
+        "status": "not_run_due_to_parity_gate"
+      },
+      "component": "depth",
+      "device_latency_gate": {
+        "status": "not_run_due_to_parity_gate"
+      },
+      "disposition": "rejected_at_parity_gate",
+      "finite_gate": {
+        "passed": true
+      },
+      "fraction_of_uncompressed": 0.2556645590977174,
+      "parity_gate": {
+        "arms": {
+          "argmax_frames": {
+            "mismatch_rate": 0.94,
+            "temporal_feedback_max_abs_error": 2.7394323348999023
+          },
+          "noise_frames_t10": {
+            "mismatch_rate": 0.9166666666666666,
+            "temporal_feedback_max_abs_error": 2.5543372631073
+          },
+          "noise_frames_t13": {
+            "mismatch_rate": 0.89,
+            "temporal_feedback_max_abs_error": 3.2384915351867676
+          }
+        },
+        "criteria": "FLOAT16: token mismatch rate <= 0.02 per arm (fp16 near-tie flips sample an equally-likely top-k neighbor; distribution unchanged); temporal_feedback max |err| <= 0.05",
+        "passed": false
+      },
+      "receipt": "validation/results/MRT2DepthBodyRollout_palettize-4bit_validation.json",
+      "variant": "palettize-4bit",
+      "weight_sha256": "3eef01b3d3cf8e8edd9d16aea8dbf5cba528964e67c567e36749433880f54eb7"
+    }
+  ],
+  "decision": {
+    "compressed_variant_selected": false,
+    "selected": "uncompressed_temporal_plus_existing_fp16_depth",
+    "summary": "All six compressed component candidates remained finite but failed their declared deterministic-reference gate. The experiment stops there and retains the uncompressed temporal plus existing FP16 depth configuration."
+  },
+  "gate_order": [
+    "finite",
+    "deterministic_parity",
+    "device",
+    "blind_audio"
+  ],
+  "schema": "mrt2-weight-compression-ladder-v1"
+}

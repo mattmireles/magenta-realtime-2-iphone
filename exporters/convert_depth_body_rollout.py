@@ -61,6 +61,10 @@ from mrt2_coreml.depthformer_wrapper import (
     MRT2_MODEL_DIM,
     MRT2_RVQ_LEVELS,
 )
+from mrt2_coreml.weight_compression import (
+    WEIGHT_COMPRESSION_CHOICES,
+    compress_weights,
+)
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -146,14 +150,34 @@ def _compile_model(package_path: Path, compiled_path: Path) -> dict[str, Any]:
     }
 
 
+def _variant_path(path: Path, variant: str) -> Path:
+  """Append a compression variant without risking baseline overwrite."""
+  if variant == "none":
+    return path
+  return path.with_name(f"{path.stem}_{variant}{path.suffix}")
+
+
+def _artifact_bytes(path: Path) -> int | None:
+  """Return recursive artifact bytes, or ``None`` when absent."""
+  if not path.exists():
+    return None
+  if path.is_file():
+    return path.stat().st_size
+  return sum(item.stat().st_size for item in path.rglob("*") if item.is_file())
+
+
 def convert(args: argparse.Namespace) -> dict[str, Any]:
   """Trace, convert, save, optionally compile, and return export metadata."""
   _ensure_coreml_runtime_path()
   output_dir = Path(args.output_dir)
   output_dir.mkdir(parents=True, exist_ok=True)
-  package_path = output_dir / args.package_name
-  compiled_path = output_dir / args.compiled_name
-  metadata_path = output_dir / args.metadata_name
+  package_path = _variant_path(output_dir / args.package_name, args.weight_compression)
+  compiled_path = _variant_path(
+      output_dir / args.compiled_name, args.weight_compression
+  )
+  metadata_path = _variant_path(
+      output_dir / args.metadata_name, args.weight_compression
+  )
   compute_precision = getattr(ct.precision, args.compute_precision)
 
   model = DepthBodyRolloutWrapper().eval()
@@ -202,6 +226,7 @@ def convert(args: argparse.Namespace) -> dict[str, Any]:
           minimum_deployment_target=ct.target.iOS18,
       )
   convert_seconds = time.perf_counter() - start_convert
+  mlmodel, compression_report = compress_weights(mlmodel, args.weight_compression)
 
   if package_path.exists():
     shutil.rmtree(package_path)
@@ -271,10 +296,13 @@ def convert(args: argparse.Namespace) -> dict[str, Any]:
           "trace_seconds": trace_seconds,
           "convert_seconds": convert_seconds,
       },
+      "weight_compression": compression_report,
       "artifacts": {
           "mlpackage": str(package_path),
           "mlmodelc": str(compiled_path) if compiled_path.exists() else None,
           "metadata": str(metadata_path),
+          "mlpackage_bytes": _artifact_bytes(package_path),
+          "mlmodelc_bytes": _artifact_bytes(compiled_path),
       },
       "warnings": {
           "python_warnings": [
@@ -312,6 +340,12 @@ def parse_args() -> argparse.Namespace:
       default=COMPUTE_PRECISION,
   )
   parser.add_argument("--compile", action=argparse.BooleanOptionalAction, default=True)
+  parser.add_argument(
+      "--weight-compression",
+      choices=WEIGHT_COMPRESSION_CHOICES,
+      default="none",
+      help="Post-training Core ML constant-weight compression variant.",
+  )
   return parser.parse_args()
 
 
