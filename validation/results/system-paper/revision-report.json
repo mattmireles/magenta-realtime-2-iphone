@@ -1,0 +1,101 @@
+{
+  "checks": {
+    "contextInterventionNegativeEveryWindow": {
+      "actual": {
+        "maximumSeedMean": -0.01573804799009059,
+        "medianSeedMean": -0.016496259405683895,
+        "positiveWindows": 0,
+        "windows": 60
+      },
+      "passed": true,
+      "requirement": "effect < -0.015 median seed mean and negative in all 60 windows"
+    },
+    "contextProbeRecoversTensor": {
+      "actual": {
+        "correlationAt0": 0.10833872346406821,
+        "correlationAt12": 0.999999999988387,
+        "maxAbsoluteErrorAt12": 0.00031876564025878906
+      },
+      "passed": true,
+      "requirement": "12-frame context correlation > 0.999999999 and max error < 0.001"
+    },
+    "coremlGraphRemainsMatchedWithContext": {
+      "actual": 0.0001717216278518476,
+      "passed": true,
+      "requirement": "absolute graph-only effect with context < 0.001"
+    },
+    "coremlGraphTooSmallToExplainDefect": {
+      "actual": {
+        "maximumSeedMean": 0.0008756950741833199,
+        "medianSeedMean": 0.00018222934685550827
+      },
+      "passed": true,
+      "requirement": "absolute graph-only effect < 0.001 for median and worst seed mean"
+    },
+    "correctedDeviceAudioIsContinuous": {
+      "actual": {
+        "clippedSampleRatio": 0.0,
+        "finiteRatio": 1.0,
+        "longestNearZeroRunSeconds": 2.0833333333333333e-05
+      },
+      "passed": true,
+      "requirement": "finite, clipping <= 1e-5, and no near-zero run longer than one sample"
+    },
+    "correctedDeviceSustainsPlayback": {
+      "actual": {
+        "maxDroppedFrames": 0,
+        "maxUnderruns": 0,
+        "nominalProducerRate": 1.030104081535966,
+        "pcmCaptureSeconds": 600.0
+      },
+      "passed": true,
+      "requirement": "at least 600 seconds, producer rate >= 1, zero underruns and drops"
+    },
+    "deviceMatchesStatefulSeedDiagnostic": {
+      "actual": {
+        "device": 5,
+        "statefulMlx": 5,
+        "windows": 20
+      },
+      "passed": true,
+      "requirement": "device and stateful MLX have the same prompt-specific count over 20 windows"
+    },
+    "fullHorizonPerArm": {
+      "actual": 600,
+      "passed": true,
+      "requirement": "600 seconds for every crossover arm"
+    },
+    "statelessEffectPositiveEveryWindow": {
+      "actual": {
+        "medianSeedMean": 0.017058402268124002,
+        "minimumSeedMean": 0.016134603929006047,
+        "positiveWindows": 60,
+        "windows": 60
+      },
+      "passed": true,
+      "requirement": "effect > 0.015 median seed mean and positive in all 60 windows"
+    },
+    "threeIndependentSeeds": {
+      "actual": 3,
+      "passed": true,
+      "requirement": "exactly three unique seed reports"
+    }
+  },
+  "inputs": {
+    "aggregate": {
+      "path": "validation/results/system-paper/crossover/aggregate.json",
+      "sha256": "73be822c9774a99ed4582580b5302b489744138549ac97ff76eda72eb697ccaa"
+    },
+    "device": {
+      "path": "validation/results/system-paper/a17pro/context12/context12-soak-manifest.json",
+      "sha256": "bc0c152da3e23fe420d729d257d1edd6d57fcff6b5642882ea3728550fbed269"
+    },
+    "principalSeed": {
+      "path": "validation/results/system-paper/crossover/seed-20260718.json",
+      "sha256": "956b14122f16f7110abe7bafec7bbb9e726bf7fcb8c54957df65e72a62e6a532"
+    }
+  },
+  "interpretation": "The measured excess follows stateless decoder windowing, and a 12-frame causal-context intervention removes it on the fixed-token crossover and the physical A17 Pro run.",
+  "outcome": "pass",
+  "schema": "mrt2-system-paper-revision-verdict-v1"
+}

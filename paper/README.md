@@ -1,8 +1,8 @@
-# The Three Clocks of Live Music Generation
+# Throughput Is Not Liveness
 
 This directory contains the readable draft, generated archival LaTeX, figures,
-and bibliography for *The Three Clocks of Live Music Generation: Sustained
-GPU-Free MRT2 Inference on iPhone*.
+and bibliography for *Throughput Is Not Liveness: Three Clocks for GPU-Free
+Music Generation on iPhone*.
 
 ## Build
 
@@ -29,9 +29,10 @@ data.
 - `../docs/plans/mrt2-system-paper-claims.md` maps every headline claim to its
   public gate and receipt.
 
-The paper intentionally reports a failed long-horizon generative-quality gate.
-It claims sustained GPU-free inference and audio delivery on A17 Pro, not
-arbitrary-horizon musical validity. The Crossfade product runtime is private
-and available from the author for artifact review; exporters, fixtures,
-normalizers, public verdicts, figure sources, and paper source are in this
-repository.
+The paper retains the original failed long-horizon diagnostic and then
+falsifies its first interpretation with a three-seed token-by-decoder
+crossover. It claims sustained GPU-free inference and audio delivery on A17
+Pro plus a localized causal-decoder boundary repair, not arbitrary-prompt
+musical validity. The Crossfade product runtime is private and available from
+the author for artifact review; exporters, fixtures, normalizers, public
+verdicts, figure sources, and paper source are in this repository.

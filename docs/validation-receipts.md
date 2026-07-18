@@ -10,7 +10,100 @@ The working rule throughout: **do not infer Core ML or ANE behavior from
 hope.** Every claim points to a command, a receipt file, or an explicit
 failure.
 
-## System paper — corrected composed runtime (2026-07-18)
+## System paper revision — causal crossover and context repair (2026-07-18)
+
+The current publication verdict is
+`validation/results/system-paper/revision-report.json`. It machine-checks the
+three-seed crossover, the decoder-context tensor intervention, and the
+corrected A17 Pro device receipt. The earlier audio-gate section below is
+retained as experiment history, but its model-degeneration interpretation is
+superseded.
+
+### Three-seed, full-horizon crossover
+
+Each seed uses 15,001 token frames (600 seconds plus the initial frame) and
+crosses MLX/Core ML token source with stateful MLX/stateless phone decoding.
+Fixed-token arms then separate decoder graph precision, DSP convention, and
+left context. Effects below are changes in 4-16 Hz envelope-pulse share,
+reported as median seed mean with the range of the three seed means. The
+original 0.070 threshold is retained only as a prompt-specific diagnostic.
+
+| Paired intervention | Effect | Positive windows |
+| --- | ---: | ---: |
+| Core ML vs MLX token source at the stateful MLX decoder | +0.00181 [-0.00057, +0.00627] | 35/60 |
+| Core ML FP16 vs MLX FLOAT32 decoder graph at identical stateless DSP | +0.00018 [+0.00016, +0.00088] | 44/60 |
+| Stateless windowing + legacy DSP vs stateful MLX | +0.01706 [+0.01613, +0.01796] | 60/60 |
+| Periodic-Hann correction alone at the MLX graph | +0.00321 | 54/60 |
+| Add 12 frames of context at the Core ML graph and corrected DSP | -0.01650 [-0.01772, -0.01574] | 0/60 |
+
+The diagnostic count is 35/60 for the original stateless Core ML path, 13/60
+after context repair, and 11/60 for stateful MLX. The FLOAT32 MLX pre-iSTFT
+graph reproduces the defect under stateless windows, so FP16 cannot explain the
+primary effect. The periodic-Hann correction is a real parity repair but moves
+the target metric in the wrong direction by itself.
+
+Public receipts:
+
+- `validation/results/system-paper/crossover/seed-{1618033,271828,20260718}.json`
+- `validation/results/system-paper/crossover/aggregate.json`
+- `validation/results/system-paper/crossover/decoder-context-probe.json`
+
+### Decoder-context tensor intervention
+
+At one fixed 25-token target segment, the public probe compares stateful MLX
+pre-iSTFT output with stateless calls retaining 0, 1, 2, 4, 8, or 12 prior token
+frames. Correlation rises from 0.108339 at zero context to 0.999995501 at eight
+frames and 0.999999999988 at twelve; maximum absolute error falls from 1,071.69
+to 0.000319. This directly identifies discarded causal convolution history.
+
+### Corrected A17 Pro physical-device run
+
+The repaired runtime retains 12 token frames, advances by 12, discards the 48
+context STFT frames, and emits the 48 new frames through the corrected
+periodic-Hann reconstruction. Its signed iPhone 15 Pro Max run records:
+
+| Measure | Result |
+| --- | ---: |
+| Foreground app / PCM capture | 610.31 s / 600.00 s |
+| Producer iterations / producer-loop wall | 628 / 609.647 s (1.0301x) |
+| Iteration-normalized p50 / p90 / p99 | 23.50 / 24.33 / 24.81 ms/token |
+| Underruns / producer drops | 0 / 0 |
+| Start / minimum / final queued PCM | 2.880 / 2.725 / 21.008 s |
+| Finite / clipped-sample ratio | 1.0 / 0.0 |
+| Longest near-zero run | one sample |
+| Prompt-specific diagnostic | 5/20, equal to stateful MLX for seed 20260718 |
+
+The cost statistic is a quantile of 25-token iteration means divided by 25,
+not a per-token latency quantile. The growing 21-second queue proves sustained
+capacity and playback, not low-latency steering. Private WAV, event, token,
+summary, executable, and runtime-source hashes are bound into
+`validation/results/system-paper/a17pro/context12/context12-soak-manifest.json`.
+
+### Secondary reviewer corrections
+
+- The measured A14 depth ablation is 40.2 ms/frame for 12 separate FLOAT32
+  predictions, about 37 ms/frame for one in-graph FLOAT32 rollout, and 12.7
+  ms/frame for the in-graph FLOAT16 rollout. The one-call graph removes host
+  boundaries but does not traverse the dependent transformer only once.
+  Receipt: `validation/results/system-paper/depth-rollout-ablation.json`.
+- The deployed 10-second refresh resets temporal K/V and previous-frame
+  feedback; decoder history, overlap-add state, and queued PCM remain
+  continuous. This is a bounded-trajectory protocol, not evidence of an
+  unrefreshed 600-second model trajectory.
+- Private steering receipts measure controller application in 4-15 ms and
+  audible change after 6.48-9.02 s without discard. An aggressive discard test
+  underruns; a 0.4-second retained-audio policy keeps delivery counters clean
+  but still lacks post-speaker click/listening evidence. The paper therefore
+  makes no low-latency steering claim.
+
+Reproduce the public verdict with:
+
+```bash
+python3 validation/verify_system_paper_revision.py \
+  --output-json validation/results/system-paper/revision-report.json
+```
+
+## Original system-paper campaign — superseded audio interpretation (2026-07-18)
 
 The current end-to-end result is the evidence package under
 `validation/results/system-paper/`. It supersedes the older composed-runtime
@@ -64,7 +157,7 @@ Receipts:
   (five independent processes for each of four device/policy cells, including
   startup and per-stage median/IQR)
 
-### Long-horizon audio quality (G3): failed, retained
+### Long-horizon audio quality (original G3): failed, retained as history
 
 The corrected 600 s A17 WAV is finite 48 kHz stereo and has zero associated
 runtime underruns/drops. It passes clipped-sample ratio (`4.05e-6`), normalized
@@ -78,8 +171,9 @@ known-bad controls. It fails two independent predeclared requirements:
 
 A temperature-0.5 full-run intervention lowers pulse share to `0.0417` but
 fails clipping, stereo, prompt, and reference-similarity bands. The gate is not
-retuned. The supported conclusion is sustained inference and delivery, not
-arbitrary-horizon musical validity. Receipt:
+retuned. The frozen failure remains valid for that artifact, but its causal
+attribution does not: the full-horizon crossover above localizes the excess to
+missing decoder context and verifies a repair. Receipt:
 `validation/results/system-paper/audio/g3-{manifest,report}.json`.
 
 ### Compression ladder: negative result
@@ -138,18 +232,21 @@ artifact table and receipts.
 
 - **Depth FP32 / host sampling (contradicts §depth below).** Superseded by the
   in-graph FP16 rollout (`exporters/convert_depth_body_rollout.py`): all 12 RVQ
-  levels sampled in one prediction from host-supplied Gumbel noise, because
-  per-call cost ≈ weight bytes ÷ DRAM bandwidth on every compute unit (§6.5).
-  FLOAT32 rollout is token-for-token exact (**0/900**;
+  levels are sampled in one prediction from host-supplied Gumbel noise. This
+  removes host/Core ML boundaries but retains dependent transformer passes;
+  measured A14 FLOAT32 cost changes only from 40.2 to about 37 ms/frame. The
+  FLOAT16 artifact supplies the large speedup. FLOAT32 rollout is
+  token-for-token exact (**0/900**;
   `validation/results/MRT2DepthBodyRollout_f32_validation.*`); FP16 flips fp16
   near-tie tokens without changing the distribution
   (`validation/results/MRT2DepthBodyRollout_f16_validation.*`) and ships at
   12.7 ms/frame (A14) / 8.4 ms (A17 Pro).
 
 **End-to-end status.** This historical paragraph is superseded by the system-
-paper section above. The corrected A17 compute and delivery clocks now pass;
-the separately frozen 600 s generative-quality clock fails and remains an
-explicit result.
+paper revision above. The corrected A17 compute and delivery clocks pass, and
+the original generative-quality failure is retained as the observation that
+motivated a crossover. Its first model-degeneration interpretation is rejected;
+missing causal decoder history is the measured cause.
 
 ---
 

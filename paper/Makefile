@@ -1,12 +1,15 @@
 .PHONY: all figures manuscript
 
+PYTHON ?= python3
+
 all: manuscript
 
 figures:
-	python3 figures/src/fig_soak.py
-	python3 figures/src/fig_latency.py
-	python3 figures/src/fig_compression.py
+	$(PYTHON) figures/src/fig_soak.py
+	$(PYTHON) figures/src/fig_latency.py
+	$(PYTHON) figures/src/fig_compression.py
+	$(PYTHON) figures/src/fig_crossover.py
 
 manuscript:
-	python3 build_manuscript.py
+	$(PYTHON) build_manuscript.py
 	tectonic main.tex --keep-logs --keep-intermediates

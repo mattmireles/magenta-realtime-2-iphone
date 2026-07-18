@@ -1,8 +1,28 @@
-# MRT2 System Paper Plan — "Live: Real-Time Streaming Music Generation on iPhone, GPU-Free"
+# MRT2 System Paper Plan — "Throughput Is Not Liveness"
 
 **Date:** 2026-07-15
-**Status:** Complete — all scientific gates adjudicated; venue-neutral PDF,
-source bundle, and reviewer packet audited and ready for publication
+**Status:** Complete — reviewer-motivated crossover, decoder-context repair,
+corrected device run, 13-page PDF, independently rebuilding source archive,
+and reviewer packet all verified
+
+## 2026-07-18 Scientific Revision
+
+An expert review correctly identified that the first complete manuscript did
+not isolate its 600-second audio failure: the phone capture was long, the MLX
+references were short, and the reported p99 was a quantile of 25-token
+iteration averages rather than a per-token tail. That version is superseded.
+
+The revision adds three independent 600-second token-by-decoder crossovers,
+fixed-token decoder-graph and DSP controls, a decoder-context tensor probe, a
+direct 12-frame context intervention, and a new 600-second iPhone 15 Pro Max
+capture. The pulse excess follows stateless decoder windowing in all 60 paired
+windows; the Core ML decoder graph contributes only 0.00018 median seed mean.
+Twelve retained token frames raise pre-iSTFT correlation from 0.1083 to
+0.999999999988 and reduce the pulse metric in all 60 paired windows. The
+corrected phone run records zero underruns/drops and matches the stateful MLX
+diagnostic count for the principal seed. The earlier model-degeneration
+interpretation is rejected in favor of a specific causal-decoder state-contract
+bug. No additional long device capture is required for this revision.
 
 ## Executive Summary
 
@@ -42,9 +62,10 @@ both the engineering and the writing, ending with an arXiv-ready PDF and a
 - [x] A14 story resolved: either <40 ms/frame via temporal weight-byte
       reduction, or an explicit, measured higher-startup-latency reservoir
       tier reported as such.
-- [x] Audio integrity adjudicated: the recorder stride defect is fixed and all
-      known-bad controls reject, while the corrected long capture fails its
-      frozen pulse and calibrated-vote gates. The failure is retained.
+- [x] Audio integrity adjudicated causally: the original recorder defect and
+      frozen-gate failure are retained as history; a three-seed crossover
+      localizes the excess to missing decoder history, and a direct context
+      intervention plus corrected device capture verifies the repair.
 - [x] Full evaluation matrix with dispersion (repeat runs) and checked-in
       receipts for every number the paper states.
 - [x] arXiv-ready PDF, independently rebuilding source bundle, and reviewer
@@ -319,6 +340,11 @@ regression-tested. G3 fails its frozen pulse-share and calibrated-vote
 requirements; a lower-temperature full-run ablation fails four other bands.
 The gate is retained, not weakened. Crossfade commit: `97b35f3`.
 
+**Superseded interpretation:** Phase 7 retains those measurements but rejects
+the inference that they show model-intrinsic long-horizon degeneration. The
+same-horizon crossover identifies missing causal decoder context and verifies
+the repair.
+
 ---
 
 ### Phase 4: Evaluation Campaign (everything the paper will state)
@@ -424,6 +450,51 @@ source bundle ready for immediate arXiv upload.
 docs and reviewer packet are self-consistent with it. arXiv upload is not part
 of this execution, per user direction.
 
+---
+
+### Phase 7: Reviewer-Motivated Falsification and Paper Revision
+
+**Goal:** Test the strongest expert objection against the same 600-second
+horizon, repair any systems defect it reveals, and replace every superseded
+claim and artifact.
+
+**Tasks:**
+
+- [x] Freeze model/sampling, Core ML numerical, decoder-window, and DSP
+      hypotheses before interpreting another capture.
+- [x] Build a deterministic 600-second harness that crosses MLX/Core ML token
+      source with stateful MLX/stateless phone decoding and hashes every arm.
+- [x] Run three independent seeds and preserve seed-level dispersion rather
+      than pooling 60 windows as independent replications.
+- [x] Split the decoder path into MLX FLOAT32 pre-iSTFT, Core ML FP16 graph,
+      legacy C++ DSP, corrected periodic-Hann DSP, and explicit left-context
+      interventions.
+- [x] Probe history depths 0, 1, 2, 4, 8, and 12 at the pre-iSTFT tensor and
+      identify the minimum deployed context with effectively exact parity.
+- [x] Implement the 12-frame production overlap, regression-test Swift and C++
+      contracts, build/sign/install the device host, and capture one corrected
+      600-second A17 Pro trajectory.
+- [x] Correct the paper's latency language, steering claim, 10-second refresh
+      description, depth-rollout explanation, A14 precision boundary, sample-
+      size statement, and role of exploratory automated listening.
+- [x] Rebuild and visually audit every manuscript page, independently rebuild
+      the source archive, replace the reviewer packet, and run the public
+      revision verifier before final commit.
+
+**Scientific verdict:** the pulse excess follows stateless decoder windowing,
+not the token source, Core ML graph, FP16 precision, or Hann convention. Twelve
+frames of retained causal history recover tensor parity and remove the excess
+on both the three-seed crossover and the physical A17 device run. The corrected
+claim is a state-contract localization and repair, not arbitrary-horizon model
+stability.
+
+**Verification:** private runtime suites pass 34 Swift tests and 10 focused
+Python tests. Public system-paper suites pass 27 tests. The revision verifier
+passes every causal and device check. The 13-page letter PDF was rendered to
+PNG and inspected page by page; the source archive rebuild has byte-identical
+extracted text. The reviewer ZIP passes `unzip -t`. Corrected private runtime:
+Crossfade commit `fc7923f` (pushed to `main`).
+
 ## Executable Memory
 
 - Regression test (parity, no checkpoint needed):
@@ -442,9 +513,9 @@ of this execution, per user direction.
       fallback explicitly accepted by the user).
 - [x] G2: A17 Pro 600 s foreground soak, ≥1.0× real time, 0 underruns,
       receipt checked in.
-- [x] G3: audio-quality gate adjudicated without weakening: all known-bad
-      controls reject, the recorder defect is regression-tested, and the
-      corrected 600 s candidate's pulse/vote failure is retained in the paper.
+- [x] G3/G3-R: the original audio gate is retained without threshold tuning,
+      and its causal interpretation is adjudicated by a three-seed 600-second
+      crossover plus direct context intervention and corrected device run.
 - [x] G4: A14 reported as pass (<40 ms/frame p99) or as an explicit measured
       reservoir tier — one or the other, in the paper.
 - [x] Every number in the PDF traces to a receipt in this repo.

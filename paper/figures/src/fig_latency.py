@@ -51,7 +51,7 @@ def main() -> None:
   )
   axis.set_yticks(range(len(order)), [LABELS[name] for name in order])
   axis.invert_yaxis()
-  axis.set_xlabel("median run-level p50 (ms/effective frame)")
+  axis.set_xlabel("median run-level p50 (iteration-normalized ms/token)")
   axis.set_xlim(0, 55)
   axis.grid(axis="x", alpha=0.22)
   axis.legend(

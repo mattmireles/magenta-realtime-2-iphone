@@ -1,0 +1,1704 @@
+{
+  "cells": {
+    "coremlTokens_coremlDecoder": {
+      "clippedSampleRatio": 5.208333333333333e-08,
+      "durationSeconds": 600.0,
+      "finiteRatio": 0.9997666666666667,
+      "longestNearZeroRunSeconds": 0.11,
+      "maxChunkBoundaryAbsJump": 0.04920002818107605,
+      "maxWindowPulseShare4To16Hz": 0.11188657618074219,
+      "medianWindowPulseShare4To16Hz": 0.07951853150366173,
+      "path": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/coreml-tokens__coreml-legacy-dsp.wav",
+      "sha256": "8fbbec7d1effcfdbdfd440695f454c4e04371eac7268ce98515d2f890a55bc25",
+      "tailPulseShare4To16Hz": 0.09074781565482197,
+      "windowCount": 20,
+      "windows": [
+        {
+          "endSeconds": 30.0,
+          "envelopePulseShare4To16Hz": 0.08802272837691462,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 0.0
+        },
+        {
+          "endSeconds": 60.0,
+          "envelopePulseShare4To16Hz": 0.06403262146577557,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 30.0
+        },
+        {
+          "endSeconds": 90.0,
+          "envelopePulseShare4To16Hz": 0.0757200032893832,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 60.0
+        },
+        {
+          "endSeconds": 120.0,
+          "envelopePulseShare4To16Hz": 0.11188657618074219,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 90.0
+        },
+        {
+          "endSeconds": 150.0,
+          "envelopePulseShare4To16Hz": 0.060809538026323086,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 120.0
+        },
+        {
+          "endSeconds": 180.0,
+          "envelopePulseShare4To16Hz": 0.07816502821058446,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 150.0
+        },
+        {
+          "endSeconds": 210.0,
+          "envelopePulseShare4To16Hz": 0.07764475337322307,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 180.0
+        },
+        {
+          "endSeconds": 240.0,
+          "envelopePulseShare4To16Hz": 0.07913155918327809,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 210.0
+        },
+        {
+          "endSeconds": 270.0,
+          "envelopePulseShare4To16Hz": 0.07064171756251601,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 240.0
+        },
+        {
+          "endSeconds": 300.0,
+          "envelopePulseShare4To16Hz": 0.07931000848477476,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 270.0
+        },
+        {
+          "endSeconds": 330.0,
+          "envelopePulseShare4To16Hz": 0.09135910736505057,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 300.0
+        },
+        {
+          "endSeconds": 360.0,
+          "envelopePulseShare4To16Hz": 0.08462403165372157,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 330.0
+        },
+        {
+          "endSeconds": 390.0,
+          "envelopePulseShare4To16Hz": 0.08347804132709717,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 360.0
+        },
+        {
+          "endSeconds": 420.0,
+          "envelopePulseShare4To16Hz": 0.053226836381564134,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 390.0
+        },
+        {
+          "endSeconds": 450.0,
+          "envelopePulseShare4To16Hz": 0.07972705452254869,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 420.0
+        },
+        {
+          "endSeconds": 480.0,
+          "envelopePulseShare4To16Hz": 0.06668981622239843,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 450.0
+        },
+        {
+          "endSeconds": 510.0,
+          "envelopePulseShare4To16Hz": 0.08692685589727271,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 480.0
+        },
+        {
+          "endSeconds": 540.0,
+          "envelopePulseShare4To16Hz": 0.08622535507635763,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 510.0
+        },
+        {
+          "endSeconds": 570.0,
+          "envelopePulseShare4To16Hz": 0.0810394940461446,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 540.0
+        },
+        {
+          "endSeconds": 600.0,
+          "envelopePulseShare4To16Hz": 0.09074781565482197,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 570.0
+        }
+      ],
+      "windowsOverFrozenLimit": 16
+    },
+    "coremlTokens_mlxDecoder": {
+      "clippedSampleRatio": 8.680555555555556e-08,
+      "durationSeconds": 600.0,
+      "finiteRatio": 1.0,
+      "longestNearZeroRunSeconds": 2.0833333333333333e-05,
+      "maxChunkBoundaryAbsJump": 0.020127655938267708,
+      "maxWindowPulseShare4To16Hz": 0.08059054245926293,
+      "medianWindowPulseShare4To16Hz": 0.06461258449653484,
+      "path": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/coreml-tokens__mlx-decoder.wav",
+      "sha256": "43b060d3b4fc098208cdfd8cf4118baf2fadf0748829847d219356236fc70d24",
+      "tailPulseShare4To16Hz": 0.0786620114914156,
+      "windowCount": 20,
+      "windows": [
+        {
+          "endSeconds": 30.0,
+          "envelopePulseShare4To16Hz": 0.058734279509407454,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 0.0
+        },
+        {
+          "endSeconds": 60.0,
+          "envelopePulseShare4To16Hz": 0.04604888346281169,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 30.0
+        },
+        {
+          "endSeconds": 90.0,
+          "envelopePulseShare4To16Hz": 0.06395904036178283,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 60.0
+        },
+        {
+          "endSeconds": 120.0,
+          "envelopePulseShare4To16Hz": 0.06526612863128686,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 90.0
+        },
+        {
+          "endSeconds": 150.0,
+          "envelopePulseShare4To16Hz": 0.04545583766151586,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 120.0
+        },
+        {
+          "endSeconds": 180.0,
+          "envelopePulseShare4To16Hz": 0.061323858572371895,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 150.0
+        },
+        {
+          "endSeconds": 210.0,
+          "envelopePulseShare4To16Hz": 0.059527084113008374,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 180.0
+        },
+        {
+          "endSeconds": 240.0,
+          "envelopePulseShare4To16Hz": 0.07217280723147584,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 210.0
+        },
+        {
+          "endSeconds": 270.0,
+          "envelopePulseShare4To16Hz": 0.0498879312717576,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 240.0
+        },
+        {
+          "endSeconds": 300.0,
+          "envelopePulseShare4To16Hz": 0.05852550487153875,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 270.0
+        },
+        {
+          "endSeconds": 330.0,
+          "envelopePulseShare4To16Hz": 0.08059054245926293,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 300.0
+        },
+        {
+          "endSeconds": 360.0,
+          "envelopePulseShare4To16Hz": 0.07370012767873459,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 330.0
+        },
+        {
+          "endSeconds": 390.0,
+          "envelopePulseShare4To16Hz": 0.06564915922734518,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 360.0
+        },
+        {
+          "endSeconds": 420.0,
+          "envelopePulseShare4To16Hz": 0.04304295886508604,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 390.0
+        },
+        {
+          "endSeconds": 450.0,
+          "envelopePulseShare4To16Hz": 0.06552762688195941,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 420.0
+        },
+        {
+          "endSeconds": 480.0,
+          "envelopePulseShare4To16Hz": 0.05232388117763272,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 450.0
+        },
+        {
+          "endSeconds": 510.0,
+          "envelopePulseShare4To16Hz": 0.0728056385411652,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 480.0
+        },
+        {
+          "endSeconds": 540.0,
+          "envelopePulseShare4To16Hz": 0.07612903299574204,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 510.0
+        },
+        {
+          "endSeconds": 570.0,
+          "envelopePulseShare4To16Hz": 0.07235199826176218,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 540.0
+        },
+        {
+          "endSeconds": 600.0,
+          "envelopePulseShare4To16Hz": 0.0786620114914156,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 570.0
+        }
+      ],
+      "windowsOverFrozenLimit": 7
+    },
+    "mlxTokens_coremlDecoder": {
+      "clippedSampleRatio": 7.638888888888889e-07,
+      "durationSeconds": 600.0,
+      "finiteRatio": 1.0,
+      "longestNearZeroRunSeconds": 2.0833333333333333e-05,
+      "maxChunkBoundaryAbsJump": 0.025848714634776115,
+      "maxWindowPulseShare4To16Hz": 0.12304998658190892,
+      "medianWindowPulseShare4To16Hz": 0.0699759439573797,
+      "path": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/mlx-tokens__coreml-legacy-dsp.wav",
+      "sha256": "02dcf07e5e39c21a45857c78b971091ad282f74b8e061f2bdc7f1fc877632dcd",
+      "tailPulseShare4To16Hz": 0.06288053084797535,
+      "windowCount": 20,
+      "windows": [
+        {
+          "endSeconds": 30.0,
+          "envelopePulseShare4To16Hz": 0.05480932041366919,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 0.0
+        },
+        {
+          "endSeconds": 60.0,
+          "envelopePulseShare4To16Hz": 0.07426963533825354,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 30.0
+        },
+        {
+          "endSeconds": 90.0,
+          "envelopePulseShare4To16Hz": 0.06198308832324441,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 60.0
+        },
+        {
+          "endSeconds": 120.0,
+          "envelopePulseShare4To16Hz": 0.0600148125254239,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 90.0
+        },
+        {
+          "endSeconds": 150.0,
+          "envelopePulseShare4To16Hz": 0.12304998658190892,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 120.0
+        },
+        {
+          "endSeconds": 180.0,
+          "envelopePulseShare4To16Hz": 0.052555376811065674,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 150.0
+        },
+        {
+          "endSeconds": 210.0,
+          "envelopePulseShare4To16Hz": 0.06521933587857792,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 180.0
+        },
+        {
+          "endSeconds": 240.0,
+          "envelopePulseShare4To16Hz": 0.08443439741437178,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 210.0
+        },
+        {
+          "endSeconds": 270.0,
+          "envelopePulseShare4To16Hz": 0.07378620981564743,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 240.0
+        },
+        {
+          "endSeconds": 300.0,
+          "envelopePulseShare4To16Hz": 0.06092369666459337,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 270.0
+        },
+        {
+          "endSeconds": 330.0,
+          "envelopePulseShare4To16Hz": 0.07734472889887045,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 300.0
+        },
+        {
+          "endSeconds": 360.0,
+          "envelopePulseShare4To16Hz": 0.06846657491735184,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 330.0
+        },
+        {
+          "endSeconds": 390.0,
+          "envelopePulseShare4To16Hz": 0.0644024784044263,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 360.0
+        },
+        {
+          "endSeconds": 420.0,
+          "envelopePulseShare4To16Hz": 0.07770048764765125,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 390.0
+        },
+        {
+          "endSeconds": 450.0,
+          "envelopePulseShare4To16Hz": 0.08416538564658728,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 420.0
+        },
+        {
+          "endSeconds": 480.0,
+          "envelopePulseShare4To16Hz": 0.06687180990990252,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 450.0
+        },
+        {
+          "endSeconds": 510.0,
+          "envelopePulseShare4To16Hz": 0.09560767350779112,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 480.0
+        },
+        {
+          "endSeconds": 540.0,
+          "envelopePulseShare4To16Hz": 0.08209674365385934,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 510.0
+        },
+        {
+          "endSeconds": 570.0,
+          "envelopePulseShare4To16Hz": 0.07148531299740757,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 540.0
+        },
+        {
+          "endSeconds": 600.0,
+          "envelopePulseShare4To16Hz": 0.06288053084797535,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 570.0
+        }
+      ],
+      "windowsOverFrozenLimit": 10
+    },
+    "mlxTokens_mlxDecoder": {
+      "clippedSampleRatio": 7.465277777777778e-07,
+      "durationSeconds": 600.0,
+      "finiteRatio": 1.0,
+      "longestNearZeroRunSeconds": 2.0833333333333333e-05,
+      "maxChunkBoundaryAbsJump": 0.02579094097018242,
+      "maxWindowPulseShare4To16Hz": 0.09470438678843307,
+      "medianWindowPulseShare4To16Hz": 0.056327837557231225,
+      "path": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/mlx-tokens__mlx-decoder.wav",
+      "sha256": "24cc57f8266913d69eb2b15c8b869bca93fec316b0cf61d8323f01433ff77045",
+      "tailPulseShare4To16Hz": 0.05601554132187547,
+      "windowCount": 20,
+      "windows": [
+        {
+          "endSeconds": 30.0,
+          "envelopePulseShare4To16Hz": 0.04438459138479551,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 0.0
+        },
+        {
+          "endSeconds": 60.0,
+          "envelopePulseShare4To16Hz": 0.05854407512073231,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 30.0
+        },
+        {
+          "endSeconds": 90.0,
+          "envelopePulseShare4To16Hz": 0.04531130232978681,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 60.0
+        },
+        {
+          "endSeconds": 120.0,
+          "envelopePulseShare4To16Hz": 0.046186919387182494,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 90.0
+        },
+        {
+          "endSeconds": 150.0,
+          "envelopePulseShare4To16Hz": 0.09470438678843307,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 120.0
+        },
+        {
+          "endSeconds": 180.0,
+          "envelopePulseShare4To16Hz": 0.0432731939878292,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 150.0
+        },
+        {
+          "endSeconds": 210.0,
+          "envelopePulseShare4To16Hz": 0.05496149225223138,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 180.0
+        },
+        {
+          "endSeconds": 240.0,
+          "envelopePulseShare4To16Hz": 0.04916989536649552,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 210.0
+        },
+        {
+          "endSeconds": 270.0,
+          "envelopePulseShare4To16Hz": 0.05664013379258698,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 240.0
+        },
+        {
+          "endSeconds": 300.0,
+          "envelopePulseShare4To16Hz": 0.040254308934861774,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 270.0
+        },
+        {
+          "endSeconds": 330.0,
+          "envelopePulseShare4To16Hz": 0.06290692622101385,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 300.0
+        },
+        {
+          "endSeconds": 360.0,
+          "envelopePulseShare4To16Hz": 0.058332073771843296,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 330.0
+        },
+        {
+          "endSeconds": 390.0,
+          "envelopePulseShare4To16Hz": 0.047452191310556856,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 360.0
+        },
+        {
+          "endSeconds": 420.0,
+          "envelopePulseShare4To16Hz": 0.05980766685487862,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 390.0
+        },
+        {
+          "endSeconds": 450.0,
+          "envelopePulseShare4To16Hz": 0.06595862099208659,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 420.0
+        },
+        {
+          "endSeconds": 480.0,
+          "envelopePulseShare4To16Hz": 0.05351794171324076,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 450.0
+        },
+        {
+          "endSeconds": 510.0,
+          "envelopePulseShare4To16Hz": 0.07208755281494209,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 480.0
+        },
+        {
+          "endSeconds": 540.0,
+          "envelopePulseShare4To16Hz": 0.06778486491947816,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 510.0
+        },
+        {
+          "endSeconds": 570.0,
+          "envelopePulseShare4To16Hz": 0.05894801835769189,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 540.0
+        },
+        {
+          "endSeconds": 600.0,
+          "envelopePulseShare4To16Hz": 0.05601554132187547,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 570.0
+        }
+      ],
+      "windowsOverFrozenLimit": 2
+    },
+    "mlxTokens_mlxStftProductionDsp": {
+      "clippedSampleRatio": 7.465277777777778e-07,
+      "durationSeconds": 600.0,
+      "finiteRatio": 1.0,
+      "longestNearZeroRunSeconds": 2.0833333333333333e-05,
+      "maxChunkBoundaryAbsJump": 0.025790948420763016,
+      "maxWindowPulseShare4To16Hz": 0.12281908928376241,
+      "medianWindowPulseShare4To16Hz": 0.06982604512256851,
+      "path": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/mlx-tokens__mlx-stft-legacy-dsp.wav",
+      "sha256": "f923f50c7bb3899b69f94c24f187a6a06080536469e4640f6adc8026c7e9406c",
+      "tailPulseShare4To16Hz": 0.06297287492566868,
+      "windowCount": 20,
+      "windows": [
+        {
+          "endSeconds": 30.0,
+          "envelopePulseShare4To16Hz": 0.05465686079077254,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 0.0
+        },
+        {
+          "endSeconds": 60.0,
+          "envelopePulseShare4To16Hz": 0.0738002186449189,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 30.0
+        },
+        {
+          "endSeconds": 90.0,
+          "envelopePulseShare4To16Hz": 0.06130366747618393,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 60.0
+        },
+        {
+          "endSeconds": 120.0,
+          "envelopePulseShare4To16Hz": 0.059902546406869255,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 90.0
+        },
+        {
+          "endSeconds": 150.0,
+          "envelopePulseShare4To16Hz": 0.12281908928376241,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 120.0
+        },
+        {
+          "endSeconds": 180.0,
+          "envelopePulseShare4To16Hz": 0.05246826007411797,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 150.0
+        },
+        {
+          "endSeconds": 210.0,
+          "envelopePulseShare4To16Hz": 0.06523411996557707,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 180.0
+        },
+        {
+          "endSeconds": 240.0,
+          "envelopePulseShare4To16Hz": 0.08403343986016448,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 210.0
+        },
+        {
+          "endSeconds": 270.0,
+          "envelopePulseShare4To16Hz": 0.07331131865429166,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 240.0
+        },
+        {
+          "endSeconds": 300.0,
+          "envelopePulseShare4To16Hz": 0.060717477962660464,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 270.0
+        },
+        {
+          "endSeconds": 330.0,
+          "envelopePulseShare4To16Hz": 0.07739366662446626,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 300.0
+        },
+        {
+          "endSeconds": 360.0,
+          "envelopePulseShare4To16Hz": 0.06824945770025223,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 330.0
+        },
+        {
+          "endSeconds": 390.0,
+          "envelopePulseShare4To16Hz": 0.06462511004594625,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 360.0
+        },
+        {
+          "endSeconds": 420.0,
+          "envelopePulseShare4To16Hz": 0.07748875110556212,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 390.0
+        },
+        {
+          "endSeconds": 450.0,
+          "envelopePulseShare4To16Hz": 0.08422237145563413,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 420.0
+        },
+        {
+          "endSeconds": 480.0,
+          "envelopePulseShare4To16Hz": 0.06657917952842768,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 450.0
+        },
+        {
+          "endSeconds": 510.0,
+          "envelopePulseShare4To16Hz": 0.09567708697537733,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 480.0
+        },
+        {
+          "endSeconds": 540.0,
+          "envelopePulseShare4To16Hz": 0.08207564617712541,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 510.0
+        },
+        {
+          "endSeconds": 570.0,
+          "envelopePulseShare4To16Hz": 0.07140263254488478,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 540.0
+        },
+        {
+          "endSeconds": 600.0,
+          "envelopePulseShare4To16Hz": 0.06297287492566868,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 570.0
+        }
+      ],
+      "windowsOverFrozenLimit": 10
+    }
+  },
+  "context12Cells": {
+    "mlxTokens_coremlContext12FixedDsp": {
+      "clippedSampleRatio": 3.472222222222222e-08,
+      "durationSeconds": 600.0,
+      "finiteRatio": 1.0,
+      "longestNearZeroRunSeconds": 2.0833333333333333e-05,
+      "maxChunkBoundaryAbsJump": 0.03168552741408348,
+      "maxWindowPulseShare4To16Hz": 0.09233960864378858,
+      "medianWindowPulseShare4To16Hz": 0.06070183125424409,
+      "path": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/mlx-tokens__coreml-context12-fixed-dsp.wav",
+      "sha256": "f4cb8665ff5e1561c8a0c66215f251b89bc2024381767a99c8b3961621eae57b",
+      "tailPulseShare4To16Hz": 0.05722705139335038,
+      "windowCount": 20,
+      "windows": [
+        {
+          "endSeconds": 30.0,
+          "envelopePulseShare4To16Hz": 0.04236675556650184,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 0.0
+        },
+        {
+          "endSeconds": 60.0,
+          "envelopePulseShare4To16Hz": 0.06139380220494016,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 30.0
+        },
+        {
+          "endSeconds": 90.0,
+          "envelopePulseShare4To16Hz": 0.045963444488325,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 60.0
+        },
+        {
+          "endSeconds": 120.0,
+          "envelopePulseShare4To16Hz": 0.04781190693372675,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 90.0
+        },
+        {
+          "endSeconds": 150.0,
+          "envelopePulseShare4To16Hz": 0.09233960864378858,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 120.0
+        },
+        {
+          "endSeconds": 180.0,
+          "envelopePulseShare4To16Hz": 0.04954687324410708,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 150.0
+        },
+        {
+          "endSeconds": 210.0,
+          "envelopePulseShare4To16Hz": 0.05595333138652464,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 180.0
+        },
+        {
+          "endSeconds": 240.0,
+          "envelopePulseShare4To16Hz": 0.06901239296857498,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 210.0
+        },
+        {
+          "endSeconds": 270.0,
+          "envelopePulseShare4To16Hz": 0.06532534006336138,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 240.0
+        },
+        {
+          "endSeconds": 300.0,
+          "envelopePulseShare4To16Hz": 0.042693823072179414,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 270.0
+        },
+        {
+          "endSeconds": 330.0,
+          "envelopePulseShare4To16Hz": 0.06311147208541414,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 300.0
+        },
+        {
+          "endSeconds": 360.0,
+          "envelopePulseShare4To16Hz": 0.06608686884433852,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 330.0
+        },
+        {
+          "endSeconds": 390.0,
+          "envelopePulseShare4To16Hz": 0.05572088510983973,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 360.0
+        },
+        {
+          "endSeconds": 420.0,
+          "envelopePulseShare4To16Hz": 0.06531013547676362,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 390.0
+        },
+        {
+          "endSeconds": 450.0,
+          "envelopePulseShare4To16Hz": 0.07187982371220814,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 420.0
+        },
+        {
+          "endSeconds": 480.0,
+          "envelopePulseShare4To16Hz": 0.05680565077420811,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 450.0
+        },
+        {
+          "endSeconds": 510.0,
+          "envelopePulseShare4To16Hz": 0.07627198458347419,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 480.0
+        },
+        {
+          "endSeconds": 540.0,
+          "envelopePulseShare4To16Hz": 0.0665542112680735,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 510.0
+        },
+        {
+          "endSeconds": 570.0,
+          "envelopePulseShare4To16Hz": 0.06000986030354802,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 540.0
+        },
+        {
+          "endSeconds": 600.0,
+          "envelopePulseShare4To16Hz": 0.05722705139335038,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 570.0
+        }
+      ],
+      "windowsOverFrozenLimit": 3
+    },
+    "mlxTokens_mlxContext12FixedDsp": {
+      "clippedSampleRatio": 0.0,
+      "durationSeconds": 600.0,
+      "finiteRatio": 1.0,
+      "longestNearZeroRunSeconds": 2.0833333333333333e-05,
+      "maxChunkBoundaryAbsJump": 0.032299771904945374,
+      "maxWindowPulseShare4To16Hz": 0.09199853070668708,
+      "medianWindowPulseShare4To16Hz": 0.06056450578781052,
+      "path": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/mlx-tokens__mlx-context12-fixed-dsp.wav",
+      "sha256": "2c043df5376b3b3711b9d62bbdc54bb516d25025af59627e62068ec6745685b1",
+      "tailPulseShare4To16Hz": 0.05715462905631548,
+      "windowCount": 20,
+      "windows": [
+        {
+          "endSeconds": 30.0,
+          "envelopePulseShare4To16Hz": 0.04220331417897871,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 0.0
+        },
+        {
+          "endSeconds": 60.0,
+          "envelopePulseShare4To16Hz": 0.061116550500923204,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 30.0
+        },
+        {
+          "endSeconds": 90.0,
+          "envelopePulseShare4To16Hz": 0.0456212157935898,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 60.0
+        },
+        {
+          "endSeconds": 120.0,
+          "envelopePulseShare4To16Hz": 0.047588292263254964,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 90.0
+        },
+        {
+          "endSeconds": 150.0,
+          "envelopePulseShare4To16Hz": 0.09199853070668708,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 120.0
+        },
+        {
+          "endSeconds": 180.0,
+          "envelopePulseShare4To16Hz": 0.04963870437015036,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 150.0
+        },
+        {
+          "endSeconds": 210.0,
+          "envelopePulseShare4To16Hz": 0.055718186324027044,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 180.0
+        },
+        {
+          "endSeconds": 240.0,
+          "envelopePulseShare4To16Hz": 0.06879946722808643,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 210.0
+        },
+        {
+          "endSeconds": 270.0,
+          "envelopePulseShare4To16Hz": 0.06491095711306911,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 240.0
+        },
+        {
+          "endSeconds": 300.0,
+          "envelopePulseShare4To16Hz": 0.04248446458731008,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 270.0
+        },
+        {
+          "endSeconds": 330.0,
+          "envelopePulseShare4To16Hz": 0.06296976302567485,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 300.0
+        },
+        {
+          "endSeconds": 360.0,
+          "envelopePulseShare4To16Hz": 0.06606923473803054,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 330.0
+        },
+        {
+          "endSeconds": 390.0,
+          "envelopePulseShare4To16Hz": 0.05583365858936314,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 360.0
+        },
+        {
+          "endSeconds": 420.0,
+          "envelopePulseShare4To16Hz": 0.06514430456210571,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 390.0
+        },
+        {
+          "endSeconds": 450.0,
+          "envelopePulseShare4To16Hz": 0.0716092309122001,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 420.0
+        },
+        {
+          "endSeconds": 480.0,
+          "envelopePulseShare4To16Hz": 0.056427089383053394,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 450.0
+        },
+        {
+          "endSeconds": 510.0,
+          "envelopePulseShare4To16Hz": 0.07624599184922033,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 480.0
+        },
+        {
+          "endSeconds": 540.0,
+          "envelopePulseShare4To16Hz": 0.06640474330947302,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 510.0
+        },
+        {
+          "endSeconds": 570.0,
+          "envelopePulseShare4To16Hz": 0.06001246107469784,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 540.0
+        },
+        {
+          "endSeconds": 600.0,
+          "envelopePulseShare4To16Hz": 0.05715462905631548,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 570.0
+        }
+      ],
+      "windowsOverFrozenLimit": 3
+    }
+  },
+  "context12WindowPulseEffects": {
+    "coremlContext12VsNoContextAtFixedDsp": {
+      "mean": -0.01573804799009059,
+      "median": -0.014573452305991327,
+      "positiveWindows": 0,
+      "windows": 20
+    },
+    "coremlContext12VsStreamingMlx": {
+      "mean": 0.003757176225035276,
+      "median": 0.0026446206107627462,
+      "positiveWindows": 17,
+      "windows": 20
+    },
+    "coremlGraphVsMlxGraphAtContext12": {
+      "mean": 0.0001717216278518476,
+      "median": 0.0001875946997636213,
+      "positiveWindows": 17,
+      "windows": 20
+    },
+    "mlxContext12VsNoContextAtFixedDsp": {
+      "mean": -0.015763612212853703,
+      "median": -0.01474694287661776,
+      "positiveWindows": 0,
+      "windows": 20
+    },
+    "mlxContext12VsStreamingMlx": {
+      "mean": 0.0035854545971834295,
+      "median": 0.0024013155163196027,
+      "positiveWindows": 17,
+      "windows": 20
+    }
+  },
+  "fixedDspCells": {
+    "coremlTokens_coremlFixedDsp": {
+      "clippedSampleRatio": 0.0,
+      "durationSeconds": 600.0,
+      "finiteRatio": 0.9997666666666667,
+      "longestNearZeroRunSeconds": 0.11,
+      "maxChunkBoundaryAbsJump": 0.06169489398598671,
+      "maxWindowPulseShare4To16Hz": 0.11927759820175748,
+      "medianWindowPulseShare4To16Hz": 0.08152878632513122,
+      "path": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/coreml-tokens__coreml-fixed-dsp.wav",
+      "sha256": "d26212aabdaa97097525cb24674bd83ad92406798b96f95d5874095412d5a9e9",
+      "tailPulseShare4To16Hz": 0.08963872966853961,
+      "windowCount": 20,
+      "windows": [
+        {
+          "endSeconds": 30.0,
+          "envelopePulseShare4To16Hz": 0.08281948652937775,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 0.0
+        },
+        {
+          "endSeconds": 60.0,
+          "envelopePulseShare4To16Hz": 0.06547667536612561,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 30.0
+        },
+        {
+          "endSeconds": 90.0,
+          "envelopePulseShare4To16Hz": 0.07724059851736857,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 60.0
+        },
+        {
+          "endSeconds": 120.0,
+          "envelopePulseShare4To16Hz": 0.11927759820175748,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 90.0
+        },
+        {
+          "endSeconds": 150.0,
+          "envelopePulseShare4To16Hz": 0.06442369127160501,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 120.0
+        },
+        {
+          "endSeconds": 180.0,
+          "envelopePulseShare4To16Hz": 0.08384198826513085,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 150.0
+        },
+        {
+          "endSeconds": 210.0,
+          "envelopePulseShare4To16Hz": 0.07629514284270428,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 180.0
+        },
+        {
+          "endSeconds": 240.0,
+          "envelopePulseShare4To16Hz": 0.08005181360948173,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 210.0
+        },
+        {
+          "endSeconds": 270.0,
+          "envelopePulseShare4To16Hz": 0.07357676455274911,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 240.0
+        },
+        {
+          "endSeconds": 300.0,
+          "envelopePulseShare4To16Hz": 0.07960626795173077,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 270.0
+        },
+        {
+          "endSeconds": 330.0,
+          "envelopePulseShare4To16Hz": 0.08760132891703523,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 300.0
+        },
+        {
+          "endSeconds": 360.0,
+          "envelopePulseShare4To16Hz": 0.08424298496492401,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 330.0
+        },
+        {
+          "endSeconds": 390.0,
+          "envelopePulseShare4To16Hz": 0.08288258422100732,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 360.0
+        },
+        {
+          "endSeconds": 420.0,
+          "envelopePulseShare4To16Hz": 0.05134600056373848,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 390.0
+        },
+        {
+          "endSeconds": 450.0,
+          "envelopePulseShare4To16Hz": 0.0802380861208847,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 420.0
+        },
+        {
+          "endSeconds": 480.0,
+          "envelopePulseShare4To16Hz": 0.06574881477284188,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 450.0
+        },
+        {
+          "endSeconds": 510.0,
+          "envelopePulseShare4To16Hz": 0.08732422187757564,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 480.0
+        },
+        {
+          "endSeconds": 540.0,
+          "envelopePulseShare4To16Hz": 0.08531692967957423,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 510.0
+        },
+        {
+          "endSeconds": 570.0,
+          "envelopePulseShare4To16Hz": 0.08536892291043277,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 540.0
+        },
+        {
+          "endSeconds": 600.0,
+          "envelopePulseShare4To16Hz": 0.08963872966853961,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 570.0
+        }
+      ],
+      "windowsOverFrozenLimit": 16
+    },
+    "coremlTokens_mlxStftFixedDsp": {
+      "clippedSampleRatio": 0.0,
+      "durationSeconds": 600.0,
+      "finiteRatio": 1.0,
+      "longestNearZeroRunSeconds": 2.0833333333333333e-05,
+      "maxChunkBoundaryAbsJump": 0.025298429653048515,
+      "maxWindowPulseShare4To16Hz": 0.11973298246234632,
+      "medianWindowPulseShare4To16Hz": 0.08125409191890025,
+      "path": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/coreml-tokens__mlx-stft-fixed-dsp.wav",
+      "sha256": "81633e0a7d2fb11920c24aca37ea502d22255611d539b8f87847686e407bd9c4",
+      "tailPulseShare4To16Hz": 0.08960036270739548,
+      "windowCount": 20,
+      "windows": [
+        {
+          "endSeconds": 30.0,
+          "envelopePulseShare4To16Hz": 0.08236573363068779,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 0.0
+        },
+        {
+          "endSeconds": 60.0,
+          "envelopePulseShare4To16Hz": 0.06526822575700514,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 30.0
+        },
+        {
+          "endSeconds": 90.0,
+          "envelopePulseShare4To16Hz": 0.07723929722304267,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 60.0
+        },
+        {
+          "endSeconds": 120.0,
+          "envelopePulseShare4To16Hz": 0.11973298246234632,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 90.0
+        },
+        {
+          "endSeconds": 150.0,
+          "envelopePulseShare4To16Hz": 0.06401867843043932,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 120.0
+        },
+        {
+          "endSeconds": 180.0,
+          "envelopePulseShare4To16Hz": 0.0836749287256406,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 150.0
+        },
+        {
+          "endSeconds": 210.0,
+          "envelopePulseShare4To16Hz": 0.0759725890264912,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 180.0
+        },
+        {
+          "endSeconds": 240.0,
+          "envelopePulseShare4To16Hz": 0.0800779604448929,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 210.0
+        },
+        {
+          "endSeconds": 270.0,
+          "envelopePulseShare4To16Hz": 0.07317337077778473,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 240.0
+        },
+        {
+          "endSeconds": 300.0,
+          "envelopePulseShare4To16Hz": 0.07932496941981998,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 270.0
+        },
+        {
+          "endSeconds": 330.0,
+          "envelopePulseShare4To16Hz": 0.08698250795878355,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 300.0
+        },
+        {
+          "endSeconds": 360.0,
+          "envelopePulseShare4To16Hz": 0.08437565847291802,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 330.0
+        },
+        {
+          "endSeconds": 390.0,
+          "envelopePulseShare4To16Hz": 0.08251767414363956,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 360.0
+        },
+        {
+          "endSeconds": 420.0,
+          "envelopePulseShare4To16Hz": 0.05115487042100921,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 390.0
+        },
+        {
+          "endSeconds": 450.0,
+          "envelopePulseShare4To16Hz": 0.0801424502071127,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 420.0
+        },
+        {
+          "endSeconds": 480.0,
+          "envelopePulseShare4To16Hz": 0.06523676362481921,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 450.0
+        },
+        {
+          "endSeconds": 510.0,
+          "envelopePulseShare4To16Hz": 0.08745573614092812,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 480.0
+        },
+        {
+          "endSeconds": 540.0,
+          "envelopePulseShare4To16Hz": 0.0849087962868775,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 510.0
+        },
+        {
+          "endSeconds": 570.0,
+          "envelopePulseShare4To16Hz": 0.08644101387475697,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 540.0
+        },
+        {
+          "endSeconds": 600.0,
+          "envelopePulseShare4To16Hz": 0.08960036270739548,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 570.0
+        }
+      ],
+      "windowsOverFrozenLimit": 16
+    },
+    "mlxTokens_coremlFixedDsp": {
+      "clippedSampleRatio": 3.472222222222222e-08,
+      "durationSeconds": 600.0,
+      "finiteRatio": 1.0,
+      "longestNearZeroRunSeconds": 2.0833333333333333e-05,
+      "maxChunkBoundaryAbsJump": 0.03168552741408348,
+      "maxWindowPulseShare4To16Hz": 0.11743907553651357,
+      "medianWindowPulseShare4To16Hz": 0.07426053237531346,
+      "path": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/mlx-tokens__coreml-fixed-dsp.wav",
+      "sha256": "cf8615beb237edab9e51db189af805111ee32741984ca0f30ca5b21538f75eb9",
+      "tailPulseShare4To16Hz": 0.06458944643827491,
+      "windowCount": 20,
+      "windows": [
+        {
+          "endSeconds": 30.0,
+          "envelopePulseShare4To16Hz": 0.05176291475053516,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 0.0
+        },
+        {
+          "endSeconds": 60.0,
+          "envelopePulseShare4To16Hz": 0.07510071003070291,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 30.0
+        },
+        {
+          "endSeconds": 90.0,
+          "envelopePulseShare4To16Hz": 0.0630140257084605,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 60.0
+        },
+        {
+          "endSeconds": 120.0,
+          "envelopePulseShare4To16Hz": 0.06241226788591236,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 90.0
+        },
+        {
+          "endSeconds": 150.0,
+          "envelopePulseShare4To16Hz": 0.11743907553651357,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 120.0
+        },
+        {
+          "endSeconds": 180.0,
+          "envelopePulseShare4To16Hz": 0.05910124749062083,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 150.0
+        },
+        {
+          "endSeconds": 210.0,
+          "envelopePulseShare4To16Hz": 0.06560358819932914,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 180.0
+        },
+        {
+          "endSeconds": 240.0,
+          "envelopePulseShare4To16Hz": 0.10369650238675444,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 210.0
+        },
+        {
+          "endSeconds": 270.0,
+          "envelopePulseShare4To16Hz": 0.08088209719884583,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 240.0
+        },
+        {
+          "endSeconds": 300.0,
+          "envelopePulseShare4To16Hz": 0.06340626791590048,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 270.0
+        },
+        {
+          "endSeconds": 330.0,
+          "envelopePulseShare4To16Hz": 0.07765801574521118,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 300.0
+        },
+        {
+          "endSeconds": 360.0,
+          "envelopePulseShare4To16Hz": 0.07559467415480739,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 330.0
+        },
+        {
+          "endSeconds": 390.0,
+          "envelopePulseShare4To16Hz": 0.07238279453927227,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 360.0
+        },
+        {
+          "endSeconds": 420.0,
+          "envelopePulseShare4To16Hz": 0.08222122327470188,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 390.0
+        },
+        {
+          "endSeconds": 450.0,
+          "envelopePulseShare4To16Hz": 0.08929457450305502,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 420.0
+        },
+        {
+          "endSeconds": 480.0,
+          "envelopePulseShare4To16Hz": 0.06826764662973037,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 450.0
+        },
+        {
+          "endSeconds": 510.0,
+          "envelopePulseShare4To16Hz": 0.09951398392424243,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 480.0
+        },
+        {
+          "endSeconds": 540.0,
+          "envelopePulseShare4To16Hz": 0.08078477089226521,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 510.0
+        },
+        {
+          "endSeconds": 570.0,
+          "envelopePulseShare4To16Hz": 0.07342035471992403,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 540.0
+        },
+        {
+          "endSeconds": 600.0,
+          "envelopePulseShare4To16Hz": 0.06458944643827491,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 570.0
+        }
+      ],
+      "windowsOverFrozenLimit": 12
+    },
+    "mlxTokens_mlxStftFixedDsp": {
+      "clippedSampleRatio": 0.0,
+      "durationSeconds": 600.0,
+      "finiteRatio": 1.0,
+      "longestNearZeroRunSeconds": 2.0833333333333333e-05,
+      "maxChunkBoundaryAbsJump": 0.032299771904945374,
+      "maxWindowPulseShare4To16Hz": 0.11726029303617015,
+      "medianWindowPulseShare4To16Hz": 0.07407854390929398,
+      "path": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/mlx-tokens__mlx-stft-fixed-dsp.wav",
+      "sha256": "e0a45d9c07950af734c8d94e0fcd1b4bd4ab68bb351d58a843e3ae8159f3e78d",
+      "tailPulseShare4To16Hz": 0.0647303289029026,
+      "windowCount": 20,
+      "windows": [
+        {
+          "endSeconds": 30.0,
+          "envelopePulseShare4To16Hz": 0.05162679855454823,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 0.0
+        },
+        {
+          "endSeconds": 60.0,
+          "envelopePulseShare4To16Hz": 0.0748011923498688,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 30.0
+        },
+        {
+          "endSeconds": 90.0,
+          "envelopePulseShare4To16Hz": 0.062206824361579253,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 60.0
+        },
+        {
+          "endSeconds": 120.0,
+          "envelopePulseShare4To16Hz": 0.06231069320434556,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 90.0
+        },
+        {
+          "endSeconds": 150.0,
+          "envelopePulseShare4To16Hz": 0.11726029303617015,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 120.0
+        },
+        {
+          "endSeconds": 180.0,
+          "envelopePulseShare4To16Hz": 0.05915656328068807,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 150.0
+        },
+        {
+          "endSeconds": 210.0,
+          "envelopePulseShare4To16Hz": 0.06557102027771979,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 180.0
+        },
+        {
+          "endSeconds": 240.0,
+          "envelopePulseShare4To16Hz": 0.1033357155203283,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 210.0
+        },
+        {
+          "endSeconds": 270.0,
+          "envelopePulseShare4To16Hz": 0.08030003416289622,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 240.0
+        },
+        {
+          "endSeconds": 300.0,
+          "envelopePulseShare4To16Hz": 0.06319887031952569,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 270.0
+        },
+        {
+          "endSeconds": 330.0,
+          "envelopePulseShare4To16Hz": 0.07774124783781977,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 300.0
+        },
+        {
+          "endSeconds": 360.0,
+          "envelopePulseShare4To16Hz": 0.07536197258433083,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 330.0
+        },
+        {
+          "endSeconds": 390.0,
+          "envelopePulseShare4To16Hz": 0.0727127842353483,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 360.0
+        },
+        {
+          "endSeconds": 420.0,
+          "envelopePulseShare4To16Hz": 0.08184593599272931,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 390.0
+        },
+        {
+          "endSeconds": 450.0,
+          "envelopePulseShare4To16Hz": 0.0892488246621316,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 420.0
+        },
+        {
+          "endSeconds": 480.0,
+          "envelopePulseShare4To16Hz": 0.0679634574914989,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 450.0
+        },
+        {
+          "endSeconds": 510.0,
+          "envelopePulseShare4To16Hz": 0.09971182944979928,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 480.0
+        },
+        {
+          "endSeconds": 540.0,
+          "envelopePulseShare4To16Hz": 0.08078275213033546,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 510.0
+        },
+        {
+          "endSeconds": 570.0,
+          "envelopePulseShare4To16Hz": 0.07335589546871916,
+          "exceedsFrozenLimit": true,
+          "startSeconds": 540.0
+        },
+        {
+          "endSeconds": 600.0,
+          "envelopePulseShare4To16Hz": 0.0647303289029026,
+          "exceedsFrozenLimit": false,
+          "startSeconds": 570.0
+        }
+      ],
+      "windowsOverFrozenLimit": 12
+    }
+  },
+  "fixedDspWindowPulseEffects": {
+    "coremlGraphVsMlxGraphAtFixedDsp": {
+      "mean": 0.0001461574050887312,
+      "median": 0.0001188454387768649,
+      "positiveWindows": 15,
+      "windows": 20
+    },
+    "fixOnMlxTokensCoremlGraph": {
+      "mean": 0.003203929786324039,
+      "median": 0.00216624854150246,
+      "positiveWindows": 17,
+      "windows": 20
+    },
+    "fixOnMlxTokensMlxGraph": {
+      "mean": 0.003214462881031087,
+      "median": 0.002180704860655344,
+      "positiveWindows": 17,
+      "windows": 20
+    }
+  },
+  "h3SplitWindowPulseEffects": {
+    "coremlGraphVsMlxGraphAtProductionDsp": {
+      "mean": 0.0001566904997957797,
+      "median": 0.00013236287072564829,
+      "positiveWindows": 14,
+      "windows": 20
+    },
+    "mlxWindowingAndProductionDspVsStreamingMlx": {
+      "mean": 0.016134603929006047,
+      "median": 0.014871441963819499,
+      "positiveWindows": 20,
+      "windows": 20
+    }
+  },
+  "protocol": {
+    "durationSeconds": 600,
+    "frozenPulseLimit": 0.07,
+    "prompt": "warm ambient texture",
+    "pulseWindowSeconds": 30,
+    "temperature": 1.0,
+    "topK": 40,
+    "trajectoryRefreshSeconds": 10.0
+  },
+  "schema": "mrt2-long-horizon-crossover-analysis-v1",
+  "seed": 1618033,
+  "tailPulseFactorialEffects": {
+    "coremlDecoderEffectOnMlxTokens": 0.006864989526099874,
+    "coremlTokenEffectAtMlxDecoder": 0.022646470169540134,
+    "interaction": 0.0052208146373064895
+  },
+  "tokens": {
+    "coremlPort": {
+      "completeWindows": 20,
+      "firstWindow": {
+        "distinctFrameRatio": 1.0,
+        "endSeconds": 30.0,
+        "frames": 750,
+        "levelChangePulseShare4To12_5Hz": 0.5295805931091309,
+        "maxDominantTokenShare": 0.7266666666666667,
+        "meanAdjacentLevelChangeFraction": 0.8625945448875427,
+        "meanLevelEntropyBits": 6.032981966209569,
+        "minLevelEntropyBits": 1.852221856525732,
+        "shortPeriodExactFrameMatch": {
+          "1": 0.0,
+          "2": 0.0,
+          "3": 0.0,
+          "4": 0.0,
+          "5": 0.0,
+          "6": 0.0,
+          "7": 0.0,
+          "8": 0.0
+        },
+        "startSeconds": 0.0
+      },
+      "frames": 15001,
+      "lastWindow": {
+        "distinctFrameRatio": 1.0,
+        "endSeconds": 600.0,
+        "frames": 750,
+        "levelChangePulseShare4To12_5Hz": 0.5205662250518799,
+        "maxDominantTokenShare": 0.6186666666666667,
+        "meanAdjacentLevelChangeFraction": 0.8472408056259155,
+        "meanLevelEntropyBits": 5.949270841806354,
+        "minLevelEntropyBits": 1.7424686971143248,
+        "shortPeriodExactFrameMatch": {
+          "1": 0.0,
+          "2": 0.0,
+          "3": 0.0,
+          "4": 0.0,
+          "5": 0.0,
+          "6": 0.0,
+          "7": 0.0,
+          "8": 0.0
+        },
+        "startSeconds": 570.0
+      },
+      "path": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/coreml-port-seed-1618033-token-summary.json",
+      "sha256": "da8d2584f0afaa6d5f56d9246bf15e19f2bca939d0ef49c1eb29d67c8255779e"
+    },
+    "mlx": {
+      "completeWindows": 20,
+      "firstWindow": {
+        "distinctFrameRatio": 1.0,
+        "endSeconds": 30.0,
+        "frames": 750,
+        "levelChangePulseShare4To12_5Hz": 0.45745769143104553,
+        "maxDominantTokenShare": 0.388,
+        "meanAdjacentLevelChangeFraction": 0.892745852470398,
+        "meanLevelEntropyBits": 6.400465981137814,
+        "minLevelEntropyBits": 3.5145638634301046,
+        "shortPeriodExactFrameMatch": {
+          "1": 0.0,
+          "2": 0.0,
+          "3": 0.0,
+          "4": 0.0,
+          "5": 0.0,
+          "6": 0.0,
+          "7": 0.0,
+          "8": 0.0
+        },
+        "startSeconds": 0.0
+      },
+      "frames": 15001,
+      "lastWindow": {
+        "distinctFrameRatio": 1.0,
+        "endSeconds": 600.0,
+        "frames": 750,
+        "levelChangePulseShare4To12_5Hz": 0.42472514510154724,
+        "maxDominantTokenShare": 0.5533333333333333,
+        "meanAdjacentLevelChangeFraction": 0.862817108631134,
+        "meanLevelEntropyBits": 6.127487488003768,
+        "minLevelEntropyBits": 2.4381335417874634,
+        "shortPeriodExactFrameMatch": {
+          "1": 0.0,
+          "2": 0.0,
+          "3": 0.0,
+          "4": 0.0,
+          "5": 0.0,
+          "6": 0.0,
+          "7": 0.0,
+          "8": 0.0
+        },
+        "startSeconds": 570.0
+      },
+      "path": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/mlx-seed-1618033-token-summary.json",
+      "sha256": "0874fc8654447450164d934af234c665ca15fb355eb8c223cae15c79a8fe6b68"
+    }
+  },
+  "windowPulseFactorialEffects": {
+    "coremlDecoderEffectOnMlxTokens": {
+      "mean": 0.01629129442880183,
+      "median": 0.015081681447688917,
+      "positiveWindows": 20,
+      "windows": 20
+    },
+    "coremlTokenEffectAtMlxDecoder": {
+      "mean": 0.006272131782226023,
+      "median": 0.01387683401434112,
+      "positiveWindows": 14,
+      "windows": 20
+    },
+    "interaction": {
+      "mean": 9.493602286964712e-05,
+      "median": 0.00045225935649142665,
+      "positiveWindows": 11,
+      "windows": 20
+    }
+  }
+}

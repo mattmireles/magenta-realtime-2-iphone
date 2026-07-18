@@ -1,0 +1,106 @@
+{
+  "schema": "mrt2-system-paper-context12-device-run-v1",
+  "capturedAt": "2026-07-18",
+  "device": {
+    "model": "iPhone16,2",
+    "soc": "A17 Pro"
+  },
+  "protocol": {
+    "foreground": true,
+    "screenOn": true,
+    "runSeconds": 610.309751,
+    "pcmCaptureSeconds": 600.0,
+    "prompt": "warm ambient texture",
+    "seed": 20260718,
+    "temperature": 1.0,
+    "topK": 40,
+    "trajectoryRefreshSeconds": 10.0,
+    "decoderInputFrames": 25,
+    "decoderContextFrames": 12,
+    "decoderAdvanceFrames": 12,
+    "audioPrimeChunks": 50,
+    "audioCapacityChunks": 500
+  },
+  "placementRequest": {
+    "temporal": "cpuAndNeuralEngine",
+    "depth": "cpuOnly",
+    "decoder": "cpuAndNeuralEngine"
+  },
+  "runtime": {
+    "generationIterations": 628,
+    "producerLoopWallSeconds": 609.647133,
+    "nominalProducerRate": 1.030104081535966,
+    "tokenFramesCaptured": 15790,
+    "thermalStates": ["nominal", "fair", "serious"],
+    "maxUnderruns": 0,
+    "maxDroppedFrames": 0,
+    "startReservoirFrames": 138240,
+    "minimumObservedFillFrames": 130816,
+    "finalReservoirFrames": 1008384,
+    "startReservoirSeconds": 2.88,
+    "minimumObservedFillSeconds": 2.7253333333333334,
+    "finalReservoirSeconds": 21.008,
+    "activeWorkDutyCycle": 0.6113679255176616,
+    "backpressureShare": 0.3886320744823383
+  },
+  "iterationNormalizedComputeMsPerTokenFrame": {
+    "definition": "quantile of each 25-token producer iteration's summed stage time, divided by 25; not a per-token latency quantile",
+    "p50": 23.50056,
+    "p90": 24.333444,
+    "p99": 24.8137172
+  },
+  "stageMsPer25TokenIteration": {
+    "temporalP50": 280.005,
+    "depthP50": 246.1415,
+    "samplingP50": 2.3585,
+    "decoderP50": 58.7415,
+    "decoderP99": 89.00249
+  },
+  "audio": {
+    "finiteRatio": 1.0,
+    "clippedSampleRatio": 0.0,
+    "maxChunkBoundaryAbsJump": 0.03421235829591751,
+    "longestNearZeroRunSeconds": 0.000020833333333333333,
+    "medianWindowPulseShare4To16Hz": 0.060906127151947625,
+    "tailWindowPulseShare4To16Hz": 0.09181394423839767,
+    "maxWindowPulseShare4To16Hz": 0.11340719662874078,
+    "windowsOverOriginalDiagnosticLimit": 5,
+    "windowCount": 20,
+    "diagnosticLimit": 0.07,
+    "interpretation": "The original prompt-specific threshold is a diagnostic count, not a universal music-quality acceptance boundary. The corrected device run matches the 5/20 count of the stateful MLX arm for this seed."
+  },
+  "tokens": {
+    "completeThirtySecondWindows": 21,
+    "firstWindowMeanLevelEntropyBits": 6.322546605508489,
+    "lastCompleteWindowMeanLevelEntropyBits": 6.224002578464266,
+    "firstWindowDistinctFrameRatio": 1.0,
+    "lastCompleteWindowDistinctFrameRatio": 1.0,
+    "shortExactCyclePeriodsTested": [1, 2, 3, 4, 5, 6, 7, 8],
+    "shortExactCycleDetected": false
+  },
+  "artifacts": {
+    "wav": {
+      "privatePath": "Scratchpad/system_paper_device_logs/20260718T-context12-a17/a17-context12-soak.wav",
+      "sha256": "04a7cac945e200bbce45ed2c51deb584b40ee1652fd875f06b3311700b417a5b"
+    },
+    "events": {
+      "privatePath": "Scratchpad/system_paper_device_logs/20260718T-context12-a17/a17-context12-soak-events.json",
+      "sha256": "899e70b41a1ac75d40520af56efdc322b7ef5b791fdb3f1a4ced22067e515d7a"
+    },
+    "tokens": {
+      "privatePath": "Scratchpad/system_paper_device_logs/20260718T-context12-a17/a17-context12-soak-tokens.json",
+      "sha256": "eb75d400ecac277afc6ae4e6f904ae6249bddf5c260c78838cef40a011df7905"
+    },
+    "eventSummary": {
+      "privatePath": "Scratchpad/system_paper_device_logs/20260718T-context12-a17/summary.json",
+      "sha256": "981ed85168b73b9174e6ed2b569c582e400276bb6bdf7f2d94c2c6dfec8da1af"
+    },
+    "tokenSummary": {
+      "privatePath": "Scratchpad/system_paper_device_logs/20260718T-context12-a17/a17-context12-soak-token-summary.json",
+      "sha256": "ac18e1de2ace4f1ca96ac39ac77f14a71bafb1ee4b11856d0b62d9f9b1e58ea8"
+    },
+    "signedExecutableSha256": "5fdc46cf26d29f85a4b418caaf0b2163365dffd4f441c6ecd5808100d5cacb58",
+    "generationRuntimeSourceSha256": "7762b99bd864065b926f20624531fe6ecc2144de73cd4140b0d82a07b4353225",
+    "renderCoreSourceSha256": "a0525a65d70c68c51505f58de7f61cbfeef01454093336d75528c8e1ff2f192f"
+  }
+}

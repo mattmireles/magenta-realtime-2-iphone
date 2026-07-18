@@ -87,14 +87,18 @@ today, with this stateless graph as the escape to re-land on the ANE.
 graph (§6.5).** Twelve depth predictions per frame cost ~12 weight streams
 (~40 ms/frame on A14) no matter how few positions they compute, because per-call
 cost ≈ weight bytes ÷ DRAM bandwidth on every compute unit. Moving the entire
-12-level autoregressive rollout inside **one** prediction streams the weights
-once per frame. Determinism stays host-owned via the Gumbel-max identity (the
-host supplies per-level Gumbel noise and inverse temperature; top-k and
-valid-range masks are baked constants; the embedder feedback between levels is an
-in-graph gather). Measured depth cost: **12.7 ms/frame FP16 on A14, 8.4 ms on
-A17 Pro**. FLOAT32 export is token-for-token exact (**0/900 mismatches**); FP16
-flips fp16 near-tie tokens (~148/900) without changing the sampling
-distribution, and was shipped after device quality and paired-listening gates.
+12-level autoregressive rollout inside **one** prediction removes 11 host/Core
+ML boundaries, but it does not collapse the dependent transformer passes into
+one weight traversal. The measured A14 FLOAT32 comparison is ~40.2 ms/frame for
+12 separate full-pass predictions versus ~37 ms/frame for the one-call graph.
+The large improvement comes from the one-call graph's FLOAT16 artifact:
+**12.7 ms/frame on A14 and 8.4 ms on A17 Pro**. Determinism stays host-owned via
+the Gumbel-max identity (the host supplies per-level Gumbel noise and inverse
+temperature; top-k and valid-range masks are baked constants; embedder feedback
+between levels is an in-graph gather). FLOAT32 export is token-for-token exact
+(**0/900 mismatches**); FP16 flips fp16 near-tie tokens (~148/900) without
+changing the sampling distribution, and was shipped after device quality and
+paired-listening gates.
 
 **`SpectroStreamDecoder` (NCHW FP16) — layout determines numerical survival, not
 just placement (§6.4).** The naive channels-last FP16 export compiles but

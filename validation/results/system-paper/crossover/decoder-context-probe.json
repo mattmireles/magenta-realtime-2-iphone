@@ -1,0 +1,54 @@
+{
+  "arms": {
+    "0": {
+      "contextTokenFrames": 0,
+      "correlation": 0.10833872346406821,
+      "finiteRatio": 1.0,
+      "maxAbsoluteError": 1071.6919391155243,
+      "meanAbsoluteError": 0.47448376776010603
+    },
+    "1": {
+      "contextTokenFrames": 1,
+      "correlation": 0.9926431141716527,
+      "finiteRatio": 1.0,
+      "maxAbsoluteError": 10.055066108703613,
+      "meanAbsoluteError": 0.01377519892635222
+    },
+    "12": {
+      "contextTokenFrames": 12,
+      "correlation": 0.999999999988387,
+      "finiteRatio": 1.0,
+      "maxAbsoluteError": 0.00031876564025878906,
+      "meanAbsoluteError": 1.2436844265550917e-06
+    },
+    "2": {
+      "contextTokenFrames": 2,
+      "correlation": 0.9966859626083564,
+      "finiteRatio": 1.0,
+      "maxAbsoluteError": 5.773003578186035,
+      "meanAbsoluteError": 0.009773606852670882
+    },
+    "4": {
+      "contextTokenFrames": 4,
+      "correlation": 0.9989409990217942,
+      "finiteRatio": 1.0,
+      "maxAbsoluteError": 3.967256546020508,
+      "meanAbsoluteError": 0.004596256149872997
+    },
+    "8": {
+      "contextTokenFrames": 8,
+      "correlation": 0.9999955008449479,
+      "finiteRatio": 1.0,
+      "maxAbsoluteError": 0.24270248413085938,
+      "meanAbsoluteError": 0.00023095669109400615
+    }
+  },
+  "checkpointSha256": "5dd1cbc7c606c512c21de0bcb04d4818bf0a3b873d7cbb9d1556d67d3b034de3",
+  "codebooksSha256": "4e236269d4194ffe2d7463c483a1a36f4aff7d619c34f8e8bfe451c7af92d496",
+  "schema": "mrt2-decoder-context-probe-v1",
+  "startTokenFrame": 150,
+  "targetSTFTFrames": 96,
+  "targetTokenFrames": 25,
+  "tokenPath": "Scratchpad/system_paper_crossover/seed-20260718/mlx-seed-20260718-tokens.npy",
+  "tokenSha256": "526198723322e44a47660d4df863965547dda22e032c998fdc4c25f43c4cb3bc"
+}

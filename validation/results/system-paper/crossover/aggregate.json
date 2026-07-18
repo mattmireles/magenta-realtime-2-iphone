@@ -1,0 +1,339 @@
+{
+  "decoderContextProbe": {
+    "arms": {
+      "0": {
+        "contextTokenFrames": 0,
+        "correlation": 0.10833872346406821,
+        "finiteRatio": 1.0,
+        "maxAbsoluteError": 1071.6919391155243,
+        "meanAbsoluteError": 0.47448376776010603
+      },
+      "1": {
+        "contextTokenFrames": 1,
+        "correlation": 0.9926431141716527,
+        "finiteRatio": 1.0,
+        "maxAbsoluteError": 10.055066108703613,
+        "meanAbsoluteError": 0.01377519892635222
+      },
+      "12": {
+        "contextTokenFrames": 12,
+        "correlation": 0.999999999988387,
+        "finiteRatio": 1.0,
+        "maxAbsoluteError": 0.00031876564025878906,
+        "meanAbsoluteError": 1.2436844265550917e-06
+      },
+      "2": {
+        "contextTokenFrames": 2,
+        "correlation": 0.9966859626083564,
+        "finiteRatio": 1.0,
+        "maxAbsoluteError": 5.773003578186035,
+        "meanAbsoluteError": 0.009773606852670882
+      },
+      "4": {
+        "contextTokenFrames": 4,
+        "correlation": 0.9989409990217942,
+        "finiteRatio": 1.0,
+        "maxAbsoluteError": 3.967256546020508,
+        "meanAbsoluteError": 0.004596256149872997
+      },
+      "8": {
+        "contextTokenFrames": 8,
+        "correlation": 0.9999955008449479,
+        "finiteRatio": 1.0,
+        "maxAbsoluteError": 0.24270248413085938,
+        "meanAbsoluteError": 0.00023095669109400615
+      }
+    },
+    "path": "validation/results/system-paper/crossover/decoder-context-probe.json",
+    "sha256": "4102f0fd6d69d95fd955fb31aa30fcc0d109ce9199acf0ba873a97ede814a616",
+    "startTokenFrame": 150,
+    "targetTokenFrames": 25
+  },
+  "diagnosticThresholdCounts": {
+    "context12CoremlTrainedHann": {
+      "overLimit": 13,
+      "windows": 60
+    },
+    "statelessCoremlLegacyDsp": {
+      "overLimit": 35,
+      "windows": 60
+    },
+    "streamingMlx": {
+      "overLimit": 11,
+      "windows": 60
+    }
+  },
+  "durationSecondsPerArm": 600,
+  "effects": {
+    "context12InterventionAtCoremlGraph": {
+      "maxSeedMean": -0.01573804799009059,
+      "medianSeedMean": -0.016496259405683895,
+      "minSeedMean": -0.01771845417686438,
+      "perSeed": [
+        {
+          "mean": -0.016496259405683895,
+          "median": -0.014900232632654744,
+          "positiveWindows": 0,
+          "seed": 271828,
+          "windows": 20
+        },
+        {
+          "mean": -0.01573804799009059,
+          "median": -0.014573452305991327,
+          "positiveWindows": 0,
+          "seed": 1618033,
+          "windows": 20
+        },
+        {
+          "mean": -0.01771845417686438,
+          "median": -0.016137050640673882,
+          "positiveWindows": 0,
+          "seed": 20260718,
+          "windows": 20
+        }
+      ],
+      "pooledMeanOfSeedMeans": -0.016650920524212954,
+      "positiveWindows": 0,
+      "windows": 60
+    },
+    "context12InterventionAtMlxGraph": {
+      "maxSeedMean": -0.015763612212853703,
+      "medianSeedMean": -0.016548445246223065,
+      "minSeedMean": -0.01700246726771434,
+      "perSeed": [
+        {
+          "mean": -0.016548445246223065,
+          "median": -0.014950325934578998,
+          "positiveWindows": 0,
+          "seed": 271828,
+          "windows": 20
+        },
+        {
+          "mean": -0.015763612212853703,
+          "median": -0.01474694287661776,
+          "positiveWindows": 0,
+          "seed": 1618033,
+          "windows": 20
+        },
+        {
+          "mean": -0.01700246726771434,
+          "median": -0.015586455757812825,
+          "positiveWindows": 0,
+          "seed": 20260718,
+          "windows": 20
+        }
+      ],
+      "pooledMeanOfSeedMeans": -0.016438174908930372,
+      "positiveWindows": 0,
+      "windows": 60
+    },
+    "context12MlxVsStreamingMlx": {
+      "maxSeedMean": 0.004575108672207961,
+      "medianSeedMean": 0.0035854545971834295,
+      "minSeedMean": 0.0028721834106437147,
+      "perSeed": [
+        {
+          "mean": 0.0028721834106437147,
+          "median": 0.0023181863510723343,
+          "positiveWindows": 14,
+          "seed": 271828,
+          "windows": 20
+        },
+        {
+          "mean": 0.0035854545971834295,
+          "median": 0.0024013155163196027,
+          "positiveWindows": 17,
+          "seed": 1618033,
+          "windows": 20
+        },
+        {
+          "mean": 0.004575108672207961,
+          "median": 0.0034606658878299813,
+          "positiveWindows": 19,
+          "seed": 20260718,
+          "windows": 20
+        }
+      ],
+      "pooledMeanOfSeedMeans": 0.003677582226678368,
+      "positiveWindows": 50,
+      "windows": 60
+    },
+    "coremlGraphVsMlxGraphAtContext12": {
+      "maxSeedMean": 0.0002309499527032407,
+      "medianSeedMean": 0.0001717216278518476,
+      "minSeedMean": 0.0001529827779437061,
+      "perSeed": [
+        {
+          "mean": 0.0002309499527032407,
+          "median": 0.00022577203182886849,
+          "positiveWindows": 20,
+          "seed": 271828,
+          "windows": 20
+        },
+        {
+          "mean": 0.0001717216278518476,
+          "median": 0.0001875946997636213,
+          "positiveWindows": 17,
+          "seed": 1618033,
+          "windows": 20
+        },
+        {
+          "mean": 0.0001529827779437061,
+          "median": 0.00014118033108390451,
+          "positiveWindows": 16,
+          "seed": 20260718,
+          "windows": 20
+        }
+      ],
+      "pooledMeanOfSeedMeans": 0.00018521811949959817,
+      "positiveWindows": 53,
+      "windows": 60
+    },
+    "coremlGraphVsMlxGraphAtLegacyDsp": {
+      "maxSeedMean": 0.0008756950741833199,
+      "medianSeedMean": 0.00018222934685550827,
+      "minSeedMean": 0.0001566904997957797,
+      "perSeed": [
+        {
+          "mean": 0.00018222934685550827,
+          "median": 0.00016385474673278472,
+          "positiveWindows": 16,
+          "seed": 271828,
+          "windows": 20
+        },
+        {
+          "mean": 0.0001566904997957797,
+          "median": 0.00013236287072564829,
+          "positiveWindows": 14,
+          "seed": 1618033,
+          "windows": 20
+        },
+        {
+          "mean": 0.0008756950741833199,
+          "median": 0.00017734623465037735,
+          "positiveWindows": 14,
+          "seed": 20260718,
+          "windows": 20
+        }
+      ],
+      "pooledMeanOfSeedMeans": 0.00040487164027820264,
+      "positiveWindows": 44,
+      "windows": 60
+    },
+    "statelessWindowingAndLegacyDspVsStreamingMlx": {
+      "maxSeedMean": 0.017958800977434734,
+      "medianSeedMean": 0.017058402268124002,
+      "minSeedMean": 0.016134603929006047,
+      "perSeed": [
+        {
+          "mean": 0.017058402268124002,
+          "median": 0.0150450544550167,
+          "positiveWindows": 20,
+          "seed": 271828,
+          "windows": 20
+        },
+        {
+          "mean": 0.016134603929006047,
+          "median": 0.014871441963819499,
+          "positiveWindows": 20,
+          "seed": 1618033,
+          "windows": 20
+        },
+        {
+          "mean": 0.017958800977434734,
+          "median": 0.015894468880395366,
+          "positiveWindows": 20,
+          "seed": 20260718,
+          "windows": 20
+        }
+      ],
+      "pooledMeanOfSeedMeans": 0.017050602391521594,
+      "positiveWindows": 60,
+      "windows": 60
+    },
+    "tokenSourceAtStreamingMlxDecoder": {
+      "maxSeedMean": 0.006272131782226023,
+      "medianSeedMean": 0.0018076939691788329,
+      "minSeedMean": -0.0005725987865221705,
+      "perSeed": [
+        {
+          "mean": 0.0018076939691788329,
+          "median": 0.002253864285736488,
+          "positiveWindows": 11,
+          "seed": 271828,
+          "windows": 20
+        },
+        {
+          "mean": 0.006272131782226023,
+          "median": 0.01387683401434112,
+          "positiveWindows": 14,
+          "seed": 1618033,
+          "windows": 20
+        },
+        {
+          "mean": -0.0005725987865221705,
+          "median": -0.002158367804228477,
+          "positiveWindows": 10,
+          "seed": 20260718,
+          "windows": 20
+        }
+      ],
+      "pooledMeanOfSeedMeans": 0.0025024089882942284,
+      "positiveWindows": 35,
+      "windows": 60
+    },
+    "trainedHannVsLegacyDspAtMlxGraph": {
+      "maxSeedMean": 0.0036187749624875683,
+      "medianSeedMean": 0.003214462881031087,
+      "minSeedMean": 0.0023622263887427704,
+      "perSeed": [
+        {
+          "mean": 0.0023622263887427704,
+          "median": 0.002017188477356026,
+          "positiveWindows": 14,
+          "seed": 271828,
+          "windows": 20
+        },
+        {
+          "mean": 0.003214462881031087,
+          "median": 0.002180704860655344,
+          "positiveWindows": 17,
+          "seed": 1618033,
+          "windows": 20
+        },
+        {
+          "mean": 0.0036187749624875683,
+          "median": 0.0027854564168418167,
+          "positiveWindows": 19,
+          "seed": 20260718,
+          "windows": 20
+        }
+      ],
+      "pooledMeanOfSeedMeans": 0.003065154744087142,
+      "positiveWindows": 50,
+      "windows": 60
+    }
+  },
+  "prompt": "warm ambient texture",
+  "replications": 3,
+  "reportArtifacts": [
+    {
+      "path": "validation/results/system-paper/crossover/seed-1618033.json",
+      "sha256": "e438a6cb1133cdb52deefc3f7152695b838d6d03eeaf8a744e392536dee1d9b9"
+    },
+    {
+      "path": "validation/results/system-paper/crossover/seed-271828.json",
+      "sha256": "61abc7d5ca41d981a8f7ad0153292eebeab55bb22f1ae32a10e1bf1ad876e054"
+    },
+    {
+      "path": "validation/results/system-paper/crossover/seed-20260718.json",
+      "sha256": "956b14122f16f7110abe7bafec7bbb9e726bf7fcb8c54957df65e72a62e6a532"
+    }
+  ],
+  "schema": "mrt2-long-horizon-crossover-aggregate-v1",
+  "seeds": [
+    271828,
+    1618033,
+    20260718
+  ]
+}

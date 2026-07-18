@@ -1,0 +1,32 @@
+{
+  "schema": "mrt2-depth-rollout-device-ablation-v1",
+  "device": "iPhone 12 Pro (A14)",
+  "model": "mrt2_small depth transformer",
+  "historicalDiagnostic": true,
+  "arms": [
+    {
+      "name": "12 separate full-pass predictions",
+      "precision": "FLOAT32",
+      "depthMsPer25FrameIterationP50": 1004.0,
+      "depthMsPerFrame": 40.2,
+      "depthMsPerPrediction": 3.35
+    },
+    {
+      "name": "one in-graph 12-level rollout prediction",
+      "precision": "FLOAT32",
+      "depthMsPerFrame": 37.0
+    },
+    {
+      "name": "one in-graph 12-level rollout prediction",
+      "precision": "FLOAT16",
+      "depthMsPerFrame": 12.7
+    }
+  ],
+  "a17Float16DepthMsPerFrame": 8.4,
+  "interpretation": "The in-graph rollout removes eleven host prediction boundaries but does not reduce twelve sequential RVQ levels to one transformer-weight traversal. FLOAT32 improves only from 40.2 to about 37 ms/frame; the large measured gain is the later FLOAT16 artifact.",
+  "privateSource": {
+    "path": "README/Notes/aperture-device-quality-root-cause-feedback-and-strides.md",
+    "sha256": "45fe7db8dd298433d8fb5907b63b95f7286c1f716cbdf8576ba5883ba161dd76",
+    "relevantLines": [187, 190, 394, 409]
+  }
+}

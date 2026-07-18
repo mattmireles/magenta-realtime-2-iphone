@@ -7,6 +7,7 @@ receipt. Run from the repository root:
 python3 paper/figures/src/fig_soak.py
 python3 paper/figures/src/fig_latency.py
 python3 paper/figures/src/fig_compression.py
+python3 paper/figures/src/fig_crossover.py
 ```
 
 The system diagram is native TikZ in `fig-system.tex`. Colors use the

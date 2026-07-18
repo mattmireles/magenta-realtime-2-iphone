@@ -27,6 +27,8 @@ CITATIONS = {
     "[Hannun et al., 2023]": "mlx",
     "[Xu et al., 2025]": "llm-npu",
     "[Mireles, 2026]": "surgical-inference",
+    "[Holtzman et al., 2020]": "neural-text-degeneration",
+    "[Rohatgi et al., 2025]": "next-token-barrier",
 }
 
 REFERENCES = {
@@ -34,9 +36,11 @@ REFERENCES = {
     "[Fig. soak]": r"\cref{fig:soak}",
     "[Fig. latency]": r"\cref{fig:latency}",
     "[Fig. compression]": r"\cref{fig:compression}",
+    "[Fig. crossover]": r"\cref{fig:crossover}",
     "[Table sustain]": r"\cref{tab:sustain}",
     "[Table dispersion]": r"\cref{tab:dispersion}",
-    "[Table audio]": r"\cref{tab:audio}",
+    "[Table crossover]": r"\cref{tab:crossover}",
+    "[Table depth]": r"\cref{tab:depth}",
 }
 
 PREAMBLE = r"""\documentclass[10pt]{article}
@@ -60,7 +64,7 @@ PREAMBLE = r"""\documentclass[10pt]{article}
   linkcolor=blue!45!black,
   citecolor=blue!45!black,
   urlcolor=blue!55!black,
-  pdftitle={The Three Clocks of Live Music Generation: Sustained GPU-Free MRT2 Inference on iPhone},
+  pdftitle={Throughput Is Not Liveness: Three Clocks for GPU-Free Music Generation on iPhone},
   pdfauthor={Matt Mireles},
   pdfkeywords={on-device inference, generative audio, Core ML, Apple Neural Engine, real-time systems}
 }
@@ -70,8 +74,8 @@ PREAMBLE = r"""\documentclass[10pt]{article}
 \setlength{\parindent}{1.1em}
 \definecolor{aneBlue}{HTML}{0072B2}
 \definecolor{cpuOrange}{HTML}{E69F00}
-\title{\textbf{The Three Clocks of Live Music Generation:}\\
-Sustained GPU-Free MRT2 Inference on iPhone}
+\title{\textbf{Throughput Is Not Liveness:}\\
+Three Clocks for GPU-Free Music Generation on iPhone}
 \author{Matt Mireles\\Independent Researcher\\\href{https://github.com/mattmireles}{github.com/mattmireles}}
 \date{July 2026}
 \begin{document}
@@ -84,7 +88,8 @@ SYSTEM_FIGURE = r"""
   \resizebox{\textwidth}{!}{\input{figures/fig-system.tex}}
   \caption{End-to-end deployment boundary. Blue stages are observed on the ANE;
   orange stages remain deliberate host/CPU work. Temporal recurrence crosses the
-  model boundary as ordinary K/V tensors. No claim of an ``all-ANE'' system is made.}
+  model boundary as ordinary K/V tensors; the stateless decoder retains 12 token
+  frames of measured causal context. No claim of an ``all-ANE'' system is made.}
   \label{fig:system}
 \end{figure}
 """
@@ -93,16 +98,18 @@ RESULTS_TABLE = r"""
 \begin{table}[H]
 \centering
 \small
-\caption{Sustained foreground results. The selected A17 policy passes compute
-and delivery; its CPU+GPU-policy control fails compute despite buffered
-delivery. A14 is a bounded-reservoir failure. Deadline: 40 ms.}
+\caption{Sustained foreground results. Cost is a p99 over 25-token iteration
+means, not per-token tail latency. The corrected A17 runtime sustains throughput
+and playback; its 21 s queue does not satisfy low-latency steering. The CPU+GPU
+control and A14 rows predate the decoder-context repair and are conservative
+duration/hardware controls.}
 \label{tab:sustain}
 \begin{tabular}{@{}lrrrrll@{}}
 \toprule
 Device & p50 & p90 & p99 & Rate & First underflow & Verdict \\
- & \multicolumn{3}{c}{effective frame (ms)} & ($\times$RT) & & \\
+ & \multicolumn{3}{c}{iteration-normalized ms/token} & ($\times$RT) & & \\
 \midrule
-A17 ANE & 20.26 & 20.81 & 21.66 & 1.031 & none / 610 s & pass \\
+A17 ANE + context & 23.50 & 24.33 & 24.81 & 1.030 & none / 610 s & throughput pass \\
 A17 CPU+GPU & 23.56 & 43.55 & 49.23 & 1.008 & none / 610 s & compute fail \\
 A14 ANE & 43.88 & 47.25 & 58.59 & 0.897 & 294.08 s & fail \\
 \bottomrule
@@ -114,14 +121,14 @@ LATENCY_TABLE = r"""
 \begin{table}[H]
 \centering
 \small
-\caption{Independent-process latency campaign, five runs per cell. Entries are
+\caption{Independent-process pre-context latency campaign, five runs per cell. Entries are
 median (IQR) across run-level percentiles. The CPU+GPU control changes only the
 requested temporal policy; depth remains CPU and decoder remains ANE.}
 \label{tab:dispersion}
 \begin{tabular}{@{}llrrrr@{}}
 \toprule
 Device & Temporal & p50 & p99 & Temporal p50 & Startup \\
- & policy & \multicolumn{3}{c}{ms/effective frame} & s \\
+ & policy & \multicolumn{3}{c}{iteration-normalized ms/token} & s \\
 \midrule
 A17 Pro & ANE & 20.77 (.03) & 22.35 (.42) & 11.25 (.01) & 4.26 (.04) \\
 A17 Pro & CPU+GPU & 27.32 (.25) & 38.51 (1.78) & 16.35 (.15) & 6.22 (.05) \\
@@ -138,41 +145,75 @@ LATENCY_FIGURE = r"""
   \includegraphics[width=0.94\textwidth]{figures/fig-latency.pdf}
   \caption{Stage decomposition for the repeated-process campaign. Bars use
   the median of run-level stage p50 values. The selected ANE policy reduces
-  temporal cost on both phones; A14 reaches the deadline before its tail is
-  considered. CPU+GPU denotes a requested Core ML policy, not a GPU-placement
-  proof.}
+  temporal cost on both phones. These are quantiles of iteration means, not
+  per-token latency quantiles. CPU+GPU denotes a requested Core ML policy, not
+  a GPU-placement proof.}
   \label{fig:latency}
 \end{figure}
 """
 
 SOAK_FIGURE = r"""
-\begin{figure}[t]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.94\textwidth]{figures/fig-soak.pdf}
-  \caption{A17 Pro matched ten-minute trajectories. The selected ANE-policy
-  run begins in \texttt{serious} thermal state and keeps p99 below deadline
-  while queued audio grows. The CPU+GPU-policy control crosses the deadline
-  after minute six and drains its banked reservoir, despite ending without an
-  underrun. Both curves are generated from public receipts.}
+  \caption{A17 Pro matched pre-context ten-minute trajectories. The selected
+  ANE-policy run keeps iteration-normalized p99 flat. The CPU+GPU-policy control
+  moves from 38.51 ms in five short processes to 49.23 ms here and crosses 40 ms
+  after minute six. The duration effect is visible even though buffering prevents
+  an underrun.}
   \label{fig:soak}
 \end{figure}
 """
 
-AUDIO_TABLE = r"""
-\begin{table}[t]
+CROSSOVER_TABLE = r"""
+\begin{table}[H]
 \centering
 \small
-\caption{Long-horizon A17 audio gate. Arrows show the required direction;
-bold values fail the frozen threshold. Lower temperature fixes only the pulse
-detector and is therefore rejected.}
-\label{tab:audio}
-\begin{tabular}{@{}lrrrrrr@{}}
+\caption{Three-seed, 600 s crossover. Effects are changes in 4--16 Hz envelope
+pulse share; entries are median seed mean [range]. The context intervention is
+paired against the same graph and corrected DSP without context.}
+\label{tab:crossover}
+\begin{tabular}{@{}lrr@{}}
 \toprule
-Arm & Clip $\downarrow$ & L/R $\uparrow$ & Prompt $\uparrow$ & Ref. $\uparrow$ & Pulse $\downarrow$ & Blind \\
+Intervention & Effect & Positive windows \\
 \midrule
-Threshold & $10^{-5}$ & .970 & .300 & .800 & .070 & $\geq$4/5 \\
-$T=1.0$, 600 s & $4.05\!\times\!10^{-6}$ & .986 & .312 & .854 & \textbf{.136} & \textbf{2/5} \\
-$T=0.5$, 600 s & \textbf{$3.27\!\times\!10^{-5}$} & \textbf{.946} & \textbf{.268} & \textbf{.784} & .042 & --- \\
+Token source at MLX decoder & +.00181 [-.00057, .00627] & 35/60 \\
+Core ML vs MLX decoder graph & +.00018 [.00016, .00088] & 44/60 \\
+Stateless window vs streaming MLX & +.01706 [.01613, .01796] & 60/60 \\
+Add 12-frame context, same Core ML/DSP & -.01650 [-.01772, -.01574] & 0/60 \\
+\bottomrule
+\end{tabular}
+\end{table}
+"""
+
+CROSSOVER_FIGURE = r"""
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig-crossover.pdf}
+  \caption{Causal localization. (a) Each dot is one 600 s seed; black bars are
+  medians. (b) Twelve retained token frames recover stateful MLX pre-iSTFT
+  output to correlation above 0.999999999. (c) The original prompt-specific
+  0.070 diagnostic fires in 35/60 stateless Core ML windows, but only 13/60
+  corrected windows versus 11/60 stateful MLX windows.}
+  \label{fig:crossover}
+\end{figure}
+"""
+
+DEPTH_TABLE = r"""
+\begin{table}[H]
+\centering
+\small
+\caption{Measured A14 depth rollout ablation. The in-graph boundary removes host
+boundaries but still traverses transformer weights at each dependent RVQ level;
+the major gain is FLOAT16, not a fictitious single weight traversal.}
+\label{tab:depth}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Depth boundary & Precision & ms/token frame \\
+\midrule
+12 separate full-pass predictions & FLOAT32 & 40.2 \\
+One in-graph 12-level prediction & FLOAT32 & $\sim$37.0 \\
+One in-graph 12-level prediction & FLOAT16 & 12.7 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -192,16 +233,16 @@ COMPRESSION_FIGURE = r"""
 
 THREE_CLOCKS = r"""
 \begin{align}
-\mathcal{C}_{\mathrm{compute}} &\equiv
-  Q_{0.99}(t_{\mathrm{eff}}) < 40\,\mathrm{ms}, \\
+\mathcal{C}_{\mathrm{compute}} &\equiv R_{\mathrm{producer}} \ge 1, \\
 \mathcal{C}_{\mathrm{delivery}} &\equiv
-  (U=0) \land (D=0) \land (B_{\mathrm{end}} \ge B_{\mathrm{start}}), \\
+  (U=0) \land (D=0) \land (0 < B(t) \le B_{\max}), \\
 \mathcal{C}_{\mathrm{gen}} &\equiv \bigwedge_{k=1}^{K} m_k \in \mathcal{A}_k.
 \end{align}
-Here $U$ and $D$ are callback underruns and producer drops, $B$ is queued
-PCM, and each $m_k$ is a predeclared audio measure with acceptance set
-$\mathcal{A}_k$. A complete live-system pass is the conjunction of all three
-clocks; no score from one clock substitutes for another.
+Here $R_{\mathrm{producer}}$ is sustained generated-audio rate relative to
+playback, $U$ and $D$ are callback underruns and producer drops, $B$ is queued
+PCM, and $B_{\max}$ is chosen from an audible steering-latency budget. Each
+$m_k$ is a prompt-conditional audio measure with acceptance set $\mathcal{A}_k$.
+No score from one clock substitutes for another.
 """
 
 
@@ -327,10 +368,19 @@ def render_blocks(blocks: list[tuple[str, str]]) -> str:
       if clean_heading.startswith("Cross-process dispersion"):
         output.append(LATENCY_TABLE)
         output.append(LATENCY_FIGURE)
+      if clean_heading.startswith("Duration changes"):
+        output.append(LATENCY_TABLE)
+        output.append(LATENCY_FIGURE)
+        output.append(SOAK_FIGURE)
       if clean_heading.startswith("A14 boundary"):
         output.append(SOAK_FIGURE)
       if clean_heading.startswith("Generative clock"):
-        output.append(AUDIO_TABLE)
+        output.append(CROSSOVER_TABLE)
+      if clean_heading.startswith("Crossover localizes"):
+        output.append(CROSSOVER_TABLE)
+        output.append(CROSSOVER_FIGURE)
+      if clean_heading.startswith("One-call depth"):
+        output.append(DEPTH_TABLE)
       if clean_heading.startswith("Compression ladder"):
         output.append(COMPRESSION_FIGURE)
     elif kind in {"items", "enumerate"}:

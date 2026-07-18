@@ -46,7 +46,7 @@ def main() -> None:
       color=ORANGE,
       label="CPU+GPU policy p99",
   )
-  latency_axis.set_ylabel("effective frame time (ms)")
+  latency_axis.set_ylabel("iteration-normalized cost (ms/token)")
   latency_axis.set_ylim(0, 58)
   latency_axis.grid(axis="y", alpha=0.25)
   latency_axis.legend(ncol=2, frameon=False, loc="upper right")

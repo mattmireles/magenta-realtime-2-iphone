@@ -1,22 +1,32 @@
 # Reviewer packet
 
-**Paper:** *The Three Clocks of Live Music Generation: Sustained GPU-Free
-MRT2 Inference on iPhone*
+**Paper:** *Throughput Is Not Liveness: Three Clocks for GPU-Free Music
+Generation on iPhone*
 
 This packet is venue-neutral and ready for academic review or arXiv upload.
-The headline result is deliberately narrower than "live music solved": the
-A17 Pro compute and delivery clocks pass for ten hot foreground minutes, while
-the independently frozen 600-second generative-quality gate fails and is
-retained as the principal negative result.
+The headline result is deliberately narrower than "live music solved." A
+three-seed, 600-second token-by-decoder crossover shows that the apparent
+long-horizon quality failure follows stateless decoder windowing, not the token
+source or Core ML graph. A 12-frame causal-context intervention recovers tensor
+parity and removes the excess; a corrected 600-second A17 Pro run sustains
+throughput and delivery with zero underruns or drops.
 
 ## Contents
 
-- `mrt2-three-clocks.pdf` — archival 12-page manuscript.
-- `mrt2-three-clocks-source.tar.gz` — self-contained Tectonic/arXiv source.
-- `mrt2-system-paper-claims.md` — claim-to-gate ledger, including rejected
+- `mrt2-three-clocks.pdf` - archival manuscript.
+- `mrt2-three-clocks-source.tar.gz` - self-contained Tectonic/arXiv source.
+- `mrt2-system-paper-claims.md` - claim-to-gate ledger, including rejected
   claims.
-- `validation-receipts.md` — public evidence map and exact receipt paths.
-- `LICENSE` and `NOTICE` — repository licensing and attribution.
+- `validation-receipts.md` - public evidence map and exact receipt paths.
+- `mrt2-system-paper-revision-report.json` - machine-checked verdict for the
+  crossover, tensor probe, and corrected device run.
+- `mrt2-system-paper-crossover-aggregate.json` - seed-level effects and
+  diagnostic counts without pooling away the three replications.
+- `mrt2-context12-soak-manifest.json` - normalized corrected A17 Pro receipt
+  with hashes binding the private raw capture and signed runtime.
+- `mrt2-depth-rollout-ablation.json` - measured correction to the one-call
+  depth-rollout explanation.
+- `LICENSE` and `NOTICE` - repository licensing and attribution.
 
 ## Public artifacts
 
@@ -38,5 +48,5 @@ Extract the source archive and run:
 tectonic main.tex
 ```
 
-The expected output is a 12-page letter-size PDF titled *The Three Clocks of
-Live Music Generation: Sustained GPU-Free MRT2 Inference on iPhone*.
+The expected output is a letter-size PDF titled *Throughput Is Not Liveness:
+Three Clocks for GPU-Free Music Generation on iPhone*.

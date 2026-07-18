@@ -2,25 +2,29 @@
 
 **A 230M-parameter live-music model sustains its compute and audio-delivery
 clocks on A17 Pro for ten hot foreground minutes without application GPU
-execution. Its long-horizon generative-quality clock still fails. Both results
-are measured and published.**
+execution. A three-seed crossover then localizes an apparent long-horizon
+quality failure to missing causal decoder history and verifies the repair.**
 
 This repository is the public artifact for Google DeepMind's
 [Magenta RealTime 2](https://huggingface.co/google/magenta-realtime-2)
 (`mrt2_small`) on iPhone: Core ML exporters, frozen fixtures, gate verifiers,
 machine-readable device receipts, and the paper source.
 
-> **System paper:** [*The Three Clocks of Live Music Generation: Sustained
-> GPU-Free MRT2 Inference on iPhone*](paper/main.pdf)
+> **System paper:** [*Throughput Is Not Liveness: Three Clocks for GPU-Free
+> Music Generation on iPhone*](paper/main.pdf)
 >
-> - A17 Pro: 610.19 s, 1.0308x production, 21.66 ms p99 against a 40 ms
->   deadline, zero underruns/drops, and a growing reservoir from a run that
->   begins in the `serious` thermal state.
+> - A17 Pro: 610.31 s, 1.0301x production, 24.81 ms p99
+>   iteration-normalized active cost against a 40 ms throughput deadline, zero
+>   underruns/drops, and a non-draining reservoir through `serious` thermal
+>   state. This p99 is a quantile of 25-token iteration means, not per-token
+>   tail latency.
 > - Placement: 10/10 cold-process temporal ANE admissions; a model-attributed
 >   trace records temporal and decoder ANE work and zero app GPU intervals.
-> - Audio quality: the corrected 600 s WAV passes delivery, finite, stereo,
->   prompt, and reference-similarity checks but fails the frozen pulse detector
->   and three of five calibrated blind votes. This is not hidden or tuned away.
+> - Causal audio result: stateless decoder windowing adds 0.01706 median seed
+>   mean pulse share in 60/60 paired windows; the Core ML graph adds only
+>   0.00018. Retaining 12 token frames reduces the excess by 0.01650 in 60/60
+>   windows and raises pre-iSTFT correlation from 0.1083 to 0.999999999988.
+>   The corrected phone capture matches stateful MLX for the principal seed.
 > - A14: 58.59 ms p99, 0.8967x production, and first underflow at 294.08 s even
 >   with a 20.16 s reservoir. It is a bounded-reservoir failure, not a
 >   real-time tier.
@@ -114,9 +118,11 @@ The cuts that matter, and why:
    stateful graph and is retained as a negative-result artifact.)*
 2. **Sampling entropy stays on the host, but the sampling math can move into the
    graph (corrected, §6.5).** Because per-call cost ≈ weight bytes ÷ DRAM
-   bandwidth, 12 depth predictions per frame are bandwidth-doomed; the corrected
-   depth body samples all 12 RVQ levels in *one* in-graph rollout fed by
-   host-supplied Gumbel noise and inverse temperature. Determinism stays
+   bandwidth, 12 host predictions per frame are boundary-heavy; the corrected
+   depth body samples all 12 dependent RVQ levels in *one* in-graph rollout fed
+   by host-supplied Gumbel noise and inverse temperature. The graph still
+   traverses transformer weights at each dependent level; the large measured
+   gain comes from FLOAT16, not a single weight traversal. Determinism stays
    host-owned (the seed reproduces this graph's runs); FP32 rollout is
    token-exact (0/900), FP16 ships at 12.7 ms/frame on A14.
 3. **RVQ gather stays on the host.** A 12-level codebook lookup is a gather —
@@ -207,10 +213,10 @@ We publish what we've validated. Nothing here is aspirational.
 | Temporal runs on the ANE in the full app                          | ✅ Proven      | 10/10 cold-process plan/state gates on A17 Pro and A14; model-attributed traces show temporal ANE work and zero app GPU intervals ([system-paper receipts](docs/validation-receipts.md))          |
 | Decoder FP16 is finite and ANE-resident (§6.4)                     | ✅ Proven      | NCHW `.cpuAndNeuralEngine` finite 184,320/184,320 (25-frame, p99 24.77 ms); CPU-only/CPU+GPU non-finite for the same fp16 artifact                                                                  |
 | Depth rollout samples identical tokens (FP32) (§6.5)               | ✅ Proven      | 0/900 mismatches vs the reference sampler; FP16 flips only fp16 near-ties (distribution unchanged)                                                                                                 |
-| Sustained playback without dropouts                                | ✅ A17 only    | A17: 610.19 s, 0 underruns/drops. A14 is explicitly rejected: 7,952 underruns and 0.8967x production despite a 20.16 s maximum reservoir ([system-paper receipts](docs/validation-receipts.md))     |
-| Survives a thermal soak                                            | ✅ A17 only    | the selected A17 run begins and remains in `serious`, holds p99 at 21.21–23.08 ms per minute, and never underruns; A14 fails the compute clock                                                     |
+| Sustained playback without dropouts                                | ✅ A17 only    | Corrected A17: 610.31 s foreground run, 600.00 s PCM, 0 underruns/drops, and 1.0301x production. A14 is explicitly rejected: 7,952 underruns and 0.8967x production despite a 20.16 s maximum reservoir ([system-paper receipts](docs/validation-receipts.md))     |
+| Survives a thermal soak                                            | ✅ A17 only    | the corrected A17 run reaches `serious`, holds p99 iteration-normalized active cost at 24.81 ms across the run, and never underruns; A14 fails the compute clock                                  |
 | The selected A17 hot loop never touches the GPU                    | ✅ Proven      | model-attributed A17 trace shows temporal/decoder ANE work, deliberate CPU depth, and zero application Metal GPU intervals ([system-paper receipts](docs/validation-receipts.md))                    |
-| Composed pipeline p99 < 40 ms                                      | ✅ A17 only    | A17 selected policy: 21.66 ms sustained p99. A14: 58.59 ms p99 and a bounded-reservoir failure                                                                                                    |
+| Composed pipeline p99 < 40 ms                                      | ✅ A17 only    | Corrected A17: 24.81 ms sustained p99 of 25-token iteration means. A14: 58.59 ms p99 before the context repair and a bounded-reservoir failure                                                     |
 | Turnkey Swift runtime / demo app                                   | ❌ Not shipped | coming when it meets our bar                                                                                                                                                                       |
 | Conditioning preset library                                        | ❌ Not shipped | deliberately — see [Conditioning](#conditioning)                                                                                                                                                   |
 
