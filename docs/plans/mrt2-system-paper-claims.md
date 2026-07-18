@@ -1,10 +1,10 @@
 # MRT2 System Paper Claims Ledger
 
-**Frozen:** 2026-07-18  
-**Owner:** Matt Mireles  
-**Primary publication path:** arXiv technical paper  
-**Length target:** 10–12 pages of main text plus references and a compact
-reproducibility appendix  
+- **Frozen:** 2026-07-18
+- **Owner:** Matt Mireles
+- **Primary publication path:** arXiv technical paper
+- **Length target:** 10–12 pages of main text plus references and a compact
+  reproducibility appendix
 **Working title:** *Live: Sustained GPU-Free Generative Music on iPhone*
 
 This ledger is the paper's scientific contract. A sentence may enter the
