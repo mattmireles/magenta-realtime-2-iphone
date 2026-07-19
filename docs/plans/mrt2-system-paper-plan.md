@@ -446,7 +446,7 @@ source bundle ready for immediate arXiv upload.
 - [x] Update `docs/validation-receipts.md` §0 and this plan's status to
       Complete.
 
-**Verification:** the source bundle independently rebuilds a 12-page PDF; repo
+**Verification:** the source bundle independently rebuilds a 13-page PDF; repo
 docs and reviewer packet are self-consistent with it. arXiv upload is not part
 of this execution, per user direction.
 
