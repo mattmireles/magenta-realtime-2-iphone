@@ -3,7 +3,9 @@
 **A 230M-parameter live-music model sustains its compute and audio-delivery
 clocks on A17 Pro for ten hot foreground minutes without application GPU
 execution. A three-seed crossover then localizes an apparent long-horizon
-quality failure to missing causal decoder history and verifies the repair.**
+quality failure to missing causal decoder history and verifies the repair. A
+separate no-reset experiment fails its frozen 600-second liveness gate in all
+three seeds, so the deployed claim remains explicitly bounded.**
 
 This repository is the public artifact for Google DeepMind's
 [Magenta RealTime 2](https://huggingface.co/google/magenta-realtime-2)
@@ -25,6 +27,17 @@ machine-readable device receipts, and the paper source.
 >   0.00018. Retaining 12 token frames reduces the excess by 0.01650 in 60/60
 >   windows and raises pre-iSTFT correlation from 0.1083 to 0.999999999988.
 >   The corrected phone capture matches stateful MLX for the principal seed.
+> - Unrefreshed liveness: no-reset produces float-PCM full-scale overrange in
+>   3/3 frozen 600-second seeds, while matched ten-second combined reset
+>   produces none. K/V-only versus feedback-only attribution is ambiguous; no
+>   new causal mitigation is claimed. One blinded non-event human excerpt finds
+>   both scientific arms technically acceptable and correctly rejects the
+>   corruption control.
+> - Steering: the final corrected five-frame decoder runs 600 seconds and 30
+>   post-ring transitions at a 160 ms retained queue with zero delivery/proof
+>   faults. Its frozen paired-reference detector misses 22/30 changes; among
+>   eight detections, end-to-end p95 is 0.947 s. The verified deployment tier
+>   is buffered, not responsive or live.
 > - A14: 58.59 ms p99, 0.8967x production, and first underflow at 294.08 s even
 >   with a 20.16 s reservoir. It is a bounded-reservoir failure, not a
 >   real-time tier.

@@ -9,7 +9,15 @@ three-seed, 600-second token-by-decoder crossover shows that the apparent
 long-horizon quality failure follows stateless decoder windowing, not the token
 source or Core ML graph. A 12-frame causal-context intervention recovers tensor
 parity and removes the excess; a corrected 600-second A17 Pro run sustains
-throughput and delivery with zero underruns or drops.
+throughput and delivery with zero underruns or drops. Separately, a frozen
+three-seed no-reset test fails its float-PCM full-scale gate in 3/3 seeds.
+Combined reset prevents overrange in 3/3, but the K/V-versus-feedback factorial
+is causally ambiguous. The paper therefore claims bounded generation rather
+than indefinite model stability. A separate final-code post-ring A17 Pro run
+completes 600 seconds and 30 prompt transitions without delivery or proof
+faults. Its frozen paired-reference detector misses 22 transitions and measures
+0.947-second p95 among eight detections, so the steering tier remains buffered
+rather than responsive or live.
 
 ## Contents
 
@@ -22,6 +30,10 @@ throughput and delivery with zero underruns or drops.
   crossover, tensor probe, and corrected device run.
 - `mrt2-system-paper-crossover-aggregate.json` - seed-level effects and
   diagnostic counts without pooling away the three replications.
+- `mrt2-system-paper-g5-manifest.json` - all 12 reset-factorial arms, calibrated
+  event-centered vote outcomes, frozen gate, narrow permitted claim, and hashes.
+- `mrt2-system-paper-g6-manifest.json` - complete post-ring steering result,
+  device/runtime identity, buffered-only claim, and hashes of private evidence.
 - `mrt2-context12-soak-manifest.json` - normalized corrected A17 Pro receipt
   with hashes binding the private raw capture and signed runtime.
 - `mrt2-depth-rollout-ablation.json` - measured correction to the one-call

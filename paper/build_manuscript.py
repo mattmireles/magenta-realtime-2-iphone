@@ -40,6 +40,7 @@ REFERENCES = {
     "[Table sustain]": r"\cref{tab:sustain}",
     "[Table dispersion]": r"\cref{tab:dispersion}",
     "[Table crossover]": r"\cref{tab:crossover}",
+    "[Table liveness]": r"\cref{tab:liveness}",
     "[Table depth]": r"\cref{tab:depth}",
 }
 
@@ -70,7 +71,7 @@ PREAMBLE = r"""\documentclass[10pt]{article}
 }
 \setlist{nosep,leftmargin=1.45em}
 \setlength{\emergencystretch}{2em}
-\setlength{\parskip}{0.24em}
+\setlength{\parskip}{0.20em}
 \setlength{\parindent}{1.1em}
 \definecolor{aneBlue}{HTML}{0072B2}
 \definecolor{cpuOrange}{HTML}{E69F00}
@@ -181,6 +182,27 @@ Token source at MLX decoder & +.00181 [-.00057, .00627] & 35/60 \\
 Core ML vs MLX decoder graph & +.00018 [.00016, .00088] & 44/60 \\
 Stateless window vs streaming MLX & +.01706 [.01613, .01796] & 60/60 \\
 Add 12-frame context, same Core ML/DSP & -.01650 [-.01772, -.01574] & 0/60 \\
+\bottomrule
+\end{tabular}
+\end{table}
+"""
+
+LIVENESS_TABLE = r"""
+\begin{table}[H]
+\centering
+\small
+\caption{Frozen 600 s unrefreshed liveness factorial. Entries are
+float-PCM samples with $|x|\geq1.0$ (peak $|x|$). Reset arms intervene every
+10 s while preserving RNG state and absolute position. Zero was required.
+The factorial prevents overrange but does not identify a unique causal state.}
+\label{tab:liveness}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Seed & No reset & K/V only & Feedback only & Both \\
+\midrule
+20260718 & 2 (1.0028) & 0 (.9919) & 0 (.8616) & 0 (.9383) \\
+271828   & 57 (1.1730) & 0 (.9264) & 13 (1.0359) & 0 (.8561) \\
+1618033  & 46 (1.2382) & 0 (.9923) & 0 (.9923) & 0 (.9923) \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -379,6 +401,8 @@ def render_blocks(blocks: list[tuple[str, str]]) -> str:
       if clean_heading.startswith("Crossover localizes"):
         output.append(CROSSOVER_TABLE)
         output.append(CROSSOVER_FIGURE)
+      if clean_heading.startswith("Unrefreshed generation"):
+        output.append(LIVENESS_TABLE)
       if clean_heading.startswith("One-call depth"):
         output.append(DEPTH_TABLE)
       if clean_heading.startswith("Compression ladder"):

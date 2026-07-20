@@ -1,0 +1,164 @@
+{
+  "g5": {
+    "checks": [
+      {
+        "name": "schema",
+        "passed": true,
+        "value": "mrt2-system-paper-g5-v1"
+      },
+      {
+        "name": "status_is_failed",
+        "passed": true,
+        "value": "fail"
+      },
+      {
+        "name": "no_machine_local_paths",
+        "passed": true,
+        "value": null
+      },
+      {
+        "name": "source_evidence_hashes",
+        "passed": true,
+        "value": {
+          "analysis": "4c563be8a217fa64e402b1b87e2413162a185810481c60e9d85fcc0d5691fc66",
+          "factorialIndex": "be35ba9b453f50b484b51807a2480bd8913f806f99b53508c9d61299245576dd",
+          "protocol": "ee197f72f162f8af9ac170e73f08635f21c834b1984ba57b7bc77fa05e3f7eb7"
+        }
+      },
+      {
+        "name": "frozen_threshold",
+        "passed": true,
+        "value": {
+          "comparison": "abs(sample) >= 1.0",
+          "id": "floatPcmFullScaleExceedance",
+          "requiredCandidateCount": 0
+        }
+      },
+      {
+        "name": "exact_seed_set",
+        "passed": true,
+        "value": 3
+      },
+      {
+        "name": "all_arms_valid",
+        "passed": true,
+        "value": 12
+      },
+      {
+        "name": "off_failure_replicates_3_of_3",
+        "passed": true,
+        "value": null
+      },
+      {
+        "name": "matched_both_controls_pass_3_of_3",
+        "passed": true,
+        "value": null
+      },
+      {
+        "name": "factorial_attribution_is_ambiguous",
+        "passed": true,
+        "value": {
+          "classification": "ambiguous",
+          "classificationCounts": {
+            "ambiguous": 2,
+            "cache-only-rescue": 1
+          },
+          "selectedMitigation": null
+        }
+      },
+      {
+        "name": "supplemental_votes_control_valid",
+        "passed": true,
+        "value": 9
+      },
+      {
+        "name": "claim_is_narrow",
+        "passed": true,
+        "value": "The tested no-reset 600-second warm-prompt configuration failed the frozen liveness gate in all three seeds; the reset-factorial attribution was ambiguous."
+      }
+    ],
+    "passed": true,
+    "schema": "mrt2-system-paper-g5-report-v1"
+  },
+  "g6": {
+    "checks": [
+      {
+        "name": "schema",
+        "passed": true,
+        "value": "mrt2-system-paper-g6-v1"
+      },
+      {
+        "name": "no_machine_local_paths",
+        "passed": true,
+        "value": null
+      },
+      {
+        "name": "valid_status",
+        "passed": true,
+        "value": "buffered"
+      },
+      {
+        "name": "a17_pro_device_identified",
+        "passed": true,
+        "value": {
+          "modelIdentifier": "iPhone16,2",
+          "name": "iPhone 15 Pro Max",
+          "osBuild": "24A5380h",
+          "osVersion": "27.0",
+          "silicon": "A17 Pro",
+          "udid": "00008130-000600660EA2001C"
+        }
+      },
+      {
+        "name": "runtime_protocol_frozen",
+        "passed": true,
+        "value": {
+          "channels": 2,
+          "controlResetSeed": 20260718,
+          "decoderContextFrames": 2,
+          "decoderInputFrames": 5,
+          "decoderStrideFrames": 3,
+          "fadeInFrames": 1920,
+          "queueTargetFrames": 7680,
+          "sampleRate": 48000,
+          "trajectoryRefreshSeconds": 0
+        }
+      },
+      {
+        "name": "post_ring_evidence_sufficient",
+        "passed": true,
+        "value": {
+          "diagnosticFailure": false,
+          "measurementComplete": true
+        }
+      },
+      {
+        "name": "status_matches_attained_rung",
+        "passed": true,
+        "value": "buffered"
+      },
+      {
+        "name": "claim_matches_attained_rung",
+        "passed": true,
+        "value": "The tested A17 Pro configuration remains buffered: the final corrected runtime completed 600 seconds and 30 control transitions without delivery faults, but the frozen paired-reference detector missed 22 transitions and measured 0.947-second p95 latency among the eight detections."
+      },
+      {
+        "name": "artifacts_hashed",
+        "passed": true,
+        "value": {
+          "deviceLaunchJson": "aa27254513f46b35d0cc1797c328949fc53f502bce2dd97fb68fa873aefd3385",
+          "deviceLaunchLog": "a6c213f91b8ef3243c994863e48994652a85efb50796b2d6f5a6286210bf20b4",
+          "eventSummary": "9f13dcbc9d077682bf96ad61623a8606ad9de960200ee4e49d9aa53b0d202dbd",
+          "eventTrace": "9181cf035622ad5214eed32d6569b7c48bc951b37fb6691a5c70398d3869f6f0",
+          "executable": "1c3d6b831691f73444bd84d4608624eb718516c9c82a64b7261cb978930db8bf",
+          "liveLatencyReport": "3f5daa373c251f678f36f22f618aebf7471c5ae10ad40de22dd27fc2d91b9c7d",
+          "tokens": "92688ddae849a3c38c950ab5f5e67b73f8bf149f8a3a05de76693f99d7bbe787"
+        }
+      }
+    ],
+    "passed": true,
+    "schema": "mrt2-system-paper-g6-report-v1"
+  },
+  "passed": true,
+  "schema": "mrt2-system-paper-liveness-verdict-v1"
+}

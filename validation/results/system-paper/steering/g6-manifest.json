@@ -1,0 +1,78 @@
+{
+  "artifactSha256": {
+    "deviceLaunchJson": "aa27254513f46b35d0cc1797c328949fc53f502bce2dd97fb68fa873aefd3385",
+    "deviceLaunchLog": "a6c213f91b8ef3243c994863e48994652a85efb50796b2d6f5a6286210bf20b4",
+    "eventSummary": "9f13dcbc9d077682bf96ad61623a8606ad9de960200ee4e49d9aa53b0d202dbd",
+    "eventTrace": "9181cf035622ad5214eed32d6569b7c48bc951b37fb6691a5c70398d3869f6f0",
+    "executable": "1c3d6b831691f73444bd84d4608624eb718516c9c82a64b7261cb978930db8bf",
+    "liveLatencyReport": "3f5daa373c251f678f36f22f618aebf7471c5ae10ad40de22dd27fc2d91b9c7d",
+    "tokens": "92688ddae849a3c38c950ab5f5e67b73f8bf149f8a3a05de76693f99d7bbe787"
+  },
+  "device": {
+    "modelIdentifier": "iPhone16,2",
+    "name": "iPhone 15 Pro Max",
+    "osBuild": "24A5380h",
+    "osVersion": "27.0",
+    "silicon": "A17 Pro",
+    "udid": "00008130-000600660EA2001C"
+  },
+  "listening": {
+    "physicalSpeakerCheck": "not-run",
+    "reason": "The frozen objective detector failed the complete 30-transition run, so promotion to model-vote and physical-speaker gates was blocked.",
+    "unanimousNoClickCorruption": false,
+    "validModelVotes": 0
+  },
+  "permittedClaim": "The tested A17 Pro configuration remains buffered: the final corrected runtime completed 600 seconds and 30 control transitions without delivery faults, but the frozen paired-reference detector missed 22 transitions and measured 0.947-second p95 latency among the eight detections.",
+  "postRingProof": {
+    "calibrationCount": 4,
+    "captureDroppedFrames": 0,
+    "captureOverflowEvents": 0,
+    "capturedFrames": 28801024,
+    "channels": 2,
+    "classTransitionCounts": {
+      "cmaj": 15,
+      "cmin": 15
+    },
+    "controlEpochTransitionCount": 37,
+    "controlTriggeredResetCount": 37,
+    "detectedTransitionCount": 8,
+    "detectorId": "event-aligned-paired-waveform-reference-v1",
+    "detectorThreshold": 0.7024937462806702,
+    "detectorThresholdSource": "paired-no-op-calibration",
+    "diagnosticOutcome": "twenty-two-of-thirty-transitions-undetected",
+    "durationSeconds": 590,
+    "finiteRatio": 1.0,
+    "framesWritten": 28320000,
+    "fullScaleSampleCount": 0,
+    "latencyReportSha256": "3f5daa373c251f678f36f22f618aebf7471c5ae10ad40de22dd27fc2d91b9c7d",
+    "maxEndToEndSeconds": 0.9512009611129884,
+    "measurementKind": "full",
+    "minimumIterationEndQueuedFrames": 3328,
+    "minimumQueuedFrames": 1024,
+    "missedTransitionCount": 22,
+    "p95EndToEndSeconds": 0.9467489690303807,
+    "postRingPeakAbsoluteSample": 0.9990000128746033,
+    "postRingWavSha256": "89d6405a2fc82504c43e9df3284700f5fb105b446f313744d4d65c2ccc066519",
+    "producerDroppedFrames": 0,
+    "prunedPendingDecoderFrames": 166,
+    "rngResetCount": 37,
+    "runDurationSeconds": 600,
+    "sampleRate": 48000,
+    "temporalResetCount": 37,
+    "transitionCount": 30,
+    "underrunFrames": 0
+  },
+  "runtime": {
+    "channels": 2,
+    "controlResetSeed": 20260718,
+    "decoderContextFrames": 2,
+    "decoderInputFrames": 5,
+    "decoderStrideFrames": 3,
+    "fadeInFrames": 1920,
+    "queueTargetFrames": 7680,
+    "sampleRate": 48000,
+    "trajectoryRefreshSeconds": 0
+  },
+  "schema": "mrt2-system-paper-g6-v1",
+  "status": "buffered"
+}

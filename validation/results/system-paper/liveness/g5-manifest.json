@@ -1,0 +1,54 @@
+{
+  "aggregate": {
+    "classification": "ambiguous",
+    "classificationCounts": {
+      "ambiguous": 2,
+      "cache-only-rescue": 1
+    },
+    "selectedMitigation": null
+  },
+  "eventCenteredModelVotes": [
+    {"baselineVerdict":"pass","candidateVerdict":"fail","corruptionVerdict":"fail","generationSeed":20260718,"lineupSeed":50101,"lineupSha256":"3c7658bb8d6f0812809e9b5b011b5f7fe6ca0d38d7f7872ce1720201f37d15b7","resultSha256":"88115bfa740d304b07ecb5846e6f8b3d3d8da5b31763066fbcfe734f4df364b7"},
+    {"baselineVerdict":"pass","candidateVerdict":"fail","corruptionVerdict":"fail","generationSeed":20260718,"lineupSeed":50102,"lineupSha256":"f35dfe205fe43ea95e14a72496f7b29361916b6ab2cc601d6a503f9210ff0b86","resultSha256":"d1f8e9e3f8f14b1e14f6696815ce2b382ef041aa5ae55926a306e90468ab3666"},
+    {"baselineVerdict":"pass","candidateVerdict":"pass","corruptionVerdict":"fail","generationSeed":20260718,"lineupSeed":50103,"lineupSha256":"4081f1e6655054cb484451b7e56a06b4df4d629ef68f142fa12bff8eb4b050e0","resultSha256":"4129646acb827a3b7adbe035edc0dc8761a6b1c89f50a4cb26900a43243abe57"},
+    {"baselineVerdict":"pass","candidateVerdict":"fail","corruptionVerdict":"fail","generationSeed":271828,"lineupSeed":50101,"lineupSha256":"ff6523ee539c305bff9389cc825bb3a4309825fb7e377db7d00b2b6908a5b9f6","resultSha256":"5425c523679dbf368a9f22bea79cc8d217ec0c69ebefa454dfa55bcb99a446b7"},
+    {"baselineVerdict":"pass","candidateVerdict":"fail","corruptionVerdict":"fail","generationSeed":271828,"lineupSeed":50102,"lineupSha256":"66c5b350db8df6a1fa8f7c045964704077f6c442936539684de34873ded857bc","resultSha256":"b8cf5fbdf8d4fe1f272c854f7f3f1159970d25d2310cf776658ad4aef81f60ca"},
+    {"baselineVerdict":"pass","candidateVerdict":"fail","corruptionVerdict":"fail","generationSeed":271828,"lineupSeed":50103,"lineupSha256":"6fa76f704048f6c5e75ec8e5d51faf9ed4254085bc17e4d0ab4414d4e4037f36","resultSha256":"8da7be8a68feba84ba122114ae567fda4417395640b0b5417aa1141b5ad9e743"},
+    {"baselineVerdict":"pass","candidateVerdict":"fail","corruptionVerdict":"fail","generationSeed":1618033,"lineupSeed":50101,"lineupSha256":"57b82f508743495ba503af87816cec77fe91a3fc2af99909721a33c266bad2ec","resultSha256":"a361ad5a6d84014717d2252b8158fee07b3e47f5f184345461214f985bddc882"},
+    {"baselineVerdict":"pass","candidateVerdict":"fail","corruptionVerdict":"fail","generationSeed":1618033,"lineupSeed":50102,"lineupSha256":"a74abdd97a1b74fd94c83bed27463b83b04f077c5e9a78553d1b0f2c1d7b935f","resultSha256":"92e100eebf96ef43ccce69c86a477bb781b55b9fd155c95a45439b146e4ddb52"},
+    {"baselineVerdict":"pass","candidateVerdict":"pass","corruptionVerdict":"fail","generationSeed":1618033,"lineupSeed":50103,"lineupSha256":"7a663d495e396b51798fd912a125db29eb6a6fc5f16b9ff3d1ff6f93d8a8b75c","resultSha256":"659ddbad84670bfddff1d398d7f7d43c05b628ff3f8b334d5f2e08464c3c330a"}
+  ],
+  "permittedClaim": "The tested no-reset 600-second warm-prompt configuration failed the frozen liveness gate in all three seeds; the reset-factorial attribution was ambiguous.",
+  "primaryFailureMetric": {
+    "comparison": "abs(sample) >= 1.0",
+    "id": "floatPcmFullScaleExceedance",
+    "requiredCandidateCount": 0
+  },
+  "schema": "mrt2-system-paper-g5-v1",
+  "seeds": [
+    {"seed":20260718,"arms":{
+      "off":{"fullScaleSampleCount":2,"peakAbsoluteSample":1.0028058290481567,"resetCounts":{"absoluteStep":0,"feedback":0,"kv":0,"rng":0},"tokenSha256":"a83c846840b5b9b13c42d646d16b300f2853ac2ba03d1c4129a5e9c8a12a8e19","wavSha256":"a8e98ae339d3290444a285ae565e40ec4d2d2f189424de4f1fd95f3cdfe67948"},
+      "kv-only":{"fullScaleSampleCount":0,"peakAbsoluteSample":0.9918505549430847,"resetCounts":{"absoluteStep":0,"feedback":0,"kv":60,"rng":0},"tokenSha256":"b0e3c9958f40d62b17db8d17f9f0755df5809cd151f9cd9785bb2971c7c7ba8b","wavSha256":"bd2b343c3d17616d5152ca5edb3c62af95914d882936f428be9e7848c12541f4"},
+      "feedback-only":{"fullScaleSampleCount":0,"peakAbsoluteSample":0.8616108298301697,"resetCounts":{"absoluteStep":0,"feedback":60,"kv":0,"rng":0},"tokenSha256":"595ae8e372659ba1edef78c5d16d8638761f784f93434c7c940f23b713f03371","wavSha256":"3a3e506b5616501c2ab05ad5d985cb189553edf5d750bf41595efe24e94e6f24"},
+      "both":{"fullScaleSampleCount":0,"peakAbsoluteSample":0.9382835626602173,"resetCounts":{"absoluteStep":0,"feedback":60,"kv":60,"rng":0},"tokenSha256":"526198723322e44a47660d4df863965547dda22e032c998fdc4c25f43c4cb3bc","wavSha256":"d167255b69451fb9b340fec015e0bf71dfa676b4993b2f3aabcf3d910580e845"}
+    }},
+    {"seed":271828,"arms":{
+      "off":{"fullScaleSampleCount":57,"peakAbsoluteSample":1.1730343103408813,"resetCounts":{"absoluteStep":0,"feedback":0,"kv":0,"rng":0},"tokenSha256":"004fac051f080b4b74bb91b39763e7bc0c235b67bdadb08456bc72bd71a52e7d","wavSha256":"87ff2c83fd9528b9dc029db01333e417d69960d16a83c7e926d0016ba1cff685"},
+      "kv-only":{"fullScaleSampleCount":0,"peakAbsoluteSample":0.9264059066772461,"resetCounts":{"absoluteStep":0,"feedback":0,"kv":60,"rng":0},"tokenSha256":"b7ba8a83ab60c99e2a1a650416c5e8f5104b0c6a8adfc13d274c2e6eb6f45619","wavSha256":"4aee0ca3233516572bf0aca118fdb8489fbc3a3ef5b41697864628bad7b2a548"},
+      "feedback-only":{"fullScaleSampleCount":13,"peakAbsoluteSample":1.035868525505066,"resetCounts":{"absoluteStep":0,"feedback":60,"kv":0,"rng":0},"tokenSha256":"08c4e7c98012337f1e8d7a7c3d2f856aa7cb771896fc6ec02a21f0f04f9f748b","wavSha256":"81f2f91340f58af61788090d3e7b4bf797838633ebc8bab1de4f7f5fb753f86c"},
+      "both":{"fullScaleSampleCount":0,"peakAbsoluteSample":0.8560812473297119,"resetCounts":{"absoluteStep":0,"feedback":60,"kv":60,"rng":0},"tokenSha256":"5660f76bc8bc410e7157b31b927a1138fd7a2ae4e54565670ee5a08f81ed80df","wavSha256":"6c5647a035ae19e4d341fa4aab81ada921bca8c7dbef38525f94fc299f0d90ca"}
+    }},
+    {"seed":1618033,"arms":{
+      "off":{"fullScaleSampleCount":46,"peakAbsoluteSample":1.238168716430664,"resetCounts":{"absoluteStep":0,"feedback":0,"kv":0,"rng":0},"tokenSha256":"05aa55be84ded5f942905cc2bdb2dbe13c470251881b3549025db7c569855210","wavSha256":"6bfa6092b67a8caf61b6484582af3e83f390d0f4a9bd95637640320a57da2ded"},
+      "kv-only":{"fullScaleSampleCount":0,"peakAbsoluteSample":0.9923136234283447,"resetCounts":{"absoluteStep":0,"feedback":0,"kv":60,"rng":0},"tokenSha256":"8215cc76270e98cd63ccfe4bef414c164ba62403ffc644799643e004a2566284","wavSha256":"9bf15cfebac16ce05306a7ad1b5164e5335ae432b6e4d6206637f74a8e0a669c"},
+      "feedback-only":{"fullScaleSampleCount":0,"peakAbsoluteSample":0.9923136234283447,"resetCounts":{"absoluteStep":0,"feedback":60,"kv":0,"rng":0},"tokenSha256":"5462fea51885e9830b16809008c44e409ff644aca94912b3035e0c6e37217f00","wavSha256":"123dd1b3468c84de8a64ddbb291cf4275db7e760e8e91adc0c189af84ce74d51"},
+      "both":{"fullScaleSampleCount":0,"peakAbsoluteSample":0.9923136234283447,"resetCounts":{"absoluteStep":0,"feedback":60,"kv":60,"rng":0},"tokenSha256":"8c120ddfef270246544e4d489b8297a93903b00ef1e3ce7356d2e6a227ac4b52","wavSha256":"8b2f173d5d2e9d1f80667435780625c285517b4b1e212018576054c5fb2c1fbd"}
+    }}
+  ],
+  "sourceEvidence": {
+    "analysis": "4c563be8a217fa64e402b1b87e2413162a185810481c60e9d85fcc0d5691fc66",
+    "factorialIndex": "be35ba9b453f50b484b51807a2480bd8913f806f99b53508c9d61299245576dd",
+    "protocol": "ee197f72f162f8af9ac170e73f08635f21c834b1984ba57b7bc77fa05e3f7eb7"
+  },
+  "status": "fail"
+}

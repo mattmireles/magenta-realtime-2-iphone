@@ -1,0 +1,978 @@
+{
+ "generatedFrom": "manifests in validation/results/system-paper/",
+ "entries": [
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_device_logs/20260718T-context12-a17/a17-context12-soak.wav",
+   "dest": "context12/a17-context12-soak.wav",
+   "sha256": "04a7cac945e200bbce45ed2c51deb584b40ee1652fd875f06b3311700b417a5b",
+   "size": 230400044,
+   "backs": "context12-soak-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_device_logs/20260718T-context12-a17/a17-context12-soak-events.json",
+   "dest": "context12/a17-context12-soak-events.json",
+   "sha256": "899e70b41a1ac75d40520af56efdc322b7ef5b791fdb3f1a4ced22067e515d7a",
+   "size": 204868,
+   "backs": "context12-soak-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_device_logs/20260718T-context12-a17/a17-context12-soak-tokens.json",
+   "dest": "context12/a17-context12-soak-tokens.json",
+   "sha256": "eb75d400ecac277afc6ae4e6f904ae6249bddf5c260c78838cef40a011df7905",
+   "size": 2261235,
+   "backs": "context12-soak-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_device_logs/20260718T-context12-a17/summary.json",
+   "dest": "context12/summary.json",
+   "sha256": "981ed85168b73b9174e6ed2b569c582e400276bb6bdf7f2d94c2c6dfec8da1af",
+   "size": 2721,
+   "backs": "context12-soak-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_device_logs/20260718T-context12-a17/a17-context12-soak-token-summary.json",
+   "dest": "context12/a17-context12-soak-token-summary.json",
+   "sha256": "ac18e1de2ace4f1ca96ac39ac77f14a71bafb1ee4b11856d0b62d9f9b1e58ea8",
+   "size": 12843,
+   "backs": "context12-soak-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-20260718/coreml-tokens__coreml-decoder.wav",
+   "dest": "crossover/seed-20260718/coreml-tokens__coreml-decoder.wav",
+   "sha256": "025d23499e6c4b05f09e433d93d42763b835f3315bd1577c2100fa1166010e94",
+   "size": 230400088,
+   "backs": "seed-20260718.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-20260718/coreml-tokens__mlx-decoder.wav",
+   "dest": "crossover/seed-20260718/coreml-tokens__mlx-decoder.wav",
+   "sha256": "9604755ef111bd25e9db918a3b452735cf3c8b92b9976eb2cd91c7634271d030",
+   "size": 230400088,
+   "backs": "seed-20260718.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-20260718/mlx-tokens__coreml-decoder.wav",
+   "dest": "crossover/seed-20260718/mlx-tokens__coreml-decoder.wav",
+   "sha256": "6b9b9ebeee148eb5e830a1451d11a8cd848af8603e9986fb5402be6fe8be6b09",
+   "size": 230400088,
+   "backs": "seed-20260718.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-20260718/mlx-tokens__mlx-decoder.wav",
+   "dest": "crossover/seed-20260718/mlx-tokens__mlx-decoder.wav",
+   "sha256": "dac7a2c56d153dba6846350720e5f78e2e8796542c23abe17837b9cba0c57db3",
+   "size": 230400088,
+   "backs": "seed-20260718.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-20260718/mlx-tokens__mlx-stft-core-dsp.wav",
+   "dest": "crossover/seed-20260718/mlx-tokens__mlx-stft-core-dsp.wav",
+   "sha256": "931cad26adaf7f9e753be7fdbdf1dd9c74f950c907ab0f08fcf4ab4b451298e9",
+   "size": 230400088,
+   "backs": "seed-20260718.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-20260718/mlx-tokens__coreml-context12-fixed-dsp.wav",
+   "dest": "crossover/seed-20260718/mlx-tokens__coreml-context12-fixed-dsp.wav",
+   "sha256": "e76b227ab5804add0be061629ca8dcfabf846fe02720ed38d48ed36d708b7c23",
+   "size": 230400088,
+   "backs": "seed-20260718.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-20260718/mlx-tokens__mlx-context12-fixed-dsp.wav",
+   "dest": "crossover/seed-20260718/mlx-tokens__mlx-context12-fixed-dsp.wav",
+   "sha256": "407150bf81053bad6b5280c09ce5dc2bee5c5abaa49482b3069af56d59f39712",
+   "size": 230400088,
+   "backs": "seed-20260718.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-20260718/coreml-tokens__coreml-fixed-dsp.wav",
+   "dest": "crossover/seed-20260718/coreml-tokens__coreml-fixed-dsp.wav",
+   "sha256": "ce52b53d7c3302e239fb220ed2fb2cfc36e0557fe7fe0d62fad82060efc4b0e0",
+   "size": 230400088,
+   "backs": "seed-20260718.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-20260718/coreml-tokens__mlx-stft-fixed-dsp.wav",
+   "dest": "crossover/seed-20260718/coreml-tokens__mlx-stft-fixed-dsp.wav",
+   "sha256": "433290bfc9086e23e68551a6e29b395bdbba68e9a755a792e2e34da959cb4b34",
+   "size": 230400088,
+   "backs": "seed-20260718.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-20260718/mlx-tokens__coreml-fixed-dsp.wav",
+   "dest": "crossover/seed-20260718/mlx-tokens__coreml-fixed-dsp.wav",
+   "sha256": "09904ed162581e0a6c504703301213acf500680b48ca85399151f3db8b7dea9d",
+   "size": 230400088,
+   "backs": "seed-20260718.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-20260718/mlx-tokens__mlx-stft-fixed-dsp.wav",
+   "dest": "crossover/seed-20260718/mlx-tokens__mlx-stft-fixed-dsp.wav",
+   "sha256": "c9d89fbd46d421f59175913da74e5f2787786493c4c8fbd616517a8f0a16d3a5",
+   "size": 230400088,
+   "backs": "seed-20260718.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-20260718/coreml-port-seed-20260718-token-summary-v2.json",
+   "dest": "crossover/seed-20260718/coreml-port-seed-20260718-token-summary-v2.json",
+   "sha256": "d8c91947c8632371ecbd38038b6a9f1db9892d72ef88935f1500357ddad38227",
+   "size": 12218,
+   "backs": "seed-20260718.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-20260718/mlx-seed-20260718-token-summary-v2.json",
+   "dest": "crossover/seed-20260718/mlx-seed-20260718-token-summary-v2.json",
+   "sha256": "bd95d180804b91e081df1773cded407e879aeaa80f1123a596b3d8bfdb09c707",
+   "size": 12169,
+   "backs": "seed-20260718.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-271828/coreml-tokens__coreml-legacy-dsp.wav",
+   "dest": "crossover/seed-271828/coreml-tokens__coreml-legacy-dsp.wav",
+   "sha256": "8a31409fcbe3d38b47cfeaaea667d33b54d3325e63b74d03607cc12cde575ea7",
+   "size": 230400088,
+   "backs": "seed-271828.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-271828/coreml-tokens__mlx-decoder.wav",
+   "dest": "crossover/seed-271828/coreml-tokens__mlx-decoder.wav",
+   "sha256": "2a3b054a4c55d009c0414b66234f57cfb6066c9cac0e585b8dca320be1a80ebb",
+   "size": 230400088,
+   "backs": "seed-271828.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-271828/mlx-tokens__coreml-legacy-dsp.wav",
+   "dest": "crossover/seed-271828/mlx-tokens__coreml-legacy-dsp.wav",
+   "sha256": "f9410840c2bc2303c484c97b08040a6a1d0fcaaf8b21eb4d7b9bf26f3dbf6612",
+   "size": 230400088,
+   "backs": "seed-271828.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-271828/mlx-tokens__mlx-decoder.wav",
+   "dest": "crossover/seed-271828/mlx-tokens__mlx-decoder.wav",
+   "sha256": "005f20233f0ad030a6536df6fc90e66db3bb0df4405abd69259c8180579a8ab0",
+   "size": 230400088,
+   "backs": "seed-271828.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-271828/mlx-tokens__mlx-stft-legacy-dsp.wav",
+   "dest": "crossover/seed-271828/mlx-tokens__mlx-stft-legacy-dsp.wav",
+   "sha256": "23452fc7666c620d93a2afbd3f1d5d5cac9940b4b4e9266aa9f522747db8cbce",
+   "size": 230400088,
+   "backs": "seed-271828.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-271828/mlx-tokens__coreml-context12-fixed-dsp.wav",
+   "dest": "crossover/seed-271828/mlx-tokens__coreml-context12-fixed-dsp.wav",
+   "sha256": "9e3827445f186b433ef1a88adb21647a00d9b294c15233d829e158e1b701a119",
+   "size": 230400088,
+   "backs": "seed-271828.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-271828/mlx-tokens__mlx-context12-fixed-dsp.wav",
+   "dest": "crossover/seed-271828/mlx-tokens__mlx-context12-fixed-dsp.wav",
+   "sha256": "b3ea2b722f923f3c96db6586c85dd3c1b18cf2efa2172b6c4df0afe86318430a",
+   "size": 230400088,
+   "backs": "seed-271828.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-271828/coreml-tokens__coreml-fixed-dsp.wav",
+   "dest": "crossover/seed-271828/coreml-tokens__coreml-fixed-dsp.wav",
+   "sha256": "8aa60306f7af03a5d79850007c22fa550808c4013e3716bcf6cdd3ae98c9d24e",
+   "size": 230400088,
+   "backs": "seed-271828.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-271828/coreml-tokens__mlx-stft-fixed-dsp.wav",
+   "dest": "crossover/seed-271828/coreml-tokens__mlx-stft-fixed-dsp.wav",
+   "sha256": "f6c2e181882bc160eea08385d70439169893ab64f5c5bb51de72c8ecfa3ac7f0",
+   "size": 230400088,
+   "backs": "seed-271828.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-271828/mlx-tokens__coreml-fixed-dsp.wav",
+   "dest": "crossover/seed-271828/mlx-tokens__coreml-fixed-dsp.wav",
+   "sha256": "a0fd7c851540db6856629a027a194f555e458878d3f6ee826628c97b0f6b3879",
+   "size": 230400088,
+   "backs": "seed-271828.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-271828/mlx-tokens__mlx-stft-fixed-dsp.wav",
+   "dest": "crossover/seed-271828/mlx-tokens__mlx-stft-fixed-dsp.wav",
+   "sha256": "267e599d898548e98098163e2e7007c07822465ad1b7d59b5694ffac77e1d7e4",
+   "size": 230400088,
+   "backs": "seed-271828.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-271828/coreml-port-seed-271828-token-summary.json",
+   "dest": "crossover/seed-271828/coreml-port-seed-271828-token-summary.json",
+   "sha256": "4e8bea0f8deb0a76717e64d2c313a433021474fcf5a7128f402c15e303dacfd4",
+   "size": 12172,
+   "backs": "seed-271828.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-271828/mlx-seed-271828-token-summary.json",
+   "dest": "crossover/seed-271828/mlx-seed-271828-token-summary.json",
+   "sha256": "8f2a30a0870a4439f85e5587c42a2c1aa08485ef1669d8c54caef67db76f4453",
+   "size": 12189,
+   "backs": "seed-271828.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/coreml-tokens__coreml-legacy-dsp.wav",
+   "dest": "crossover/seed-1618033/coreml-tokens__coreml-legacy-dsp.wav",
+   "sha256": "8fbbec7d1effcfdbdfd440695f454c4e04371eac7268ce98515d2f890a55bc25",
+   "size": 230400088,
+   "backs": "seed-1618033.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/coreml-tokens__mlx-decoder.wav",
+   "dest": "crossover/seed-1618033/coreml-tokens__mlx-decoder.wav",
+   "sha256": "43b060d3b4fc098208cdfd8cf4118baf2fadf0748829847d219356236fc70d24",
+   "size": 230400088,
+   "backs": "seed-1618033.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/mlx-tokens__coreml-legacy-dsp.wav",
+   "dest": "crossover/seed-1618033/mlx-tokens__coreml-legacy-dsp.wav",
+   "sha256": "02dcf07e5e39c21a45857c78b971091ad282f74b8e061f2bdc7f1fc877632dcd",
+   "size": 230400088,
+   "backs": "seed-1618033.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/mlx-tokens__mlx-decoder.wav",
+   "dest": "crossover/seed-1618033/mlx-tokens__mlx-decoder.wav",
+   "sha256": "24cc57f8266913d69eb2b15c8b869bca93fec316b0cf61d8323f01433ff77045",
+   "size": 230400088,
+   "backs": "seed-1618033.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/mlx-tokens__mlx-stft-legacy-dsp.wav",
+   "dest": "crossover/seed-1618033/mlx-tokens__mlx-stft-legacy-dsp.wav",
+   "sha256": "f923f50c7bb3899b69f94c24f187a6a06080536469e4640f6adc8026c7e9406c",
+   "size": 230400088,
+   "backs": "seed-1618033.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/mlx-tokens__coreml-context12-fixed-dsp.wav",
+   "dest": "crossover/seed-1618033/mlx-tokens__coreml-context12-fixed-dsp.wav",
+   "sha256": "f4cb8665ff5e1561c8a0c66215f251b89bc2024381767a99c8b3961621eae57b",
+   "size": 230400088,
+   "backs": "seed-1618033.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/mlx-tokens__mlx-context12-fixed-dsp.wav",
+   "dest": "crossover/seed-1618033/mlx-tokens__mlx-context12-fixed-dsp.wav",
+   "sha256": "2c043df5376b3b3711b9d62bbdc54bb516d25025af59627e62068ec6745685b1",
+   "size": 230400088,
+   "backs": "seed-1618033.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/coreml-tokens__coreml-fixed-dsp.wav",
+   "dest": "crossover/seed-1618033/coreml-tokens__coreml-fixed-dsp.wav",
+   "sha256": "d26212aabdaa97097525cb24674bd83ad92406798b96f95d5874095412d5a9e9",
+   "size": 230400088,
+   "backs": "seed-1618033.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/coreml-tokens__mlx-stft-fixed-dsp.wav",
+   "dest": "crossover/seed-1618033/coreml-tokens__mlx-stft-fixed-dsp.wav",
+   "sha256": "81633e0a7d2fb11920c24aca37ea502d22255611d539b8f87847686e407bd9c4",
+   "size": 230400088,
+   "backs": "seed-1618033.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/mlx-tokens__coreml-fixed-dsp.wav",
+   "dest": "crossover/seed-1618033/mlx-tokens__coreml-fixed-dsp.wav",
+   "sha256": "cf8615beb237edab9e51db189af805111ee32741984ca0f30ca5b21538f75eb9",
+   "size": 230400088,
+   "backs": "seed-1618033.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/mlx-tokens__mlx-stft-fixed-dsp.wav",
+   "dest": "crossover/seed-1618033/mlx-tokens__mlx-stft-fixed-dsp.wav",
+   "sha256": "e0a45d9c07950af734c8d94e0fcd1b4bd4ab68bb351d58a843e3ae8159f3e78d",
+   "size": 230400088,
+   "backs": "seed-1618033.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/coreml-port-seed-1618033-token-summary.json",
+   "dest": "crossover/seed-1618033/coreml-port-seed-1618033-token-summary.json",
+   "sha256": "da8d2584f0afaa6d5f56d9246bf15e19f2bca939d0ef49c1eb29d67c8255779e",
+   "size": 12183,
+   "backs": "seed-1618033.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-1618033/mlx-seed-1618033-token-summary.json",
+   "dest": "crossover/seed-1618033/mlx-seed-1618033-token-summary.json",
+   "sha256": "0874fc8654447450164d934af234c665ca15fb355eb8c223cae15c79a8fe6b68",
+   "size": 12189,
+   "backs": "seed-1618033.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_crossover/seed-20260718/mlx-seed-20260718-tokens.npy",
+   "dest": "crossover/decoder-context-probe-tokens.npy",
+   "sha256": "526198723322e44a47660d4df863965547dda22e032c998fdc4c25f43c4cb3bc",
+   "size": 360152,
+   "backs": "decoder-context-probe.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-20260718/off/context12.wav",
+   "dest": "liveness/reset-factorial/seed-20260718/off/context12.wav",
+   "sha256": "a8e98ae339d3290444a285ae565e40ec4d2d2f189424de4f1fd95f3cdfe67948",
+   "size": 230400088,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-20260718/off/mlx-seed-20260718-tokens.npy",
+   "dest": "liveness/reset-factorial/seed-20260718/off/mlx-seed-20260718-tokens.npy",
+   "sha256": "a83c846840b5b9b13c42d646d16b300f2853ac2ba03d1c4129a5e9c8a12a8e19",
+   "size": 360152,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-20260718/kv-only/context12.wav",
+   "dest": "liveness/reset-factorial/seed-20260718/kv-only/context12.wav",
+   "sha256": "bd2b343c3d17616d5152ca5edb3c62af95914d882936f428be9e7848c12541f4",
+   "size": 230400088,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-20260718/kv-only/mlx-seed-20260718-tokens.npy",
+   "dest": "liveness/reset-factorial/seed-20260718/kv-only/mlx-seed-20260718-tokens.npy",
+   "sha256": "b0e3c9958f40d62b17db8d17f9f0755df5809cd151f9cd9785bb2971c7c7ba8b",
+   "size": 360152,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-20260718/feedback-only/context12.wav",
+   "dest": "liveness/reset-factorial/seed-20260718/feedback-only/context12.wav",
+   "sha256": "3a3e506b5616501c2ab05ad5d985cb189553edf5d750bf41595efe24e94e6f24",
+   "size": 230400088,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-20260718/feedback-only/mlx-seed-20260718-tokens.npy",
+   "dest": "liveness/reset-factorial/seed-20260718/feedback-only/mlx-seed-20260718-tokens.npy",
+   "sha256": "595ae8e372659ba1edef78c5d16d8638761f784f93434c7c940f23b713f03371",
+   "size": 360152,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-20260718/both/context12.wav",
+   "dest": "liveness/reset-factorial/seed-20260718/both/context12.wav",
+   "sha256": "d167255b69451fb9b340fec015e0bf71dfa676b4993b2f3aabcf3d910580e845",
+   "size": 230400088,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-20260718/both/mlx-seed-20260718-tokens.npy",
+   "dest": "liveness/reset-factorial/seed-20260718/both/mlx-seed-20260718-tokens.npy",
+   "sha256": "526198723322e44a47660d4df863965547dda22e032c998fdc4c25f43c4cb3bc",
+   "size": 360152,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-271828/off/context12.wav",
+   "dest": "liveness/reset-factorial/seed-271828/off/context12.wav",
+   "sha256": "87ff2c83fd9528b9dc029db01333e417d69960d16a83c7e926d0016ba1cff685",
+   "size": 230400088,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-271828/off/mlx-seed-271828-tokens.npy",
+   "dest": "liveness/reset-factorial/seed-271828/off/mlx-seed-271828-tokens.npy",
+   "sha256": "004fac051f080b4b74bb91b39763e7bc0c235b67bdadb08456bc72bd71a52e7d",
+   "size": 360152,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-271828/kv-only/context12.wav",
+   "dest": "liveness/reset-factorial/seed-271828/kv-only/context12.wav",
+   "sha256": "4aee0ca3233516572bf0aca118fdb8489fbc3a3ef5b41697864628bad7b2a548",
+   "size": 230400088,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-271828/kv-only/mlx-seed-271828-tokens.npy",
+   "dest": "liveness/reset-factorial/seed-271828/kv-only/mlx-seed-271828-tokens.npy",
+   "sha256": "b7ba8a83ab60c99e2a1a650416c5e8f5104b0c6a8adfc13d274c2e6eb6f45619",
+   "size": 360152,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-271828/feedback-only/context12.wav",
+   "dest": "liveness/reset-factorial/seed-271828/feedback-only/context12.wav",
+   "sha256": "81f2f91340f58af61788090d3e7b4bf797838633ebc8bab1de4f7f5fb753f86c",
+   "size": 230400088,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-271828/feedback-only/mlx-seed-271828-tokens.npy",
+   "dest": "liveness/reset-factorial/seed-271828/feedback-only/mlx-seed-271828-tokens.npy",
+   "sha256": "08c4e7c98012337f1e8d7a7c3d2f856aa7cb771896fc6ec02a21f0f04f9f748b",
+   "size": 360152,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-271828/both/context12.wav",
+   "dest": "liveness/reset-factorial/seed-271828/both/context12.wav",
+   "sha256": "6c5647a035ae19e4d341fa4aab81ada921bca8c7dbef38525f94fc299f0d90ca",
+   "size": 230400088,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-271828/both/mlx-seed-271828-tokens.npy",
+   "dest": "liveness/reset-factorial/seed-271828/both/mlx-seed-271828-tokens.npy",
+   "sha256": "5660f76bc8bc410e7157b31b927a1138fd7a2ae4e54565670ee5a08f81ed80df",
+   "size": 360152,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-1618033/off/context12.wav",
+   "dest": "liveness/reset-factorial/seed-1618033/off/context12.wav",
+   "sha256": "6bfa6092b67a8caf61b6484582af3e83f390d0f4a9bd95637640320a57da2ded",
+   "size": 230400088,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-1618033/off/mlx-seed-1618033-tokens.npy",
+   "dest": "liveness/reset-factorial/seed-1618033/off/mlx-seed-1618033-tokens.npy",
+   "sha256": "05aa55be84ded5f942905cc2bdb2dbe13c470251881b3549025db7c569855210",
+   "size": 360152,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-1618033/kv-only/context12.wav",
+   "dest": "liveness/reset-factorial/seed-1618033/kv-only/context12.wav",
+   "sha256": "9bf15cfebac16ce05306a7ad1b5164e5335ae432b6e4d6206637f74a8e0a669c",
+   "size": 230400088,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-1618033/kv-only/mlx-seed-1618033-tokens.npy",
+   "dest": "liveness/reset-factorial/seed-1618033/kv-only/mlx-seed-1618033-tokens.npy",
+   "sha256": "8215cc76270e98cd63ccfe4bef414c164ba62403ffc644799643e004a2566284",
+   "size": 360152,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-1618033/feedback-only/context12.wav",
+   "dest": "liveness/reset-factorial/seed-1618033/feedback-only/context12.wav",
+   "sha256": "123dd1b3468c84de8a64ddbb291cf4275db7e760e8e91adc0c189af84ce74d51",
+   "size": 230400088,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-1618033/feedback-only/mlx-seed-1618033-tokens.npy",
+   "dest": "liveness/reset-factorial/seed-1618033/feedback-only/mlx-seed-1618033-tokens.npy",
+   "sha256": "5462fea51885e9830b16809008c44e409ff644aca94912b3035e0c6e37217f00",
+   "size": 360152,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-1618033/both/context12.wav",
+   "dest": "liveness/reset-factorial/seed-1618033/both/context12.wav",
+   "sha256": "8b2f173d5d2e9d1f80667435780625c285517b4b1e212018576054c5fb2c1fbd",
+   "size": 230400088,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/warm/seed-1618033/both/mlx-seed-1618033-tokens.npy",
+   "dest": "liveness/reset-factorial/seed-1618033/both/mlx-seed-1618033-tokens.npy",
+   "sha256": "8c120ddfef270246544e4d489b8297a93903b00ef1e3ce7356d2e6a227ac4b52",
+   "size": 360152,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-20260718/lineup-50101/sealed-mapping.json",
+   "dest": "liveness/judge-events/seed-20260718/lineup-50101/sealed-mapping.json",
+   "sha256": "3c7658bb8d6f0812809e9b5b011b5f7fe6ca0d38d7f7872ce1720201f37d15b7",
+   "size": 1781,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-20260718/lineup-50101/judge-vote.json",
+   "dest": "liveness/judge-events/seed-20260718/lineup-50101/judge-vote.json",
+   "sha256": "88115bfa740d304b07ecb5846e6f8b3d3d8da5b31763066fbcfe734f4df364b7",
+   "size": 1767,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-20260718/lineup-50101/clip-A.wav",
+   "dest": "liveness/judge-events/seed-20260718/lineup-50101/clip-A.wav",
+   "sha256": "23a286b80d7adf6d906f922b6d97864a9993c44bb4a55ddf6417f36e12344c9d",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-20260718/lineup-50101/clip-B.wav",
+   "dest": "liveness/judge-events/seed-20260718/lineup-50101/clip-B.wav",
+   "sha256": "702aad91153a7347045e974ef991568f14065b7f2eb9953310277a391a3fadc7",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-20260718/lineup-50101/clip-C.wav",
+   "dest": "liveness/judge-events/seed-20260718/lineup-50101/clip-C.wav",
+   "sha256": "bd1c60473afd8fbe50284d82bf766745add5e99e4291c1da6a3079a28f150eb3",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-20260718/lineup-50101/README.md",
+   "dest": "liveness/judge-events/seed-20260718/lineup-50101/README.md",
+   "sha256": "a4f81287df2321e95e47255589a1a374cef5a47e69aa4879cfdb3c605d3d9d27",
+   "size": 396,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-20260718/lineup-50101/request.json",
+   "dest": "liveness/judge-events/seed-20260718/lineup-50101/request.json",
+   "sha256": "f2a5625e1afe9d962ed8de094c940de28408686fc5b6b025116668b0ec4bdf29",
+   "size": 1701,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-20260718/lineup-50102/sealed-mapping.json",
+   "dest": "liveness/judge-events/seed-20260718/lineup-50102/sealed-mapping.json",
+   "sha256": "f35dfe205fe43ea95e14a72496f7b29361916b6ab2cc601d6a503f9210ff0b86",
+   "size": 1781,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-20260718/lineup-50102/judge-vote.json",
+   "dest": "liveness/judge-events/seed-20260718/lineup-50102/judge-vote.json",
+   "sha256": "d1f8e9e3f8f14b1e14f6696815ce2b382ef041aa5ae55926a306e90468ab3666",
+   "size": 2061,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-20260718/lineup-50102/clip-A.wav",
+   "dest": "liveness/judge-events/seed-20260718/lineup-50102/clip-A.wav",
+   "sha256": "702aad91153a7347045e974ef991568f14065b7f2eb9953310277a391a3fadc7",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-20260718/lineup-50102/clip-B.wav",
+   "dest": "liveness/judge-events/seed-20260718/lineup-50102/clip-B.wav",
+   "sha256": "23a286b80d7adf6d906f922b6d97864a9993c44bb4a55ddf6417f36e12344c9d",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-20260718/lineup-50102/clip-C.wav",
+   "dest": "liveness/judge-events/seed-20260718/lineup-50102/clip-C.wav",
+   "sha256": "6321aa4b22e44ee198f6f61e1b05fc0cf34b99cd99831747f3ac14b13432df31",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-20260718/lineup-50102/README.md",
+   "dest": "liveness/judge-events/seed-20260718/lineup-50102/README.md",
+   "sha256": "a4f81287df2321e95e47255589a1a374cef5a47e69aa4879cfdb3c605d3d9d27",
+   "size": 396,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-20260718/lineup-50102/request.json",
+   "dest": "liveness/judge-events/seed-20260718/lineup-50102/request.json",
+   "sha256": "bc30bc7f4f35ebdcb0bdba3174bd15726373ab8f88db7b7dd523c6b5fd2b6cb6",
+   "size": 3237,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-20260718/lineup-50103/sealed-mapping.json",
+   "dest": "liveness/judge-events/seed-20260718/lineup-50103/sealed-mapping.json",
+   "sha256": "4081f1e6655054cb484451b7e56a06b4df4d629ef68f142fa12bff8eb4b050e0",
+   "size": 1781,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-20260718/lineup-50103/judge-vote.json",
+   "dest": "liveness/judge-events/seed-20260718/lineup-50103/judge-vote.json",
+   "sha256": "4129646acb827a3b7adbe035edc0dc8761a6b1c89f50a4cb26900a43243abe57",
+   "size": 1961,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-20260718/lineup-50103/clip-A.wav",
+   "dest": "liveness/judge-events/seed-20260718/lineup-50103/clip-A.wav",
+   "sha256": "23a286b80d7adf6d906f922b6d97864a9993c44bb4a55ddf6417f36e12344c9d",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-20260718/lineup-50103/clip-B.wav",
+   "dest": "liveness/judge-events/seed-20260718/lineup-50103/clip-B.wav",
+   "sha256": "7508eed7301a27313fd0d199a3d0543e6ff2cd46970914d538b72e4ca7df0796",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-20260718/lineup-50103/clip-C.wav",
+   "dest": "liveness/judge-events/seed-20260718/lineup-50103/clip-C.wav",
+   "sha256": "702aad91153a7347045e974ef991568f14065b7f2eb9953310277a391a3fadc7",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-20260718/lineup-50103/README.md",
+   "dest": "liveness/judge-events/seed-20260718/lineup-50103/README.md",
+   "sha256": "a4f81287df2321e95e47255589a1a374cef5a47e69aa4879cfdb3c605d3d9d27",
+   "size": 396,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-20260718/lineup-50103/request.json",
+   "dest": "liveness/judge-events/seed-20260718/lineup-50103/request.json",
+   "sha256": "581092f32192f2672a5e675a08342a9d46a2d951da9040fdd430eb58e4904ba7",
+   "size": 1701,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-271828/lineup-50101/sealed-mapping.json",
+   "dest": "liveness/judge-events/seed-271828/lineup-50101/sealed-mapping.json",
+   "sha256": "ff6523ee539c305bff9389cc825bb3a4309825fb7e377db7d00b2b6908a5b9f6",
+   "size": 1774,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-271828/lineup-50101/judge-vote.json",
+   "dest": "liveness/judge-events/seed-271828/lineup-50101/judge-vote.json",
+   "sha256": "5425c523679dbf368a9f22bea79cc8d217ec0c69ebefa454dfa55bcb99a446b7",
+   "size": 1850,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-271828/lineup-50101/clip-A.wav",
+   "dest": "liveness/judge-events/seed-271828/lineup-50101/clip-A.wav",
+   "sha256": "76e18d171b8f3fe76c6aaa7184bc7fdc72467d9135493c9e95c0dace66109682",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-271828/lineup-50101/clip-B.wav",
+   "dest": "liveness/judge-events/seed-271828/lineup-50101/clip-B.wav",
+   "sha256": "c7669f23d974acf2aa4c53b163420ee19b40c2e005149482f5cf477df35aa382",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-271828/lineup-50101/clip-C.wav",
+   "dest": "liveness/judge-events/seed-271828/lineup-50101/clip-C.wav",
+   "sha256": "b11132fd9f9f2622ae7ce69398f13db611d5912843b08105ed633df6e6cfddda",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-271828/lineup-50101/README.md",
+   "dest": "liveness/judge-events/seed-271828/lineup-50101/README.md",
+   "sha256": "a4f81287df2321e95e47255589a1a374cef5a47e69aa4879cfdb3c605d3d9d27",
+   "size": 396,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-271828/lineup-50101/request.json",
+   "dest": "liveness/judge-events/seed-271828/lineup-50101/request.json",
+   "sha256": "3d21a5ab22bdbe388bc0be85c67c05fbb9d1a74a01cbb1dbe2d8326e676c3cec",
+   "size": 1695,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-271828/lineup-50102/sealed-mapping.json",
+   "dest": "liveness/judge-events/seed-271828/lineup-50102/sealed-mapping.json",
+   "sha256": "66c5b350db8df6a1fa8f7c045964704077f6c442936539684de34873ded857bc",
+   "size": 1774,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-271828/lineup-50102/judge-vote.json",
+   "dest": "liveness/judge-events/seed-271828/lineup-50102/judge-vote.json",
+   "sha256": "b8cf5fbdf8d4fe1f272c854f7f3f1159970d25d2310cf776658ad4aef81f60ca",
+   "size": 1998,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-271828/lineup-50102/clip-A.wav",
+   "dest": "liveness/judge-events/seed-271828/lineup-50102/clip-A.wav",
+   "sha256": "c7669f23d974acf2aa4c53b163420ee19b40c2e005149482f5cf477df35aa382",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-271828/lineup-50102/clip-B.wav",
+   "dest": "liveness/judge-events/seed-271828/lineup-50102/clip-B.wav",
+   "sha256": "76e18d171b8f3fe76c6aaa7184bc7fdc72467d9135493c9e95c0dace66109682",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-271828/lineup-50102/clip-C.wav",
+   "dest": "liveness/judge-events/seed-271828/lineup-50102/clip-C.wav",
+   "sha256": "bf97eb4de0debf1b04de0839c67f6430d3939faab6b1ce12314742f9838352bd",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-271828/lineup-50102/README.md",
+   "dest": "liveness/judge-events/seed-271828/lineup-50102/README.md",
+   "sha256": "a4f81287df2321e95e47255589a1a374cef5a47e69aa4879cfdb3c605d3d9d27",
+   "size": 396,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-271828/lineup-50102/request.json",
+   "dest": "liveness/judge-events/seed-271828/lineup-50102/request.json",
+   "sha256": "c00f608fd4e33d189c69ac2fde884da7d010d75d2958fc7b2da9495de0cda1d9",
+   "size": 3231,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-271828/lineup-50103/sealed-mapping.json",
+   "dest": "liveness/judge-events/seed-271828/lineup-50103/sealed-mapping.json",
+   "sha256": "6fa76f704048f6c5e75ec8e5d51faf9ed4254085bc17e4d0ab4414d4e4037f36",
+   "size": 1774,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-271828/lineup-50103/judge-vote.json",
+   "dest": "liveness/judge-events/seed-271828/lineup-50103/judge-vote.json",
+   "sha256": "8da7be8a68feba84ba122114ae567fda4417395640b0b5417aa1141b5ad9e743",
+   "size": 1940,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-271828/lineup-50103/clip-A.wav",
+   "dest": "liveness/judge-events/seed-271828/lineup-50103/clip-A.wav",
+   "sha256": "76e18d171b8f3fe76c6aaa7184bc7fdc72467d9135493c9e95c0dace66109682",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-271828/lineup-50103/clip-B.wav",
+   "dest": "liveness/judge-events/seed-271828/lineup-50103/clip-B.wav",
+   "sha256": "62ee9536e35b8f98d55c77faddf1182523cf5c823f34121625a25fa9a7f320a7",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-271828/lineup-50103/clip-C.wav",
+   "dest": "liveness/judge-events/seed-271828/lineup-50103/clip-C.wav",
+   "sha256": "c7669f23d974acf2aa4c53b163420ee19b40c2e005149482f5cf477df35aa382",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-271828/lineup-50103/README.md",
+   "dest": "liveness/judge-events/seed-271828/lineup-50103/README.md",
+   "sha256": "a4f81287df2321e95e47255589a1a374cef5a47e69aa4879cfdb3c605d3d9d27",
+   "size": 396,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-271828/lineup-50103/request.json",
+   "dest": "liveness/judge-events/seed-271828/lineup-50103/request.json",
+   "sha256": "a42ccf1c824a43774523a7851a6dec2b413adf3ae8a92c978ba0d7f56e893e37",
+   "size": 1695,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-1618033/lineup-50101/sealed-mapping.json",
+   "dest": "liveness/judge-events/seed-1618033/lineup-50101/sealed-mapping.json",
+   "sha256": "57b82f508743495ba503af87816cec77fe91a3fc2af99909721a33c266bad2ec",
+   "size": 1778,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-1618033/lineup-50101/judge-vote.json",
+   "dest": "liveness/judge-events/seed-1618033/lineup-50101/judge-vote.json",
+   "sha256": "a361ad5a6d84014717d2252b8158fee07b3e47f5f184345461214f985bddc882",
+   "size": 1765,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-1618033/lineup-50101/clip-A.wav",
+   "dest": "liveness/judge-events/seed-1618033/lineup-50101/clip-A.wav",
+   "sha256": "1dfa4ff917738d84d46ca3715afc46733cb2c9e07e46ad54777fa4d3bff96edb",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-1618033/lineup-50101/clip-B.wav",
+   "dest": "liveness/judge-events/seed-1618033/lineup-50101/clip-B.wav",
+   "sha256": "26b2256937dd88fca40c9b22b07556697b344391c280b23a92c36b0215156469",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-1618033/lineup-50101/clip-C.wav",
+   "dest": "liveness/judge-events/seed-1618033/lineup-50101/clip-C.wav",
+   "sha256": "f51b9a65eca9079b8dfc460664adb38be678b8c62954b33f50af6fb2f9e5ff47",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-1618033/lineup-50101/README.md",
+   "dest": "liveness/judge-events/seed-1618033/lineup-50101/README.md",
+   "sha256": "a4f81287df2321e95e47255589a1a374cef5a47e69aa4879cfdb3c605d3d9d27",
+   "size": 396,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-1618033/lineup-50101/request.json",
+   "dest": "liveness/judge-events/seed-1618033/lineup-50101/request.json",
+   "sha256": "0fec31b19661b128e71faf03310d0c7251c964ce7e9b25f5286bc56ed6d09d46",
+   "size": 1698,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-1618033/lineup-50102/sealed-mapping.json",
+   "dest": "liveness/judge-events/seed-1618033/lineup-50102/sealed-mapping.json",
+   "sha256": "a74abdd97a1b74fd94c83bed27463b83b04f077c5e9a78553d1b0f2c1d7b935f",
+   "size": 1778,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-1618033/lineup-50102/judge-vote.json",
+   "dest": "liveness/judge-events/seed-1618033/lineup-50102/judge-vote.json",
+   "sha256": "92e100eebf96ef43ccce69c86a477bb781b55b9fd155c95a45439b146e4ddb52",
+   "size": 2190,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-1618033/lineup-50102/clip-A.wav",
+   "dest": "liveness/judge-events/seed-1618033/lineup-50102/clip-A.wav",
+   "sha256": "26b2256937dd88fca40c9b22b07556697b344391c280b23a92c36b0215156469",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-1618033/lineup-50102/clip-B.wav",
+   "dest": "liveness/judge-events/seed-1618033/lineup-50102/clip-B.wav",
+   "sha256": "1dfa4ff917738d84d46ca3715afc46733cb2c9e07e46ad54777fa4d3bff96edb",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-1618033/lineup-50102/clip-C.wav",
+   "dest": "liveness/judge-events/seed-1618033/lineup-50102/clip-C.wav",
+   "sha256": "3e625fae3be384460bde92d4df2ba14ef30edb5edf5c0aed4cb434a2ff6706c7",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-1618033/lineup-50102/README.md",
+   "dest": "liveness/judge-events/seed-1618033/lineup-50102/README.md",
+   "sha256": "a4f81287df2321e95e47255589a1a374cef5a47e69aa4879cfdb3c605d3d9d27",
+   "size": 396,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-1618033/lineup-50102/request.json",
+   "dest": "liveness/judge-events/seed-1618033/lineup-50102/request.json",
+   "sha256": "325288566508a24ae21219d6edbd8ed6fb0e250835f7c229a1b737b197bf4941",
+   "size": 1698,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-1618033/lineup-50103/sealed-mapping.json",
+   "dest": "liveness/judge-events/seed-1618033/lineup-50103/sealed-mapping.json",
+   "sha256": "7a663d495e396b51798fd912a125db29eb6a6fc5f16b9ff3d1ff6f93d8a8b75c",
+   "size": 1778,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-1618033/lineup-50103/judge-vote.json",
+   "dest": "liveness/judge-events/seed-1618033/lineup-50103/judge-vote.json",
+   "sha256": "659ddbad84670bfddff1d398d7f7d43c05b628ff3f8b334d5f2e08464c3c330a",
+   "size": 1707,
+   "backs": "g5-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-1618033/lineup-50103/clip-A.wav",
+   "dest": "liveness/judge-events/seed-1618033/lineup-50103/clip-A.wav",
+   "sha256": "1dfa4ff917738d84d46ca3715afc46733cb2c9e07e46ad54777fa4d3bff96edb",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-1618033/lineup-50103/clip-B.wav",
+   "dest": "liveness/judge-events/seed-1618033/lineup-50103/clip-B.wav",
+   "sha256": "efa1c6908786b7bca9548fec1af61cdfb9b37248674f7678b331b48c66d91f6f",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-1618033/lineup-50103/clip-C.wav",
+   "dest": "liveness/judge-events/seed-1618033/lineup-50103/clip-C.wav",
+   "sha256": "26b2256937dd88fca40c9b22b07556697b344391c280b23a92c36b0215156469",
+   "size": 5760044,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-1618033/lineup-50103/README.md",
+   "dest": "liveness/judge-events/seed-1618033/lineup-50103/README.md",
+   "sha256": "a4f81287df2321e95e47255589a1a374cef5a47e69aa4879cfdb3c605d3d9d27",
+   "size": 396,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/reset-factorial/judge-events/seed-1618033/lineup-50103/request.json",
+   "dest": "liveness/judge-events/seed-1618033/lineup-50103/request.json",
+   "sha256": "cef6a1a2127a64b0530aa22827595b633968d5c2d62a0f71d547eb871e8c474f",
+   "size": 1698,
+   "backs": "g5-manifest.json (supporting context, not independently hash-bound)"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/steering/g6-final-context-only-600s-iphone16-2-20260719/g6-final-context-only-600s-post.wav",
+   "dest": "steering/g6-final-context-only-600s-post.wav",
+   "sha256": "89d6405a2fc82504c43e9df3284700f5fb105b446f313744d4d65c2ccc066519",
+   "size": 226560044,
+   "backs": "g6-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/steering/g6-final-context-only-600s-iphone16-2-20260719/devicectl.json",
+   "dest": "steering/devicectl.json",
+   "sha256": "aa27254513f46b35d0cc1797c328949fc53f502bce2dd97fb68fa873aefd3385",
+   "size": 4521,
+   "backs": "g6-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/steering/g6-final-context-only-600s-iphone16-2-20260719/devicectl.log",
+   "dest": "steering/devicectl.log",
+   "sha256": "a6c213f91b8ef3243c994863e48994652a85efb50796b2d6f5a6286210bf20b4",
+   "size": 481,
+   "backs": "g6-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/steering/g6-final-context-only-600s-iphone16-2-20260719/event-summary.json",
+   "dest": "steering/event-summary.json",
+   "sha256": "9f13dcbc9d077682bf96ad61623a8606ad9de960200ee4e49d9aa53b0d202dbd",
+   "size": 52668,
+   "backs": "g6-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/steering/g6-final-context-only-600s-iphone16-2-20260719/g6-final-context-only-600s-events.json",
+   "dest": "steering/g6-final-context-only-600s-events.json",
+   "sha256": "9181cf035622ad5214eed32d6569b7c48bc951b37fb6691a5c70398d3869f6f0",
+   "size": 464342,
+   "backs": "g6-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/steering/g6-final-context-only-600s-iphone16-2-20260719/paired-latency.json",
+   "dest": "steering/paired-latency.json",
+   "sha256": "3f5daa373c251f678f36f22f618aebf7471c5ae10ad40de22dd27fc2d91b9c7d",
+   "size": 13221,
+   "backs": "g6-manifest.json"
+  },
+  {
+   "source": "/Users/mm/Documents/GitHub/crossfade/Scratchpad/system_paper_liveness/steering/g6-final-context-only-600s-iphone16-2-20260719/g6-final-context-only-600s-tokens.json",
+   "dest": "steering/g6-final-context-only-600s-tokens.json",
+   "sha256": "92688ddae849a3c38c950ab5f5e67b73f8bf149f8a3a05de76693f99d7bbe787",
+   "size": 3462125,
+   "backs": "g6-manifest.json"
+  }
+ ]
+}

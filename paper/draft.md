@@ -26,9 +26,14 @@ the p99 of 25-token iteration means, not per-token tail latency. Backpressure
 bounds the queue near 21 seconds, so the experiment proves continuous
 throughput, not low-latency steering. Separate device evidence measures
 controller application in 4-15 ms but audible changes only after 6.48-9.02
-seconds without queue discard.
+seconds without queue discard. A final-code post-ring experiment then tests 30
+matched-noise control resets with a five-frame decoder and a 160 ms retained
+queue. It completes 600 seconds with zero delivery or proof faults, but its
+frozen paired-reference detector misses 22 transitions; among eight detections,
+end-to-end p95 is 0.947 seconds. The attained deployment tier is therefore
+buffered, not responsive or live.
 
-The main scientific result comes from a reviewer-motivated 2x2 crossover. For
+The first scientific result comes from a reviewer-motivated 2x2 crossover. For
 three seeds, we generate 600-second token trajectories with MLX and the shipped
 Core ML port, then decode each through stateful MLX or the stateless phone
 boundary. Fixed-token graph and DSP controls separate sampling, numerical,
@@ -41,10 +46,19 @@ history; retaining 12 token frames raises correlation with stateful MLX from
 and changes the original diagnostic-limit count from 35/60 windows to 13/60,
 versus 11/60 for stateful MLX. A new 600-second iPhone capture matches the
 stateful reference count at 5/20 windows for the principal seed, with no
-dropout. Thus a result first framed as long-horizon model degeneration was a
-systems boundary bug. The broader lesson is methodological: live generation
-has separate compute, delivery, and generative clocks, and a credible study
-must localize failures across all three.
+dropout. Thus the measured pulse excess first framed as long-horizon model
+degeneration was a systems boundary bug. A separate frozen liveness test then
+removes the ten-second temporal reset. Across three 600-second seeds, all three
+unrefreshed trajectories emit float-PCM samples at or above full scale; matched
+ten-second reset arms emit none. A K/V-only versus feedback-only factorial does
+not identify a unique causal state. Event-centered calibrated model votes
+reject 7/9 unrefreshed clips, whereas one blinded human engineering check finds
+both conditions technically acceptable in a late window that excludes the
+measured event and correctly rejects a corruption control. We therefore retain
+reset as an explicit bounded-trajectory protocol, not a model repair. The
+broader lesson is methodological: live generation has separate compute,
+delivery, and generative clocks, and a credible study must localize failures
+across all three without turning a detector into a causal claim.
 
 ## 1. Introduction
 
@@ -65,15 +79,16 @@ paper asks whether the complete loop can execute continuously on an iPhone
 without application GPU work, and, more importantly, what evidence is needed
 to make that statement mean anything.
 
-Our first answer was wrong in an instructive way. A signed A17 Pro runtime
+Our first answer conflated two failures. A signed A17 Pro runtime
 sustained 610 seconds with zero underruns and a growing reservoir. Its captured
 audio nevertheless crossed a predeclared 4-16 Hz envelope-pulse threshold and
 failed three of five exploratory automated listening votes. We reported a
-failed "generative clock." That framing survived many engineering controls but
-not the decisive one: we had never run the reference sampler to the same
-horizon and crossed token source with decoder implementation.
+failed "generative clock." That causal framing did not survive the decisive
+token-by-decoder crossover: the measured pulse excess followed decoder
+windowing. But the correction did not establish indefinite model stability;
+the deployed runs still reset temporal state every ten seconds.
 
-We therefore freeze three causal hypotheses. H1 is model-intrinsic or
+We therefore freeze three causal hypotheses for the pulse defect. H1 is model-intrinsic or
 sampling-induced recurrence: the pulse should follow tokens into either
 decoder. H2 is numerical divergence in the temporal/depth port: the Core ML
 token source should be worse after decoding with clean MLX. H3 is a decoder or
@@ -81,7 +96,9 @@ DSP boundary error: the pulse should follow the stateless phone decoding path
 for either fixed token source. We then split H3 into an MLX FLOAT32 pre-iSTFT
 graph, the Core ML FP16 graph, the production C++ reconstruction core, and a
 measured context intervention. The result strongly supports a refined H3: a
-stateless causal decoder was invoked with insufficient left context.
+stateless causal decoder was invoked with insufficient left context. We then
+test the separate question the crossover cannot answer: whether an unrefreshed
+trajectory satisfies a frozen 600-second liveness contract.
 
 This correction changes the paper's thesis. "Faster than playback" is not a
 complete real-time claim, and a failed audio detector is not a causal label.
@@ -97,7 +114,7 @@ We define three clocks:
    comparisons must remain valid across the horizon. A detector can identify a
    symptom; only an intervention or crossover can identify its source.
 
-We make four contributions:
+We make five contributions:
 
 - A complete GPU-free placement and sustained-throughput study of MRT2 on A17
   Pro, with a pure temporal graph, host-owned K/V state, in-process admission
@@ -109,10 +126,14 @@ We make four contributions:
   plausible generative failure to missing causal decoder history, plus a
   12-frame overlap intervention verified at tensor, audio, and physical-device
   levels.
-- A corrected liveness contract that distinguishes continuous playback from
-  interactive steering. The current runtime sustains output, but its ordinary
-  6.48-9.02 second audible control latency is not yet a strong live-product
-  result.
+- A frozen unrefreshed liveness experiment in which no-reset fails an objective
+  float-PCM full-scale gate in 3/3 seeds, matched reset passes in 3/3, and a
+  state-reset factorial honestly terminates at ambiguous attribution.
+- A corrected delivery contract that distinguishes continuous playback from
+  interactive steering, plus a complete post-ring A17 Pro falsification: the
+  final code delivers 600 seconds and 30 transitions without faults, yet a
+  frozen paired-reference detector misses 22 changes and measures 0.947-second
+  p95 among eight detections, so the runtime remains buffered.
 
 The weights are unchanged. Previous conversion and accelerator-admission
 findings appear in the companion *Surgical Inference* manuscript [Mireles,
@@ -237,6 +258,22 @@ with zero underruns and drops. The capture point was before the playback ring,
 so that receipt cannot prove click-free speaker output. We therefore report
 continuous buffered playback as solved and subsecond audible steering as open.
 
+The final steering harness moves the proof tap after ring discard and fade, so
+the stored PCM is the sequence offered to Core Audio. At each scripted control
+event it retains a bounded queue, applies a 40 ms fade, and resets temporal K/V
+plus previous-token feedback. For the proof only, every no-op and cross-class
+event restarts sampling from the same seed; this matched-noise design makes the
+no-op events calibrate the generic reset while target changes isolate
+conditioning. It is not the shipping sampling policy.
+
+Two control-boundary bugs surfaced under this harness. First, a producer that
+awoke from backpressure could decode a window captured under the prior control
+epoch; the runtime now rechecks the epoch after the await and suppresses that
+stale emission. Second, suffix pruning retained one old lookahead embedding in
+addition to causal context, leaking 40 ms of prior-control PCM. The final policy
+retains exactly the decoder's two causal context frames. Focused regressions
+cover both boundaries; the complete device run below uses the corrected build.
+
 ### 3.5 Ten-second temporal refresh
 
 All principal device and crossover trajectories reset temporal K/V and the
@@ -247,6 +284,12 @@ already rolled over several times; the intervention's distinctive long-horizon
 effect is resetting the recurrent feedback loop and returning the cache to a
 cold start. It is a deployed bounded-trajectory protocol here, not evidence
 that an unrefreshed model is stable.
+
+The reset is deliberately not described as a fix. It changes both K/V history
+and recurrent feedback, thereby selecting a new autoregressive trajectory. A
+rare peak disappearing after an intervention demonstrates bounded operation;
+it does not, by itself, localize the mechanism or establish that every
+unrefreshed trajectory is perceptually defective.
 
 ## 4. Experimental method
 
@@ -313,7 +356,46 @@ inference uses paired effect sizes over all windows and reports the median and
 range of seed-level means. We do not treat 60 temporally adjacent windows as 60
 independent samples.
 
-### 4.4 Independent evidence and receipts
+### 4.4 Frozen unrefreshed liveness protocol
+
+The liveness gate is fixed before replication: a candidate passes only if a
+600-second float-PCM decode contains zero samples with `abs(x) >= 1.0`. Because
+the stored path is floating point, crossing 1.0 is called **full-scale
+overrange**, not hard clipping; we separately inspect finiteness, saturation,
+dropout, token cycles, and perceptual evidence. The prompt, checkpoint,
+conditioning, temperature, top-k, decoder, DSP, and seeds are held fixed.
+
+For each of seeds 20260718, 271828, and 1618033, a 2x2 reset factorial runs
+without reset, with K/V reset only, with previous-frame feedback reset only,
+and with both reset every ten seconds. RNG state and absolute position remain
+continuous. The predeclared decision requires a replicated no-reset failure and
+a consistent arm-level rescue; otherwise attribution is ambiguous and no new
+mitigation is selected. This is a trajectory intervention, not a paired-token
+ablation: resetting state changes subsequent sampled tokens.
+
+Listening is supplemental. Three opaque event-centered lineups per seed contain
+a reset baseline, the unrefreshed candidate, and deterministic corruption
+control. Votes count only when the baseline passes and corruption fails. A
+separate blinded human engineering check uses a presealed late 30-second window;
+it is an instrument/control check, not a participant study or a substitute for
+full-trajectory measurement.
+
+### 4.5 Post-ring steering protocol
+
+Two class-reference events and four same-class no-op calibrations precede 30
+alternating C-major/drums and C-minor/drumless transitions. For each class, the
+detector compares 20 ms post-event waveform frames against the matched-noise
+reference trajectory, allows 12 ms alignment, requires three consecutive 1 ms
+hops, and freezes its threshold as the largest false-target score in the no-op
+windows plus 0.02. A responsive pass requires end-to-end p95 at most 0.50
+seconds and maximum at most 0.75 seconds; a live pass requires p95 at most 0.20
+seconds and maximum at most 0.25 seconds. Any underrun, producer drop,
+proof-ring loss, full-scale sample, or missed transition fails promotion. The
+detector, 160 ms queue, transition schedule, and thresholds are frozen before
+the complete run; a failure blocks speaker/listening promotion rather than
+inviting post-hoc tuning.
+
+### 4.6 Independent evidence and receipts
 
 The decoder-context tensor probe compares a stateful MLX prefix against
 stateless 25-token evaluations at one fixed segment while varying retained
@@ -321,10 +403,11 @@ history over 0, 1, 2, 4, 8, and 12 tokens. The production C++ reconstruction
 has an independent sample-level parity test against a NumPy periodic-Hann
 inverse STFT and overlap-add implementation.
 
-Every public result is generated from a machine-readable receipt. Raw device
-WAVs, events, tokens, and traces remain private because the product runtime is
-private, but their SHA-256 hashes, normalized summaries, commands, model
-identities, and source hashes are public. Precision experiments stop in the
+Every public result is generated from a machine-readable receipt. The raw
+device WAVs, events, tokens, and traces behind those receipts are public
+(Artifact statement); their SHA-256 hashes, normalized summaries, commands,
+model identities, and source hashes were public from first submission and
+remain the verification path of record. Precision experiments stop in the
 order finite, deterministic parity, device latency, then audio; a wrong
 function never earns a favorable speed number.
 
@@ -413,7 +496,73 @@ measured pulse excess attributed to the phone path is caused primarily by an
 incorrect causal decoder boundary and is repaired by restoring measured
 history.
 
-### 5.5 A14 is below the sustained boundary
+### 5.5 Unrefreshed generation fails the frozen gate
+
+Every no-reset trajectory fails the zero-tolerance gate ([Table liveness]). The
+three seeds contain respectively 2, 57, and 46 float-PCM samples with
+`abs(x) >= 1.0`, with peaks 1.0028, 1.1730, and 1.2382. All trajectories remain
+finite and none exhibits an exact short token cycle. The result is therefore a
+replicated full-scale-headroom failure for this configuration, not evidence of
+numerical explosion or proof that all of MRT2 is unusable.
+
+Resetting both K/V and feedback prevents overrange in all three matched seeds.
+The factorial does not localize why. K/V-only also passes all three seeds;
+feedback-only passes two but leaves 13 overrange samples in seed 271828. Under
+the frozen classifier, one seed supports K/V-only rescue and two are ambiguous
+because multiple interventions land on the same safe side of a rare-event
+threshold. Aggregate attribution is therefore **ambiguous**, and no mitigation
+is promoted beyond the already-deployed combined reset.
+
+All nine event-centered model lineups are control-valid: every reset baseline
+passes and every corrupted clip fails. The candidate is rejected in 7/9 votes,
+including 3/3 for seed 271828; these repeated calls are calibrated measurements,
+not independent listeners. In the separate blinded human check, the listener
+correctly rejects the corrupted clip but judges refreshed and unrefreshed clips
+both technically acceptable, noting only that the latter sounds "a little
+weird." That window covers seconds 570-600 and excludes the first measured
+overrange event. The evidence is consistent: the objective full-trajectory
+contract fails, while this one non-event human excerpt does not establish an
+audible failure.
+
+The permitted conclusion is narrow: the tested no-reset, warm-prompt,
+600-second configuration fails the frozen liveness gate in 3/3 seeds, and the
+reset-state attribution is unresolved. We neither call the model universally
+broken nor infer stable unrefreshed generation from acceptable excerpts.
+
+### 5.6 Post-ring steering fails after clean full delivery
+
+The first 600-second context-21 attempt at a 120 ms retained queue completes
+all 30 events but records seven underruns under sustained serious thermals and
+no detector-confirmed transition. A matched-noise context-21 diagnostic at a
+safer 200 ms queue eliminates delivery faults and detects all five measured
+changes, but end-to-end p95 is 0.790 seconds and maximum is 0.814 seconds, above
+the responsive gate. Context 23 reduces decoder emission to 40 ms but raises
+decoder call count enough to produce 165 underruns by the third calibration;
+the run is stopped.
+
+The final corrected runtime instead uses five decoder input frames, two frames
+of causal history, a 120 ms emission quantum, and a 160 ms retained queue.
+Periodic refresh is disabled; each scripted event performs the matched reset.
+On the A17 Pro iPhone it completes 600 seconds and all 30 transitions, writes
+exactly 590 seconds of post-ring stereo PCM, and exits normally with zero
+underruns, producer drops, proof drops, or overflows. The runtime records a
+1,024-frame (21.3 ms) low-water mark; the smallest end-of-iteration fill is
+3,328 frames. All samples are finite, none reaches full scale, and peak
+magnitude is 0.999 after the safety clamp.
+
+The four paired no-op windows freeze the detector threshold at 0.70249. Only
+8/30 measured transitions cross it; 22 are missed. Among those eight
+detections, end-to-end p95 is 0.94675 seconds and maximum is 0.95120 seconds.
+Misses independently fail promotion, and the detected tail also exceeds the
+responsive limit. The frozen full protocol therefore fails both steering
+rungs and blocks the model-vote and physical-speaker tests.
+
+This is a systems result, not evidence that text conditioning never affects
+MRT2. It establishes that the tested reset, decoder-cadence, and delivery
+protocol cannot jointly demonstrate responsive steering under its own
+false-change control. The supported product claim remains buffered playback.
+
+### 5.7 A14 is below the sustained boundary
 
 The A14 story remains a negative lower bound. Before the context repair, its
 certified FLOAT32 decoder configuration measured 43.88, 47.25, and 58.59 ms
@@ -428,7 +577,7 @@ overflowing layer, so we report a device-artifact numerical incompatibility,
 not a layer-level mechanism. A14 needs a different trained precision or
 decoder/depth architecture, not a larger hidden buffer.
 
-### 5.6 Compression ladder and early stopping
+### 5.8 Compression ladder and early stopping
 
 We also test int8 linear quantization and 6-bit and 4-bit palettization on
 temporal and depth packages ([Fig. compression]). Temporal packages shrink to
@@ -457,7 +606,24 @@ modulation. Output finiteness, tensor shape parity, seam-jump metrics, and even
 short perceptual clips can all pass. A useful export test must compare a
 stateless window with a stateful prefix at multiple history depths.
 
-### 6.2 Throughput is not frame latency
+### 6.2 Fixing one boundary does not prove indefinite liveness
+
+The decoder crossover and unrefreshed factorial answer different causal
+questions. Restoring 12 frames of decoder history removes the deterministic
+4-16 Hz boundary modulation. It cannot certify the autoregressive trajectory,
+because the principal crossover resets temporal state every ten seconds. The
+no-reset experiment closes that logical gap and fails its frozen headroom gate.
+
+Conversely, a few float samples beyond nominal full scale do not retroactively
+prove that the original pulse was model recurrence. The stored signal is not
+integer-clipped, the human late-window check is acceptable, and reset arms
+sample different futures. The scientifically stable statement is the
+intersection: decoder history repairs the measured pulse defect; unrefreshed
+long-horizon generation still lacks a passing liveness certificate; combined
+ten-second reset is a bounded operating protocol whose causal mechanism remains
+unresolved.
+
+### 6.3 Throughput is not frame latency
 
 Dividing a batch time by 25 produces a unit of ms/token, not 25 observations.
 Its quantiles describe iteration-level compute density. They average away
@@ -472,7 +638,7 @@ producer rate, and late CPU+GPU-policy slowdown are batch-appropriate evidence.
 It does narrow the headline: we demonstrate sustained generation throughput,
 not a frame-synchronous 40 ms scheduler.
 
-### 6.3 Continuous playback is not interactive liveness
+### 6.4 Continuous playback is not interactive liveness
 
 A growing or high-watermark-limited reservoir prevents underflow and delays
 intent. The old delivery criterion accepted any final queue larger than the
@@ -480,14 +646,15 @@ initial queue. For a continuously steerable model, that condition rewards the
 wrong behavior. A defensible upper bound is derived from prompt-change-to-
 audible-change latency, not memory capacity.
 
-The discard experiment offers an architectural direction: retain 0.4 seconds,
-apply a short fade, and count intentional discard separately from producer
-drops. But it has not passed a human speaker-level click-free test. The current
-system is therefore a robust buffered playback engine and a candidate live
-engine. Calling both simply "real time" would erase the most important product
-difference.
+Post-ring evidence now sharpens that result. A 200 ms queue is clean but misses
+the responsive p95 gate, and a 40 ms decoder-emission configuration underruns.
+The final five-frame decoder closes delivery at a 160 ms queue for 600 seconds,
+but its frozen detector misses 22/30 changes and yields 0.947-second p95 among
+the detections. Because the objective full run fails, it is not promoted to the
+human speaker-level click test. The current system is therefore a robust
+buffered playback engine, not a demonstrated responsive or live engine.
 
-### 6.4 Evidence paths are systems too
+### 6.5 Evidence paths are systems too
 
 The project exposed two evidence-path bugs. An early recorder flattened a
 padded FP16 `MLMultiArray`, manufacturing huge coefficients that live playback
@@ -503,14 +670,16 @@ an underdetermined experiment causal.
 
 ## 7. Limitations
 
-The crossover uses three seeds and one ambient prompt. That is enough to
+The crossover and reset factorial use three seeds and one ambient prompt. That is enough to
 replicate the decoder-boundary effect, not to characterize the prompt
 distribution or long-horizon musical quality of MRT2. The 4-16 Hz measure is
 prompt-sensitive and overlaps legitimate musical rhythm; its 0.070 value is
-reported only as the original diagnostic boundary. We do not use the prior
-five automated listening votes as independent statistical evidence: two late
-excerpts overlap, and an audio model is not a substitute for counterbalanced
-human listening.
+reported only as the original diagnostic boundary. We do not use automated
+listening votes as independent statistical evidence. The nine event-centered
+calls are repeated measurements of one judge configuration, and the single
+blinded human engineering check is not a listening study. Its late window
+excludes the measured event. Neither instrument characterizes the prompt
+distribution or establishes population-level perceptual quality.
 
 The MLX and Core ML token generators use different native random-number
 schemes. Token-source arms therefore test distributions and downstream
@@ -519,18 +688,22 @@ rollout provide separate deterministic parity evidence, but rare FP16
 near-tie flips remain expected. The context tensor probe uses one segment;
 three-seed full-audio interventions provide the broader replication.
 
-The final corrected runtime has one 610-second physical-device run. The
+The context-12 sustain runtime has one 610-second physical-device run, and the
+final five-frame steering runtime has one separate 600-second run. The
 placement campaign, pre-context latency campaign, and A14 study reuse prior
 signed builds with identical model artifacts; the context repair is host-only.
 The A14 FP16 failure is not localized to a layer. We report Instruments impact
 and placement evidence but no calibrated joules or battery-life claim.
 
-Finally, the default 21-second queue is incompatible with a strong live-
-steering claim. The 0.4-second discard path needs counterbalanced human
-speaker-level evaluation. The complete Crossfade runtime and raw audio remain
-private; public artifacts contain exporters, validators, normalized receipts,
-hashes, figure sources, and manuscript source. The runtime is available from
-the author for artifact review.
+Finally, steering is tested on one deliberately high-contrast prompt pair and
+30 measured transitions in one device run. That is sufficient to reject
+promotion of this protocol, not to estimate steering quality over prompts or
+devices. No physical-speaker check was run after the objective failure, so the
+post-ring fade is not claimed click-free at the DAC or speaker. The raw WAVs,
+token captures, event traces, and device logs behind every table in this paper
+are public (see Artifact statement); the signed, compiled iOS application
+binary is not, and the generation runtime and render core are published as
+reference source rather than the shipping product.
 
 ## 8. Conclusion
 
@@ -541,24 +714,42 @@ boundary makes ANE admission repeatable. Those are substantial systems
 results, but they are not synonymous with per-token tail latency or low-latency
 steering.
 
-The strongest result came from trying to falsify our own negative claim. A
+The strongest result came from decomposing our own negative claim. A
 three-seed token-by-decoder crossover showed that an apparent long-horizon
 generative failure followed stateless decoder windowing, not the model, token
 source, FP16 graph, or Hann reconstruction. Twelve frames of measured causal
-history recover tensor parity and remove the excess on Mac and iPhone. Live
-generation has three clocks. Good science requires measuring each one and,
-when a clock fails, crossing the boundary until the cause has nowhere left to
-hide.
+history recover tensor parity and remove the excess on Mac and iPhone. Yet a
+separate no-reset protocol fails a frozen full-scale gate in all three seeds,
+and the reset factorial does not identify a unique responsible state. The
+honest deployed claim is therefore bounded: ten-second reset, sustained
+throughput, and buffered playback. The final post-ring steering run closes
+delivery but fails its acoustic promotion gate. Live generation has three
+clocks. Good
+science requires measuring each one, preserving negative results, and refusing
+to let a repair on one clock certify another.
 
 ## Artifact statement
 
-The public repository contains Core ML exporters, frozen fixtures, placement
-and sustain verifiers, the three 600-second crossover reports, decoder-context
-probe, corrected A17 normalized manifest, compression ladder, figure sources,
-paper source, and exact build protocol. Public reports hash private WAVs,
-tokens, events, traces, signed executables, and relevant runtime sources.
-Preconverted artifacts are mirrored on Hugging Face. The product application
-and raw listening media are available from the author for artifact review.
+The public repository, `github.com/mattmireles/magenta-realtime-2-iphone`,
+contains Core ML exporters, frozen fixtures, placement and sustain verifiers,
+the three 600-second crossover reports, decoder-context probe, corrected A17
+normalized manifest, compression ladder, figure sources, paper source, and
+exact build protocol. It additionally contains, under `harness/`, the
+generation/decode/summarize/probe scripts referenced in Reproducibility as
+"the Crossfade harness," and, under `harness/reference-runtime/`, the exact
+source of the producer-loop runtime and the C++ inverse-STFT render core that
+produced the corrected A17 sustained-throughput run, each verifiable against
+the `generationRuntimeSourceSha256` / `renderCoreSourceSha256` fields in
+`context12-soak-manifest.json`.
+
+The raw evidence itself, every WAV, token capture, event trace, and device
+log hashed by a manifest in `validation/results/system-paper/`, is public at
+`huggingface.co/datasets/mattmireles/mrt2-three-clocks-evidence`; the mapping
+from each published hash to its public file is `evidence/evidence-manifest.json`
+in the repository. Two things remain private: the signed, compiled iOS
+application binary (`signedExecutableSha256` records its hash but not its
+bytes), and the single blinded human engineering listening check, which was
+never machine-hash-bound and is reported only as prose in Limitations.
 
 ## Acknowledgments
 
@@ -578,7 +769,34 @@ corrected physical-device receipt is `context12-soak-manifest.json` in the A17
 context-12 directory;
 it hashes the 600-second PCM capture, 610-second event trace, 15,790-frame token
 capture, normalized summaries, signed executable, runtime source, and render
-core source.
+core source. Every one of these hashed files, the raw WAVs, token captures,
+and event traces, not only their summaries, is public at
+`huggingface.co/datasets/mattmireles/mrt2-three-clocks-evidence`; the exact
+source-to-hash mapping is `evidence/evidence-manifest.json` in the repository.
+The three seed-report JSON files themselves retain the original authoring
+machine's local file paths in their `path` fields: those files are individually
+hash-bound by `aggregate.json`, so editing them to remove the local paths would
+invalidate a hash already published as a scientific receipt. The public dataset
+mapping resolves each local path to its public counterpart without touching the
+receipts.
+
+The unrefreshed result is
+`validation/results/system-paper/liveness/g5-manifest.json`. It records the
+frozen gate, all 12 factorial arms, reset counters, candidate and control vote
+outcomes, permitted claim, and hashes of tokens, WAVs, lineups, vote reports,
+protocol, index, and analysis, all of which are public in the same evidence
+dataset. The public verifier treats the failed G5 status as a valid scientific
+result and rejects missing seeds, changed thresholds, invalid controls,
+machine-local paths, or broader wording.
+
+The steering result is
+`validation/results/system-paper/steering/g6-manifest.json`. It binds the
+post-ring WAV, event trace, tokens, detector reports, device identity, signed
+executable, and exact buffered-only wording. Every artifact except the signed
+executable is public in the same dataset. The verifier accepts this complete
+600-second negative result but requires all 30 transitions to be detected
+inside a latency rung, plus calibrated listening and a physical-speaker record,
+to promote a responsive or live claim.
 
 The A17 and A14 placement directories contain admission receipts. The
 historical A17 placement soak and CPU+GPU duration control are under
@@ -589,11 +807,16 @@ measured 12-call, one-call FLOAT32, and one-call FLOAT16 depth results.
 
 ### Crossover commands
 
-The private Crossfade harness exposes generation, decoding, summarization, and
-decoder-context probe subcommands. A complete replication uses
-15,001 codebook-local token frames, temperature 1.0, top-k 40, a 10-second
-refresh, and a 600-second decode. Decoder arms name the token file explicitly;
-the analyzer refuses incomplete fixed-DSP or context pairs.
+The Crossfade harness, published under `harness/` in the repository, exposes
+generation, decoding, summarization, and decoder-context probe subcommands as
+`run_mrt2_long_horizon_crossover.py`, `probe_spectrostream_rvq_lookup.py`, and
+related scripts (see `harness/README.md` for the full command-to-section
+map). A complete replication uses 15,001 codebook-local token frames,
+temperature 1.0, top-k 40, a 10-second refresh, and a 600-second decode.
+Decoder arms name the token file explicitly; the analyzer refuses incomplete
+fixed-DSP or context pairs. Running the harness end to end additionally
+requires the converted model artifacts and compiled render core described in
+§3.3; the render core's exact source is `harness/reference-runtime/RenderCore.cpp`.
 
 The public analysis commands are:
 
@@ -603,6 +826,14 @@ The public analysis commands are:
 - run `aggregate_system_paper_crossover.py` on the three reports
   plus `decoder-context-probe.json`; and
 - regenerate `fig-crossover.pdf` from the aggregate only.
+
+### Unrefreshed liveness verification
+
+Run `validation/verify_system_paper_liveness.py` with the public G5 manifest and
+the physical-device G6 steering manifest. The G5 branch requires exactly three
+seeds and four reset arms, verifies that no-reset fails in 3/3 and combined
+reset passes in 3/3, preserves the ambiguous attribution, validates all nine
+listening controls, and enforces the narrow permitted claim.
 
 ### Corrected runtime protocol
 

@@ -10,7 +10,7 @@ The working rule throughout: **do not infer Core ML or ANE behavior from
 hope.** Every claim points to a command, a receipt file, or an explicit
 failure.
 
-## System paper revision — causal crossover and context repair (2026-07-18)
+## System paper revision — causal crossover, context repair, and liveness (2026-07-19)
 
 The current publication verdict is
 `validation/results/system-paper/revision-report.json`. It machine-checks the
@@ -18,6 +18,78 @@ three-seed crossover, the decoder-context tensor intervention, and the
 corrected A17 Pro device receipt. The earlier audio-gate section below is
 retained as experiment history, but its model-degeneration interpretation is
 superseded.
+
+### Frozen unrefreshed liveness result
+
+The repaired decoder does not by itself prove that an autoregressive trajectory
+is stable without the deployed ten-second temporal reset. A predeclared
+three-seed, 600-second reference experiment therefore crosses four reset
+policies while preserving RNG state and absolute position: no reset, K/V-only,
+previous-feedback-only, and both.
+
+| Seed | No reset | K/V only | Feedback only | Both |
+| --- | ---: | ---: | ---: | ---: |
+| 20260718 | 2 (1.0028) | 0 (0.9919) | 0 (0.8616) | 0 (0.9383) |
+| 271828 | 57 (1.1730) | 0 (0.9264) | 13 (1.0359) | 0 (0.8561) |
+| 1618033 | 46 (1.2382) | 0 (0.9923) | 0 (0.9923) | 0 (0.9923) |
+
+Entries are counts of float-PCM samples with `abs(x) >= 1.0`, followed by peak
+absolute sample in parentheses. Zero was required. All no-reset arms fail and
+all combined-reset arms pass, but the partial-reset pattern classifies two
+seeds as ambiguous and one as K/V-only rescue. Aggregate attribution is
+therefore ambiguous and no new causal mitigation is selected.
+
+All nine event-centered model lineups are control-valid: the reset baseline
+passes and deterministic corruption fails. The candidate is rejected in 7/9
+calls, which are repeated calibrated measurements rather than independent
+listeners. One separately blinded human engineering check correctly rejects
+corruption and finds refreshed and unrefreshed late-window clips both
+technically acceptable; that excerpt excludes the measured event and is not a
+human study. The result neither declares MRT2 universally broken nor certifies
+unrefreshed stability.
+
+Public receipt:
+`validation/results/system-paper/liveness/g5-manifest.json`. Focused validation:
+`python3 -m pytest -q validation/test_system_paper_liveness.py`.
+
+### Post-ring steering result
+
+The final corrected run executes on an iPhone 15 Pro Max (`iPhone16,2`, A17
+Pro, iOS 27.0 build `24A5380h`) with a five-frame decoder, two frames of causal
+context, a 120 ms emission quantum, a 160 ms retained queue, and a 40 ms fade.
+A post-ring SPSC proof tap captures exactly the delivered sequence. Every
+reference, no-op, setup, and cross-class event resets sampling to seed
+20260718, so generic restart effects are calibrated under the same
+matched-noise intervention used for measured changes. Periodic refresh is
+disabled; the 37 resets are all control-triggered.
+
+| Measure | Result |
+| --- | ---: |
+| App run / post-ring capture | 600.00 s / 590.00 s, 48 kHz stereo |
+| Paired no-op calibrations / measured transitions | 4 / 30 |
+| Detected / missed measured transitions | 8 / 22 |
+| Paired-no-op detector threshold | 0.702494 |
+| Detected end-to-end p95 / maximum | 0.94675 s / 0.95120 s |
+| Underruns / producer drops | 0 / 0 |
+| Proof drops / overflows | 0 / 0 |
+| Observed minimum fill | 1,024 frames (21.3 ms) |
+| Minimum end-of-iteration fill | 3,328 frames (69.3 ms) |
+| Finite ratio / full-scale samples | 1.0 / 0 |
+| Peak absolute sample | 0.9990000 |
+
+The full run therefore passes delivery integrity but fails both acoustic
+steering rungs: any missed transition blocks promotion, and the detected p95
+also exceeds the 0.50-second responsive limit. It is not promoted to a
+model-vote packet or physical-speaker check. Earlier bounded attempts expose
+the tradeoff: context 21 with a 200 ms queue detects 5/5 changes but has 0.790 s
+end-to-end p95 and 0.814 s maximum; context 23 with a 120 ms queue accumulates
+165 underruns by the third calibration and is stopped. The final correction
+also removes one stale decoder lookahead frame and rechecks the complete
+protocol rather than extrapolating from the earlier diagnostic.
+
+Public receipt:
+`validation/results/system-paper/steering/g6-manifest.json`. The combined G5/G6
+verdict is `validation/results/system-paper/liveness-verdict.json`.
 
 ### Three-seed, full-horizon crossover
 

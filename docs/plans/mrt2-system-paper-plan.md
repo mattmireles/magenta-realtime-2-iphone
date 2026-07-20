@@ -1,9 +1,26 @@
 # MRT2 System Paper Plan — "Throughput Is Not Liveness"
 
 **Date:** 2026-07-15
-**Status:** Complete — reviewer-motivated crossover, decoder-context repair,
-corrected device run, 13-page PDF, independently rebuilding source archive,
-and reviewer packet all verified
+**Status:** Complete — crossover and decoder repair verified; G5 failed the
+frozen unrefreshed gate; G6 attained the buffered tier; 15-page PDF, rebuilding
+source archive, normalized receipts, and reviewer packet all verified
+
+## 2026-07-19 Liveness and Steering Closure
+
+The corrected decoder does not certify an unrefreshed trajectory. A frozen
+three-seed, four-policy reset factorial finds float-PCM full-scale overrange in
+all three no-reset arms and none in the matched combined-reset arms; partial
+K/V-versus-feedback attribution is ambiguous. The paper therefore treats the
+ten-second reset as a bounded deployment protocol, not a model repair.
+
+Post-ring steering is also closed negatively. The final A17 Pro run uses a
+five-frame decoder with two frames of causal context, a 120 ms emission
+quantum, a 160 ms retained queue, four paired no-op calibrations, and 30
+alternating matched-noise transitions. It completes 600 seconds with zero
+delivery or proof faults, but the frozen detector misses 22/30 transitions;
+detected end-to-end p95 is 0.947 seconds. G6 is `buffered`, not `responsive`
+or `live`, and the failed objective gate correctly blocks listening and the
+physical-speaker gate.
 
 ## 2026-07-18 Scientific Revision
 
@@ -22,7 +39,8 @@ Twelve retained token frames raise pre-iSTFT correlation from 0.1083 to
 corrected phone run records zero underruns/drops and matches the stateful MLX
 diagnostic count for the principal seed. The earlier model-degeneration
 interpretation is rejected in favor of a specific causal-decoder state-contract
-bug. No additional long device capture is required for this revision.
+bug. The later G6 closure adds a separate final-code 600-second steering run;
+it does not alter this context-12 sustain result.
 
 ## Executive Summary
 
@@ -446,7 +464,7 @@ source bundle ready for immediate arXiv upload.
 - [x] Update `docs/validation-receipts.md` §0 and this plan's status to
       Complete.
 
-**Verification:** the source bundle independently rebuilds a 13-page PDF; repo
+**Verification:** the source bundle independently rebuilds a 15-page PDF; repo
 docs and reviewer packet are self-consistent with it. arXiv upload is not part
 of this execution, per user direction.
 
@@ -488,12 +506,12 @@ on both the three-seed crossover and the physical A17 device run. The corrected
 claim is a state-contract localization and repair, not arbitrary-horizon model
 stability.
 
-**Verification:** private runtime suites pass 34 Swift tests and 10 focused
-Python tests. Public system-paper suites pass 27 tests. The revision verifier
-passes every causal and device check. The 13-page letter PDF was rendered to
-PNG and inspected page by page; the source archive rebuild has byte-identical
-extracted text. The reviewer ZIP passes `unzip -t`. Corrected private runtime:
-Crossfade commit `fc7923f` (pushed to `main`).
+**Verification:** the final private runtime passes 38 Swift tests and 5 focused
+paired-latency Python tests. The public validation suite passes 34 tests; both the
+revision verifier and combined G5/G6 verifier pass. The 15-page letter PDF was
+rendered to PNG and inspected page by page; the source archive independently
+rebuilds a 15-page letter PDF with matching title/author metadata. The reviewer
+ZIP passes `unzip -t`.
 
 ## Executable Memory
 
@@ -518,6 +536,10 @@ Crossfade commit `fc7923f` (pushed to `main`).
       crossover plus direct context intervention and corrected device run.
 - [x] G4: A14 reported as pass (<40 ms/frame p99) or as an explicit measured
       reservoir tier — one or the other, in the paper.
+- [x] G5: unrefreshed liveness is adjudicated and the failed tested condition
+      is reported without a universal model-failure claim.
+- [x] G6: post-ring steering is adjudicated; the failed full protocol permits only
+      the buffered tier and blocks responsive/live language.
 - [x] Every number in the PDF traces to a receipt in this repo.
 - [x] No contribution overlap with *Surgical Inference* beyond citation.
 

@@ -75,6 +75,10 @@ but the claims and evidence gates below may not be weakened silently.
   drops are necessary, but a queue satisfies interactive delivery only when its
   maximum depth is chosen from an audible steering-latency budget. The current
   21-second soak reservoir proves continuity, not low-latency steering.
+- **Unrefreshed liveness contract:** for the frozen warm prompt and three seeds,
+  a 600-second float-PCM candidate requires zero samples with
+  `abs(x) >= 1.0`. This is a full-scale-overrange gate on floating-point audio,
+  not an assertion of hard clipping or a universal perceptual-quality metric.
 - **Precision gate order:** `finite_ratio == 1.0` first; only then parity,
   token agreement, SNR/correlation, latency, and audio judgment.
 - **State gate:** fresh-vs-warmed divergence plus streaming agreement beyond
@@ -287,6 +291,62 @@ python3 validation/verify_system_paper_gate.py g4 \
   --output-json validation/results/system-paper/a14/soak/g4-report.json
 ```
 
+### G5 — Unrefreshed generative liveness
+
+**Frozen outcome: FAIL, publishable as a bounded negative result.** The exact
+no-reset configuration fails the zero-overrange contract in all three seeds,
+with counts 2, 57, and 46. Matched combined K/V-plus-feedback reset passes in
+all three. The 12-arm partial-reset factorial classifies two seeds as ambiguous
+and one as K/V-only rescue, so aggregate causal attribution is ambiguous and no
+new mitigation is selected.
+
+All nine event-centered model votes are control-valid; the candidate is
+rejected in 7/9, but these are repeated calibrated measurements rather than
+independent listeners. One blinded human engineering check correctly rejects a
+corruption control and finds both scientific conditions technically acceptable
+in a late window that excludes the measured event. This is not a human study.
+
+**Permitted claim:** “The tested no-reset 600-second warm-prompt configuration
+failed the frozen liveness gate in all three seeds; the reset-factorial
+attribution was ambiguous.” The result does not license “MRT2 is broken,”
+“reset fixes the model,” or “unrefreshed output is always audibly defective.”
+
+**Public receipt and focused verifier:**
+
+```bash
+python3 -m pytest -q validation/test_system_paper_liveness.py
+```
+
+Receipt: `validation/results/system-paper/liveness/g5-manifest.json`.
+
+### G6 — Post-ring steering
+
+**Frozen outcome: BUFFERED, publishable as a complete negative result.** The
+final corrected A17 Pro runtime uses a five-frame decoder with two frames of
+causal history, a 120 ms emission quantum, a 160 ms retained queue, a 40 ms
+fade, four paired no-op calibrations, and 30 measured C-major/drums versus
+C-minor/drumless transitions. It completes 600 seconds and writes 590 seconds
+of post-ring audio with zero underruns, producer drops, proof drops, overflows,
+or full-scale samples. The runtime records a 1,024-frame (21.3 ms) low-water
+mark; the smallest end-of-iteration fill is 3,328 frames. All samples are
+finite and peak magnitude is 0.999 after the safety clamp. The
+paired no-op windows freeze the threshold at 0.70249. The detector finds 8/30
+transitions and misses 22; among detections, end-to-end p95 is 0.94675 seconds
+and maximum is 0.95120 seconds. Neither responsive nor live passes.
+
+The run is on the connected iPhone 15 Pro Max (`iPhone16,2`, A17 Pro), which is
+reported exactly. The failed objective gate precludes promotion to model-vote
+or physical-speaker testing. The matched sampling restart is proof-only and is
+applied identically to no-op and cross-class events; it is not a shipping RNG
+policy.
+
+**Permitted claim:** “The tested A17 Pro configuration remains buffered: the
+final corrected runtime completed 600 seconds and 30 control transitions
+without delivery faults, but the frozen paired-reference detector missed 22
+transitions and measured 0.947-second p95 latency among eight detections.”
+
+Receipt: `validation/results/system-paper/steering/g6-manifest.json`.
+
 ## Paper Claim Ledger
 
 | ID | Candidate paper claim | Required gate / receipt | Current disposition |
@@ -295,12 +355,14 @@ python3 validation/verify_system_paper_gate.py g4 \
 | C2 | The system sustains the 40 ms/token throughput contract for 10 foreground minutes with zero underruns. | G2; five-run latency dispersion plus the corrected 600 s soak | **Passed on A17 Pro.** The 610.31 s run produces at 1.0301x, p99 iteration-normalized active cost 24.81 ms/token, zero underruns/drops, and a non-draining reservoir. The statistic is a quantile of iteration means, not per-token tail latency. |
 | C3 | A stateless host-owned K/V boundary makes the full temporal math island reliably ANE-resident in the shipping app. | G1 plus fresh/warm and >41-frame state receipts | **Passed on A17 Pro and A14.** Both phones pass 10/10 cold-process plan/state gates; both model-attributed traces show temporal ANE predictions and zero app GPU intervals. |
 | C4 | Reducing temporal weight bytes improves frame cost and sustained headroom in the bandwidth-bound regime without changing audible behavior. | Quantization ladder: artifact bytes, finite/parity/audio gates, device latency and soak pair | **Rejected for the tested post-training methods.** Int8-linear, 6-bit palettized, and 4-bit palettized temporal artifacts shrink to 0.502x, 0.376x, and 0.252x of baseline, but all fail the 64-step deterministic state gate. They were stopped before device/audio measurement, so no speedup or audio-equivalence claim is supported. |
-| C5 | The delivery architecture converts measured jitter into bounded queued playback without blocking the audio render thread. | Runtime log, ring/reservoir trace, zero-underrun soak, steering receipts, pseudocode | **Continuity passes; low-latency steering does not.** The corrected run captures 600 s with zero callback underruns/drops while the reservoir grows from 2.88 to 21.01 s. Separate receipts show 4-15 ms controller application but 6.48-9.02 s until audible change without queue discard. |
+| C5 | The delivery architecture converts measured jitter into bounded queued playback without blocking the audio render thread. | Runtime log, ring/reservoir trace, zero-underrun soak, steering receipts, pseudocode | **Continuity passes; low-latency steering does not.** The corrected steering run completes 600 s and 30 transitions with zero callback underruns/drops or proof loss at a 160 ms retained queue. The frozen detector misses 22/30 changes and detected p95 is 0.947 s. |
 | C6 | GPU-free placement lowers process GPU impact and producer duty cycle relative to a temporal-GPU control. | Corrected-pipeline, counterbalanced Power Profiler pair; placement receipts | **Unsupported and omitted.** The first corrected-bundle trace is invalid because the bundle omitted `warm.bin` and exited at preflight; after repairing and testing the signed bundle, Instruments lost USB attachment to both phones. The invalid trace is retained and excluded. No energy, impact-score, or producer-duty-cycle claim is made. |
 | C7 | The same pipeline has a measured, honest deployment tier on an A14 iPhone. | G4 | **Passed as a bounded-reservoir failure, not a tier.** p99 is 58.59 ms, production 0.8967x, the maximum 20.16 s reservoir first underflows at 294.08 s, and the 610 s run records 7,952 underruns. Unqualified A14 real time is forbidden. |
 | C8 | Cold start to first audible PCM is measured on both phones. | Five cold launches/device with load, compile, prime, and first-render timestamps | **Measured.** Median (IQR) is 4.26 s (0.04) on A17 Pro and 7.52 s (0.01) on A14 under the selected ANE policy; all five run values remain in the evaluation manifest. |
 | C9 | Placement reliability is a deployment property distinct from graph convertibility and one-off harness success. | Ten cold launches/device plus falsification matrix | **Passed.** The first post-install A14 process costs 39.498 s while warmed gate processes cost about 1.7 s, yet all 10/10 on each device preserve the same ANE plan and state result. |
 | C10 | Negative results identify where state, precision, compression, placement, thermal behavior, or long-horizon generation break. | Failed variants retained with commands, hashes, and failure text | **Supported and revised.** The public receipts retain six rejected compression variants, the A14 FP16/FLOAT32 boundary and bounded-reservoir failure, recorder-stride falsification, the original failed 600 s diagnostic, and the crossover that rejects its model-degeneration interpretation in favor of missing decoder context. |
+| C11 | The tested unrefreshed 600-second warm-prompt configuration satisfies the deployed generative-liveness contract. | G5; 12-arm reset factorial, frozen metric, calibrated controls, and narrow public verifier | **Rejected.** No-reset fails in 3/3 seeds. Combined reset avoids overrange in 3/3, but partial-reset attribution is ambiguous. The paper claims a bounded ten-second reset protocol, not stable unrefreshed generation or a universal model failure. |
+| C12 | The tested A17 Pro runtime provides responsive or live audible prompt steering. | G6; post-ring PCM, no-op calibration, latency rungs, delivery integrity, and promoted listening/speaker gates | **Rejected for the tested protocol.** The final corrected 600 s run has clean delivery but misses 22/30 measured transitions; detected p95 is 0.947 s. Earlier context 21 misses the responsive p95 gate and context 23 underruns. The deployment tier remains buffered. |
 
 ## Claims Explicitly Forbidden
 
@@ -314,6 +376,12 @@ python3 validation/verify_system_paper_gate.py g4 \
 - Calibrated energy, battery-life, or joule claims from Instruments impact
   scores.
 - A14 unqualified real time if its result is the reservoir tier.
+- “MRT2 is broken,” “reset repairs the model,” or stable unrefreshed generation
+  inferred from a passing excerpt. G5 supports only the frozen tested-condition
+  failure and ambiguous reset attribution.
+- "Responsive" or "live" steering from controller-application time, queue
+  depth alone, a missed detector transition, or a run without the promoted
+  speaker gate. G6 supports buffered playback only.
 - Novelty for conversion, layout, state, or bandwidth findings already
   published in *Surgical Inference*. This paper cites them as prior method and
   contributes the corrected composed system, reliability study, sustain
