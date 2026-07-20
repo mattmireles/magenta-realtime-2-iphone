@@ -743,13 +743,18 @@ the `generationRuntimeSourceSha256` / `renderCoreSourceSha256` fields in
 `context12-soak-manifest.json`.
 
 The raw evidence itself, every WAV, token capture, event trace, and device
-log hashed by a manifest in `validation/results/system-paper/`, is public at
-`huggingface.co/datasets/mattmireles/mrt2-three-clocks-evidence`; the mapping
-from each published hash to its public file is `evidence/evidence-manifest.json`
-in the repository. Two things remain private: the signed, compiled iOS
-application binary (`signedExecutableSha256` records its hash but not its
-bytes), and the single blinded human engineering listening check, which was
-never machine-hash-bound and is reported only as prose in Limitations.
+log hashed by a manifest in `validation/results/system-paper/`, is public as
+release assets at `github.com/mattmireles/magenta-realtime-2-iphone` /
+`releases/tag/evidence-v1`
+(139 files, individually sha256-verified against the manifests both before and
+after upload). The mapping from each published hash to its public asset is
+`evidence/evidence-manifest.json` and `evidence/release-asset-map.json` in the
+repository. A Hugging Face dataset mirror can be published from the same
+verified manifest via `evidence/publish_to_huggingface.py`. Two things remain
+private: the signed, compiled iOS application binary
+(`signedExecutableSha256` records its hash but not its bytes), and the single
+blinded human engineering listening check, which was never machine-hash-bound
+and is reported only as prose in Limitations.
 
 ## Acknowledgments
 
@@ -770,9 +775,10 @@ context-12 directory;
 it hashes the 600-second PCM capture, 610-second event trace, 15,790-frame token
 capture, normalized summaries, signed executable, runtime source, and render
 core source. Every one of these hashed files, the raw WAVs, token captures,
-and event traces, not only their summaries, is public at
-`huggingface.co/datasets/mattmireles/mrt2-three-clocks-evidence`; the exact
-source-to-hash mapping is `evidence/evidence-manifest.json` in the repository.
+and event traces, not only their summaries, is public as release assets at
+`github.com/mattmireles/magenta-realtime-2-iphone` / `releases/tag/evidence-v1`;
+the exact source-to-hash mapping is `evidence/evidence-manifest.json` and
+`evidence/release-asset-map.json` in the repository.
 The three seed-report JSON files themselves retain the original authoring
 machine's local file paths in their `path` fields: those files are individually
 hash-bound by `aggregate.json`, so editing them to remove the local paths would

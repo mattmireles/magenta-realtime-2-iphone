@@ -13,16 +13,17 @@ rewritten to link the public evidence dataset and harness. The independent
 build completed as a 16-page letter-size PDF with the same title and author
 metadata. The reviewer ZIP passes `unzip -t`.
 
-Raw evidence (WAVs, token captures, event traces, device logs) is public at
-`huggingface.co/datasets/mattmireles/mrt2-three-clocks-evidence`; the
-generation/decode/probe harness and the two hash-bound runtime source files
-are public under `harness/` in this repository. See the paper's Artifact
+Raw evidence (WAVs, token captures, event traces, device logs; 139 files,
+sha256-verified) is public as release assets at
+`github.com/mattmireles/magenta-realtime-2-iphone/releases/tag/evidence-v1`;
+the generation/decode/probe harness and the two hash-bound runtime source
+files are public under `harness/` in this repository. See the paper's Artifact
 statement for what remains private.
 
 ## SHA-256
 
 ```text
-2d773a58ad3febd34511f0eed541f1a7970988dca8e556ca467fb38ac9a3c1a5  pdf/mrt2-three-clocks.pdf
-c3861f461a32066806bd05cda160a398ef940a2541cd2ce7faa6e8b9c2c5f5b7  arxiv/mrt2-three-clocks-source.tar.gz
-f7d6152835e4bb1c0b7785dc0241896b39c7a2238b2cafcb9c9d4aed48bd5ebe  reviewer/mrt2-three-clocks-reviewer-packet.zip
+3fe09a4c33d103ecd720d4783ab59493038d8a359f2db1b3d182d18ee6b01e92  pdf/mrt2-three-clocks.pdf
+1da59c7c287a33fe56f7562fe13c7ea9fc6f08e9c566f4d37a527a5e28daf8c9  arxiv/mrt2-three-clocks-source.tar.gz
+b216efd0a7115d5ea259b6ac1fd5eab04d5a08ba43cbde992e12dcc84e758c83  reviewer/mrt2-three-clocks-reviewer-packet.zip
 ```
