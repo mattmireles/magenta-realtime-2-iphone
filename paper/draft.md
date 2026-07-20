@@ -749,9 +749,10 @@ release assets at `github.com/mattmireles/magenta-realtime-2-iphone` /
 (139 files, individually sha256-verified against the manifests both before and
 after upload). The mapping from each published hash to its public asset is
 `evidence/evidence-manifest.json` and `evidence/release-asset-map.json` in the
-repository. A Hugging Face dataset mirror can be published from the same
-verified manifest via `evidence/publish_to_huggingface.py`. Two things remain
-private: the signed, compiled iOS application binary
+repository. The same 139-file evidence bundle is also mirrored at
+`huggingface.co/datasets/mattmireles/mrt2-three-clocks-evidence`, published
+from the verified manifest via `evidence/publish_to_huggingface.py`. Two things
+remain private: the signed, compiled iOS application binary
 (`signedExecutableSha256` records its hash but not its bytes), and the single
 blinded human engineering listening check, which was never machine-hash-bound
 and is reported only as prose in Limitations.
