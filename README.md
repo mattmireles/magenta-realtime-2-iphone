@@ -44,7 +44,7 @@ machine-readable device receipts, and the paper source.
 > - Compression: six 4/6/8-bit post-training variants shrink to 25–50% of
 >   baseline but all fail deterministic parity before device timing.
 
-> **Model mirror (FP32 decoder package, RVQ codebooks, fixtures, receipts):** [huggingface.co/mattmireles/magenta-realtime-2-iphone](https://huggingface.co/mattmireles/magenta-realtime-2-iphone)
+> **Pre-converted models:** [huggingface.co/mattmireles/magenta-realtime-2-iphone](https://huggingface.co/mattmireles/magenta-realtime-2-iphone)
 > **Exporters, validation harness, docs (this repo):** [github.com/mattmireles/magenta-realtime-2-iphone](https://github.com/mattmireles/magenta-realtime-2-iphone)
 
 > ### Corrected artifact generation (paper *Surgical Inference*, §5.1–5.3)
@@ -282,9 +282,10 @@ Corrected generation (paper §5.1–5.3 — the exporters to use):
 
 ```bash
 # checkpoint: mrt2_small.safetensors from google/magenta-realtime-2
-# 1) Stateless temporal step (host-owned K/V caches in, one-token updates out;
-#    the system runtime uses the one-frame `--frames 1 --streaming` variant):
-PYTHONPATH=exporters python exporters/convert_temporal_body_carry.py
+# 1) Stateless one-frame temporal step (host-owned K/V caches in, one-token
+#    updates out). Without these flags the exporter builds the 2-frame bucket,
+#    which falls back to the CPU:
+PYTHONPATH=exporters python exporters/convert_temporal_body_carry.py --frames 1 --streaming
 # 2) In-graph FP16 depth rollout (all 12 RVQ levels in one prediction):
 PYTHONPATH=exporters python exporters/convert_depth_body_rollout.py
 # 3) NCHW FP16 decoder with exact rescale (A17 Pro; the A14 uses the FP32 default):
@@ -295,7 +296,7 @@ PYTHONPATH=exporters python exporters/export_rvq_codebooks.py
 ```
 
 Superseded generation (retained as negative-result artifacts; their export
-metadata, and receipts for the temporal body, are under `superseded/` on HF): `convert_temporal_body.py` (stateful fp16) and
+metadata, and receipts for the temporal graphs, are under `superseded/` on HF): `convert_temporal_body.py` (stateful fp16) and
 `convert_depth_body.py` (fp32 logits + host sampling). Both superseded
 exporters are headed as superseded with pointers to the corrected ones and the
 paper findings. (`convert_spectrostream_decoder.py` with its FP32 defaults
@@ -311,8 +312,8 @@ corrected binaries are in [MODELS.md](MODELS.md); each package was regenerated
 by the commands above and its weight payload matched the certified original
 byte-for-byte. Of the Core ML packages, the
 [Hugging Face mirror](https://huggingface.co/mattmireles/magenta-realtime-2-iphone)
-currently hosts only the FP32 `SpectroStreamDecoder.mlpackage`; the others must
-be exported locally.
+hosts all five corrected packages; the superseded ones must be exported
+locally.
 
 ## Conditioning
 

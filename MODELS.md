@@ -25,11 +25,10 @@ corrected package was regenerated from the exporters in this repo and its
 weight payload matched the certified original byte-for-byte. The Hugging Face
 mirror
 ([mattmireles/magenta-realtime-2-iphone](https://huggingface.co/mattmireles/magenta-realtime-2-iphone))
-currently hosts only one Core ML package, the FP32
-`SpectroStreamDecoder.mlpackage`, plus the RVQ codebook binary, the test
-vector, fixtures, export metadata, and validation receipts. Its `superseded/`
+hosts all five corrected Core ML packages listed below, plus the RVQ codebook
+binary, the test vector, fixtures, export metadata, and validation receipts. Its `superseded/`
 directory holds the superseded artifacts' export metadata, and validation
-receipts for the temporal body only, not their packages.
+receipts for the temporal graphs, not their packages.
 
 ---
 
@@ -63,13 +62,13 @@ statuses are in
 
 | Artifact | File | Exporter | Precision | Compute target | Role |
 | --- | --- | --- | --- | --- | --- |
-| `MRT2TemporalBodyCarry` | `MRT2TemporalBodyCarry.mlpackage` | `convert_temporal_body_carry.py` | FLOAT16 | 2-frame checksummed bucket: CPU (under `.cpuAndNeuralEngine` it prints `ANECCompile() FAILED` and runs an all-CPU plan). The system runtime's one-frame `--frames 1 --streaming` graph runs on the **ANE** (10/10 cold launches on both phones, ANE cost share 1.000). | Stateless temporal step function. 48 K/V caches are ordinary **inputs**, 48 one-token cache updates are ordinary **outputs**, the host owns mutation. No `ct.StateType`. The checksummed package is the 2-frame bucket (`--frames 2`). |
+| `MRT2TemporalBodyStreamingCarry` | `MRT2TemporalBodyStreamingCarry.mlpackage` | `convert_temporal_body_carry.py --frames 1 --streaming` | FLOAT16 | **ANE** (10/10 cold launches on both phones, ANE cost share 1.000) | Stateless one-frame temporal step, the shipped temporal graph. 48 K/V caches are ordinary **inputs**, 48 one-token cache updates are ordinary **outputs**, plus a fixed-shape `cache_valid_bias`; the host owns a 41-frame ring. No `ct.StateType`. The exporter's default 2-frame bucket (same weights) falls back to an all-CPU plan under `.cpuAndNeuralEngine` and is superseded. |
 | `MRT2DepthBodyRollout` | `MRT2DepthBodyRollout.f16.mlpackage` (ship) / `.f32.mlpackage` (reference) | `convert_depth_body_rollout.py` | FLOAT16 (ship) / FLOAT32 (reference) | CPU in the system runtime (bandwidth-bound on every unit) | In-graph depth rollout: all 12 RVQ levels sampled in **one** prediction from host-supplied Gumbel noise. |
 | `SpectroStreamDecoder` (NCHW FP16) | `SpectroStreamDecoder.f16.mlpackage` (ship) / `SpectroStreamDecoder.mlpackage` (FP32 reference) | `convert_spectrostream_decoder.py --nchw-parallel-layer 5 --fp16-rescale --compute-precision FLOAT16` | FLOAT16 (fp16-safe rescale) / FLOAT32 (reference) | FP16: **ANE** (`.cpuAndNeuralEngine`) on the A17 Pro. FP32: the A14 decoder; its compute plan under `.cpuAndNeuralEngine` is entirely CPU | RVQ embeddings → pre-iSTFT tensor. Channels-first internal layout, channels-last public I/O. The only FP16 variant usable on device (A17 Pro only). |
 
 ### Why each is the corrected artifact
 
-**`MRT2TemporalBodyCarry` — state mutation, not attention, is the ANE cliff
+**`MRT2TemporalBodyStreamingCarry` — state mutation, not attention, is the ANE cliff
 (§5.1).** The complete 12-layer stateless stack for one frame (all attention, all FFN,
 all 48 cache reads, all 48 one-token cache-update outputs; the host-cache update
 stack, not the 2-frame checksummed package) compiles to a **single
@@ -127,12 +126,13 @@ byte-for-byte, and its output is wrong. FP32 NCHW parity vs MLX: SNR **118.85 dB
 
 ### Tensor contracts (corrected generation)
 
-#### MRT2TemporalBodyCarry (`frames` = F, F ≥ 1)
+#### MRT2TemporalBodyStreamingCarry (published, F = 1) and carry exports (`frames` = F)
 
 | Tensor | Shape | dtype |
 | --- | --- | --- |
 | `temporal_inputs` (in) | `[1, F, 1024]` | float32 |
 | `source_encoded` (in) | `[1, F, 256]` | float32 |
+| `cache_valid_bias` (in; `--streaming` only) | `[1, 1, 1, 43]` | float16 |
 | `temporal_layer_XX_{self,cross}_{key,value}_cache_in` ×48 (in) | `[1, 41, 8, 128]` | float16 |
 | `temporal_outputs` (out) | `[1, F, 1024]` | Core ML selected |
 | `temporal_layer_XX_{self,cross}_{key,value}_cache_updates` ×48 (out) | `[1, F, 8, 128]` | float16 |
@@ -165,7 +165,8 @@ STFT / overlap-add. Audio-rate tensors never enter the Core ML graph.
 
 | Artifact | Receipt |
 | --- | --- |
-| `MRT2TemporalBodyCarry` (Core ML vs MLX carry parity, corr 0.999982, all cache updates finite) | `validation/results/MRT2TemporalBodyCarry_validation.{json,md}` |
+| `MRT2TemporalBodyStreamingCarry` (64 steps across the 41-frame ring wrap; Core ML vs reference corr 0.999312, fresh vs warmed state diverge) | `validation/results/MRT2TemporalBodyStreamingCarry_validation.{json,md}` |
+| Superseded 2-frame carry (Core ML vs MLX carry parity, corr 0.999982, all cache updates finite) | `validation/results/MRT2TemporalBodyCarry_validation.{json,md}` |
 | `MRT2DepthBodyRollout` FP32 (0/900 token parity) | `validation/results/MRT2DepthBodyRollout_f32_validation.{json,md}` |
 | `MRT2DepthBodyRollout` FP16 (near-tie flips, distribution unchanged) | `validation/results/MRT2DepthBodyRollout_f16_validation.{json,md}` |
 | `SpectroStreamDecoder` NCHW FP32 parity (SNR 118.85 dB, finite 1.0) | `validation/results/SpectroStreamDecoder_validation.{json,md}` |
@@ -184,13 +185,14 @@ request.
 ## Superseded generation (metadata under `superseded/` on Hugging Face)
 
 The HF repo's `superseded/` directory holds these artifacts' export metadata,
-and validation receipts for the temporal body only; the packages themselves are not on the mirror and are
-reproduced by the superseded exporters. They are retained as negative-result
+and validation receipts for the temporal graphs; the packages themselves are not on
+the mirror and are reproduced by the superseded exporters. They are retained as negative-result
 evidence; do **not** treat them as the paper's shipped configuration.
 
 | Artifact | Size | Precision | Compute target | Superseded by |
 | --- | --- | --- | --- | --- |
 | `superseded/MRT2TemporalBody.mlpackage` | 349 MB | FLOAT16 | Partial ANE island (`ane:0.69`, A14; stateful, 48 `ct.StateType`) | Stateless carry graph (§5.1): multi-frame and rolling-history state variants fail `ANECCompile −14`; this one-frame fixed-slot graph compiles only as a partial ANE island, and its baked bias masks all 41 history slots. |
+| `MRT2TemporalBodyCarry.mlpackage` (2-frame bucket; metadata and receipt under `superseded/`) | 366 MB | FLOAT16 | CPU (all-CPU plan under `.cpuAndNeuralEngine`) | One-frame streaming carry (`MRT2TemporalBodyStreamingCarry`, same weights): the 2-frame graph prints `ANECCompile() FAILED` and falls back. |
 | `superseded/MRT2DepthBody.mlpackage` | 93 MB | FLOAT32 | CPU/GPU (host sampling) | In-graph FP16 rollout (§5.3): 12 predictions/frame are weight-bandwidth-doomed. |
 
 **Decoder note.** The earlier generation's `SpectroStreamDecoder.mlpackage`
@@ -199,8 +201,8 @@ byte-identical to the certified NCHW FP32 reference, and its receipt is the
 118.85 dB NCHW parity run. What §5.2 supersedes is the *shipping decision*
 ("FP32, keep it off the ANE, do not re-export at fp16") on the A17 Pro only,
 not the binary, which remains the A14 decoder. It therefore stays at the
-mirror's top level as the FP32 reference; the FP16 A17 Pro variant
-`SpectroStreamDecoder.f16.mlpackage` is not on the mirror.
+mirror's top level as the FP32 reference and A14 decoder, next to the FP16 A17
+Pro variant `SpectroStreamDecoder.f16.mlpackage`.
 
 ### Host-side binaries
 
@@ -213,7 +215,7 @@ mirror's top level as the FP32 reference; the FP16 A17 Pro variant
 
 | File | sha256 |
 | --- | --- |
-| `MRT2TemporalBodyCarry.mlpackage/Data/com.apple.CoreML/weights/weight.bin` | `02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64` |
+| `MRT2TemporalBodyStreamingCarry.mlpackage/Data/com.apple.CoreML/weights/weight.bin` | `02657e24a19402fed8210e431e1a67baa0c8196d4d23f0c78dd931668a9c5a64` |
 | `MRT2DepthBodyRollout.f16.mlpackage/Data/com.apple.CoreML/weights/weight.bin` | `6c69ebae8cd7401fcb9927e3ff558d5b240cebdae2e29972d731ee08bd81c4f8` |
 | `MRT2DepthBodyRollout.f32.mlpackage/Data/com.apple.CoreML/weights/weight.bin` | `af3ec4f9fadb84991b5dabbac58acd44294df7514226af2db63aa79659e304a9` |
 | `SpectroStreamDecoder.f16.mlpackage/Data/com.apple.CoreML/weights/weight.bin` | `ceb3ed7d5b0286e69a937a17db253ce5a95e6bfa5560a187eb4c17de9e080f5d` |
