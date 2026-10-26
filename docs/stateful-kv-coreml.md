@@ -2,19 +2,21 @@
 
 June 4, 2026
 
-> **Superseded framing — read this first (paper §6.3).** This guide recommends a
+> **Superseded framing — read this first (paper §5.1).** This guide recommends a
 > 1-frame stateful `ct.StateType` KV-cache temporal export, and the earlier
 > `MRT2TemporalBody.mlpackage` shipped that way. The shipped finding *inverts*
 > the conclusion for the ANE: **in-graph state mutation is the ANE admission
-> cliff.** Every `ct.StateType` variant fails `ANECCompile()` with Core ML error
-> −14 (25-frame stateful graph, both test phones, both `.cpuAndNeuralEngine` and
-> `.all`). The escape is to remove Core ML state entirely — export a *stateless*
+> cliff.** Every multi-frame or (on the A14) rolling-history `ct.StateType` variant fails
+> `ANECCompile()` with Core ML error −14 (25-frame stateful graph, both test
+> phones, both `.cpuAndNeuralEngine` and `.all`); 1-frame fixed-slot graphs
+> compiled only as partial ANE islands, and the one the app used masked its history. The escape is to remove Core ML state entirely — export a *stateless*
 > step function with the 48 K/V caches as ordinary inputs and one-token updates
 > as ordinary outputs, host-owned mutation
 > (`exporters/convert_temporal_body_carry.py`,
-> `TemporalBodyCoreMLCarryWrapper`). That graph compiles the full 12-layer stack
-> to a single ANE-resident island (`costWeights=ane:1.000`, p99 14.991 ms on
-> iPhone 12 Pro). See `MODELS.md` and `docs/validation-receipts.md` §0. The
+> `TemporalBodyCoreMLCarryWrapper`). For one frame that graph compiles the full
+> 12-layer stack to a single ANE-resident island (`costWeights=ane:1.000`, p99
+> 14.991 ms on iPhone 12 Pro); the exporter's default 2-frame export falls back
+> to an all-CPU plan, so the runtime ships `--frames 1 --streaming`. See `MODELS.md` and `docs/validation-receipts.md` §0. The
 > stateful patterns below remain useful background on the `MLState` API and why
 > it fails on the ANE.
 

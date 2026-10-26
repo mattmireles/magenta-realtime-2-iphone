@@ -536,7 +536,9 @@ def parse_args() -> argparse.Namespace:
       default=False,
       help=(
           "Rescale the hot mid-network (exact transform) so FLOAT16 "
-          "conversion cannot overflow; required for ANE-resident decode. "
+          "conversion does not overflow on the calibration input; required "
+          "for usable FP16 output (the FP16 graph is ANE-resident with or "
+          "without it). "
           "See apply_fp16_safe_rescale in spectrostream_decoder_wrapper.py."
       ),
   )

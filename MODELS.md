@@ -10,27 +10,30 @@ distillation.
 
 This repository documents **two generations** of artifacts, because the
 supersession itself is a result reported in the paper (*Surgical Inference*,
-§6.3–6.5):
+§5.1–5.3):
 
 - **Corrected generation** — the exporters and receipts that reproduce the
   paper's three headline findings. This is the current, correct code path.
 - **Superseded generation** — the earlier artifacts, retained as
   **negative-result evidence**: in-graph state mutation fails ANE admission
-  (§6.3), and a channels-last FP16 decoder is numerically non-finite (§6.4).
-  See "Superseded generation" below.
+  (§5.1), and 12 depth predictions per frame are weight-bandwidth-bound
+  (§5.3). See "Superseded generation" below.
 
-Pre-converted `.mlpackage` binaries for the corrected generation are hosted on
-the Hugging Face mirror
-([mattmireles/magenta-realtime-2-iphone](https://huggingface.co/mattmireles/magenta-realtime-2-iphone))
-at the top level (checksums below), and are reproduced locally by the commands
-in the [README](README.md#re-export-from-scratch). Before upload, every
+The corrected `.mlpackage` binaries are reproduced locally by the commands in
+the [README](README.md#re-export-from-scratch) (checksums below); every
 corrected package was regenerated from the exporters in this repo and its
-weight payload matched the certified original byte-for-byte. The superseded
-binaries moved to the mirror's `superseded/` directory.
+weight payload matched the certified original byte-for-byte. The Hugging Face
+mirror
+([mattmireles/magenta-realtime-2-iphone](https://huggingface.co/mattmireles/magenta-realtime-2-iphone))
+currently hosts only one Core ML package, the FP32
+`SpectroStreamDecoder.mlpackage`, plus the RVQ codebook binary, the test
+vector, fixtures, export metadata, and validation receipts. Its `superseded/`
+directory holds the superseded artifacts' export metadata, and validation
+receipts for the temporal body only, not their packages.
 
 ---
 
-## Corrected generation (paper §6.3–6.5)
+## Corrected generation (paper §5.1–5.3)
 
 ### System-paper compression ladder (2026-07-18)
 
@@ -58,33 +61,35 @@ claim. Exact package bytes, weight hashes, all three depth arms, and early-stop
 statuses are in
 `validation/results/MRT2WeightCompressionLadder.{json,md}`.
 
-| Artifact | HF file | Exporter | Precision | Compute target | Role |
+| Artifact | File | Exporter | Precision | Compute target | Role |
 | --- | --- | --- | --- | --- | --- |
-| `MRT2TemporalBodyCarry` | `MRT2TemporalBodyCarry.mlpackage` | `convert_temporal_body_carry.py` | FLOAT16 | **ANE-clean (proven); shipped runtime `.cpuAndGPU`** | Stateless temporal step function. 48 K/V caches are ordinary **inputs**, 48 one-token cache updates are ordinary **outputs**, the host owns mutation. No `ct.StateType`. Uploaded package is the 2-frame bucket (`--frames 2`). |
-| `MRT2DepthBodyRollout` | `MRT2DepthBodyRollout.f16.mlpackage` (ship) / `.f32.mlpackage` (reference) | `convert_depth_body_rollout.py` | FLOAT16 (ship) / FLOAT32 (reference) | CPU/GPU/ANE (bandwidth-bound) | In-graph depth rollout: all 12 RVQ levels sampled in **one** prediction from host-supplied Gumbel noise. |
-| `SpectroStreamDecoder` (NCHW FP16) | `SpectroStreamDecoder.f16.mlpackage` (ship) / `SpectroStreamDecoder.mlpackage` (FP32 reference) | `convert_spectrostream_decoder.py --nchw-parallel-layer 5 --fp16-rescale --compute-precision FLOAT16` | FLOAT16 (fp16-safe rescale) | **ANE** (`.cpuAndNeuralEngine`) | RVQ embeddings → pre-iSTFT tensor. Channels-first internal layout, channels-last public I/O. The only numerically finite FP16 variant. |
+| `MRT2TemporalBodyCarry` | `MRT2TemporalBodyCarry.mlpackage` | `convert_temporal_body_carry.py` | FLOAT16 | 2-frame checksummed bucket: CPU (under `.cpuAndNeuralEngine` it prints `ANECCompile() FAILED` and runs an all-CPU plan). The system runtime's one-frame `--frames 1 --streaming` graph runs on the **ANE** (10/10 cold launches on both phones, ANE cost share 1.000). | Stateless temporal step function. 48 K/V caches are ordinary **inputs**, 48 one-token cache updates are ordinary **outputs**, the host owns mutation. No `ct.StateType`. The checksummed package is the 2-frame bucket (`--frames 2`). |
+| `MRT2DepthBodyRollout` | `MRT2DepthBodyRollout.f16.mlpackage` (ship) / `.f32.mlpackage` (reference) | `convert_depth_body_rollout.py` | FLOAT16 (ship) / FLOAT32 (reference) | CPU in the system runtime (bandwidth-bound on every unit) | In-graph depth rollout: all 12 RVQ levels sampled in **one** prediction from host-supplied Gumbel noise. |
+| `SpectroStreamDecoder` (NCHW FP16) | `SpectroStreamDecoder.f16.mlpackage` (ship) / `SpectroStreamDecoder.mlpackage` (FP32 reference) | `convert_spectrostream_decoder.py --nchw-parallel-layer 5 --fp16-rescale --compute-precision FLOAT16` | FLOAT16 (fp16-safe rescale) / FLOAT32 (reference) | FP16: **ANE** (`.cpuAndNeuralEngine`) on the A17 Pro. FP32: the A14 decoder; its compute plan under `.cpuAndNeuralEngine` is entirely CPU | RVQ embeddings → pre-iSTFT tensor. Channels-first internal layout, channels-last public I/O. The only FP16 variant usable on device (A17 Pro only). |
 
 ### Why each is the corrected artifact
 
 **`MRT2TemporalBodyCarry` — state mutation, not attention, is the ANE cliff
-(§6.3).** The complete 12-layer stateless stack (all attention, all FFN, all 48
-cache reads, all 48 one-token cache-update outputs) compiles to a **single
-ANE-resident graph** and beats both CPU-only and GPU placement — on iPhone 12
+(§5.1).** The complete 12-layer stateless stack for one frame (all attention, all FFN,
+all 48 cache reads, all 48 one-token cache-update outputs; the host-cache update
+stack, not the 2-frame checksummed package) compiles to a **single
+ANE-resident graph** and matches or beats CPU-only and GPU placement — on iPhone 12
 Pro, `MLComputePlan` reports `preferredCounts=ane:1033,cpu:2`,
 `costWeights=ane:1.000`, p99 **14.991 ms**. The one condition is that no cache
-mutation happens *inside* the graph. Every `ct.StateType` variant fails ANE
-compilation: the 25-frame stateful unrolled graph reproduces
+mutation happens *inside* the graph. Every multi-frame or (on the A14) rolling-history
+`ct.StateType` variant fails ANE compilation (the one-frame fixed-slot graphs compiled only as partial ANE islands, and the one the app used masked its history): the 25-frame stateful unrolled graph reproduces
 `MILCompilerForANE … ANECCompile() FAILED`, Core ML **error −14**, on both
 phones and under both `.cpuAndNeuralEngine` and `.all`. Core ML vs MLX temporal
-correlation is 0.999975 (25-frame) / 0.999984 (2-frame carry). **Honesty note
-(paper §6.3, §6.7):** the stateless boundary is *proven possible* and is the
-documented escape to re-land, but ANE admission proved *instance-fragile* — an
-artifact that compiled to the ANE in a test harness later fell back to CPU
-inside the shipping app — so the shipped temporal placement is `.cpuAndGPU`
-today, with this stateless graph as the escape to re-land on the ANE.
+correlation is 0.999975 (25-frame) / 0.999984 (2-frame carry). **Placement in
+the app (paper §5.1):** for a time the temporal stage shipped on `.cpuAndGPU`
+after earlier app builds failed to reproduce harness ANE placement. The system
+runtime now ships this stateless boundary as the one-frame streaming-carry
+graph (`--frames 1 --streaming`) with a Swift-owned 41-frame ring; it refuses to
+start unless `MLComputePlan` puts it on the ANE, and it passes that gate in
+10/10 cold launches on both the A17 Pro and the A14 (ANE cost share 1.000).
 
 **`MRT2DepthBodyRollout` — weight bandwidth is the invariant that shapes the
-graph (§6.5).** Twelve depth predictions per frame cost ~12 weight streams
+graph (§5.3).** Twelve depth predictions per frame cost ~12 weight streams
 (~40 ms/frame on A14) no matter how few positions they compute, because per-call
 cost ≈ weight bytes ÷ DRAM bandwidth on every compute unit. Moving the entire
 12-level autoregressive rollout inside **one** prediction removes 11 host/Core
@@ -100,17 +105,25 @@ between levels is an in-graph gather). FLOAT32 export is token-for-token exact
 changing the sampling distribution, and was shipped after device quality and
 paired-listening gates.
 
-**`SpectroStreamDecoder` (NCHW FP16) — layout determines numerical survival, not
-just placement (§6.4).** The naive channels-last FP16 export compiles but
-produces non-finite output (finite ratio 0.71). Converting the parallel
-upsampling block to channels-first (NCHW) internally — while preserving the
-channels-last public I/O contract — plus an exact-in-FP32 mid-network rescale
-(`apply_fp16_safe_rescale`) makes the FP16 graph finite **and** ANE-resident. On
-iPhone 12 Pro, `.cpuAndNeuralEngine` (ANE cost 1.000) yields finite output
-(30,720/30,720 at 5-frame, p99 **6.65 ms**; 184,320/184,320 at 25-frame, p99
-**24.77 ms**), while **CPU-only and CPU+GPU produce non-finite output from the
-same FP16 artifact**. FP32 NCHW parity vs MLX: SNR **118.85 dB**. The ANE was
-the only compute unit that produced finite output.
+**`SpectroStreamDecoder` (NCHW FP16) — FP16 range, not layout, gates
+correctness (§5.2).** The decoder's internal activations exceed the FP16
+maximum on every real window. Without the rescale, FP16 is wrong in either
+layout: in an October 2026 device matrix (both phones, iOS 27.0.1, SNR against
+the FP32 decoder on the same device's CPU) channels-last and NCHW FP16 both
+return non-finite output on CPU and GPU, and both run fully on the ANE and
+return finite output at ~0 dB SNR (correlation ≤ 0.46). Layout decided neither
+ANE placement nor correctness. The exact-in-FP32 mid-network rescale
+(`apply_fp16_safe_rescale`, which this exporter applies only to the NCHW
+layout) is what makes FP16 usable: on the A17 Pro it scores 41–46 dB on its
+calibration window and 35–48 dB on a held-out window across engines (38.8 dB
+on the ANE). It still fails where activations exceed FP16 range after the
+rescale (1 of 600 windows by host scan; 8.5 dB on the A17 Pro ANE, non-finite on
+CPU and GPU). On the A14 the same artifact is wrong on the ANE (−12 to
+−21 dB) while its CPU gives 44.0 / 34.7 dB, so the A14 runs the FP32 decoder.
+The June iPhone 12 Pro probe that found FP16 "finite only on the ANE"
+(184,320/184,320 at 25-frame, p99 24.77 ms; 30,720/30,720 at 5-frame) measured
+the unrescaled NCHW graph on a constant input; the 25-frame readout reproduces
+byte-for-byte, and its output is wrong. FP32 NCHW parity vs MLX: SNR **118.85 dB**.
 
 ### Tensor contracts (corrected generation)
 
@@ -160,30 +173,34 @@ STFT / overlap-add. Audio-rate tensors never enter the Core ML graph.
 
 The temporal stateless-boundary ANE placement (`ane:1033,cpu:2`, p99 14.991 ms),
 the stateful `ANECCompile −14` failures, and the decoder's on-device FP16
-finite/ANE proof (184,320/184,320) are on-device `MLComputePlan`/Instruments
-measurements; see [`docs/validation-receipts.md`](docs/validation-receipts.md)
-for the device evidence and per-run log pointers.
+placement are on-device `MLComputePlan`/Instruments measurements, and its
+accuracy (§5.2) is on-device SNR against the FP32 decoder; see [`docs/validation-receipts.md`](docs/validation-receipts.md)
+for the device evidence and per-run log pointers. The October 2026 decoder
+matrix's packages and per-cell logs are archived by the author and available on
+request.
 
 ---
 
-## Superseded generation (mirrored under `superseded/` on Hugging Face)
+## Superseded generation (metadata under `superseded/` on Hugging Face)
 
-These artifacts now live in the HF repo's `superseded/` directory (with their
-export metadata and validation receipts). They are retained as negative-result
+The HF repo's `superseded/` directory holds these artifacts' export metadata,
+and validation receipts for the temporal body only; the packages themselves are not on the mirror and are
+reproduced by the superseded exporters. They are retained as negative-result
 evidence; do **not** treat them as the paper's shipped configuration.
 
 | Artifact | Size | Precision | Compute target | Superseded by |
 | --- | --- | --- | --- | --- |
-| `superseded/MRT2TemporalBody.mlpackage` | 349 MB | FLOAT16 | ANE (stateful, 48 `ct.StateType`) | Stateless carry graph (§6.3): every in-graph state-mutation variant fails `ANECCompile −14`. |
-| `superseded/MRT2DepthBody.mlpackage` | 93 MB | FLOAT32 | CPU/GPU (host sampling) | In-graph FP16 rollout (§6.5): 12 predictions/frame are weight-bandwidth-doomed. |
+| `superseded/MRT2TemporalBody.mlpackage` | 349 MB | FLOAT16 | Partial ANE island (`ane:0.69`, A14; stateful, 48 `ct.StateType`) | Stateless carry graph (§5.1): multi-frame and rolling-history state variants fail `ANECCompile −14`; this one-frame fixed-slot graph compiles only as a partial ANE island, and its baked bias masks all 41 history slots. |
+| `superseded/MRT2DepthBody.mlpackage` | 93 MB | FLOAT32 | CPU/GPU (host sampling) | In-graph FP16 rollout (§5.3): 12 predictions/frame are weight-bandwidth-doomed. |
 
 **Decoder note.** The earlier generation's `SpectroStreamDecoder.mlpackage`
 turned out to be the NCHW FP32 build all along — its weight payload is
 byte-identical to the certified NCHW FP32 reference, and its receipt is the
-118.85 dB NCHW parity run. What §6.4 supersedes is the *shipping decision*
-("FP32, keep it off the ANE, do not re-export at fp16"), not the binary. It
-therefore stays at the mirror's top level as the FP32 reference, joined by the
-corrected FP16 ship variant `SpectroStreamDecoder.f16.mlpackage`.
+118.85 dB NCHW parity run. What §5.2 supersedes is the *shipping decision*
+("FP32, keep it off the ANE, do not re-export at fp16") on the A17 Pro only,
+not the binary, which remains the A14 decoder. It therefore stays at the
+mirror's top level as the FP32 reference; the FP16 A17 Pro variant
+`SpectroStreamDecoder.f16.mlpackage` is not on the mirror.
 
 ### Host-side binaries
 
@@ -192,7 +209,7 @@ corrected FP16 ship variant `SpectroStreamDecoder.f16.mlpackage`.
 | `SpectroStreamRVQCodebooks.f32.bin` (+ `.json` shape sidecar) | 12.6 MB | 12 RVQ levels × 1024 codes × 256 dims, float32 little-endian. Loaded once; codebook gather runs on the CPU. |
 | `examples/test_vector_smooth_electronic.bin` (+ `.json` provenance) | 1 KB | One certified conditioning vector (`[1, 256]`, prompt "smooth electronic", CFG tokens (20, 10, 2)). Deterministic: `exporters/export_conditioning.py` reproduces it byte-for-byte. |
 
-### Checksums (sha256) — corrected HF binaries
+### Checksums (sha256) — corrected binaries
 
 | File | sha256 |
 | --- | --- |
@@ -204,7 +221,7 @@ corrected FP16 ship variant `SpectroStreamDecoder.f16.mlpackage`.
 | `SpectroStreamRVQCodebooks.f32.bin` | `4e236269d4194ffe2d7463c483a1a36f4aff7d619c34f8e8bfe451c7af92d496` |
 | `examples/test_vector_smooth_electronic.bin` | `08dfec990345e92f7dbffa7f3c349b9bebf61967c67c653c069550a5c6132039` |
 
-### Checksums (sha256) — superseded binaries (`superseded/`)
+### Checksums (sha256) — superseded binaries (reproduced locally; not hosted)
 
 | File | sha256 |
 | --- | --- |

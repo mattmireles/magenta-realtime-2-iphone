@@ -21,16 +21,21 @@ audio-rate tensors never enter the Core ML graph.
 Two configurations:
 
 * **FP32 baseline** (defaults): ``--nchw-parallel-layer 5 --compute-precision
-  FLOAT32``. Numerically clean everywhere; schedules on CPU/GPU. This was the
-  earlier shipped decoder.
-* **Corrected FP16, ANE-resident (paper §6.4):** add ``--fp16-rescale
-  --compute-precision FLOAT16``. Layout determines FP16 numerical survival — the
-  channels-first (NCHW) internal rewrite plus the exact-in-FP32
-  ``apply_fp16_safe_rescale`` transform make the FP16 decoder finite AND
-  ANE-resident. On iPhone 12 Pro ``.cpuAndNeuralEngine`` gives finite output
-  (184,320/184,320 at 25-frame, p99 24.77 ms) while CPU-only and CPU+GPU are
-  non-finite for the same artifact. The naive channels-last FP16 export is
-  non-finite everywhere (finite ratio 0.71).
+  FLOAT32``. Numerically clean everywhere. This was the earlier shipped
+  decoder and is the A14 decoder; under ``.cpuAndNeuralEngine`` its compute
+  plan places it entirely on the CPU.
+* **Rescaled FP16 (Surgical Inference paper, section 5.2):** add
+  ``--fp16-rescale --compute-precision FLOAT16``. The rescale, not the layout,
+  is what makes FP16 usable: without it, both the channels-last and the NCHW
+  FP16 exports are wrong on device (non-finite on CPU and GPU; fully
+  ANE-resident but finite at ~0 dB SNR on the ANE), and layout decided neither
+  ANE placement nor correctness. With the exact-in-FP32
+  ``apply_fp16_safe_rescale`` transform the FP16 decoder scores 41-46 dB on
+  its calibration window and 35-48 dB held-out on the A17 Pro (38.8 dB on the
+  ANE), fails on windows still beyond FP16 range after the rescale (1 of 600
+  by host scan), and is wrong on the A14 ANE (-12 to -21 dB). Measurements:
+  October 2026 device matrix, iOS 27.0.1, SNR vs the FP32 decoder on the same
+  device's CPU.
 
 The public I/O contract is channels-last in both configurations.
 """
@@ -298,12 +303,14 @@ def convert(args: argparse.Namespace) -> dict[str, Any]:
     ).eval()
   example_input = torch.from_numpy(embeddings[np.newaxis]).to(torch.float32)
 
-  # FP16 path (paper §6.4): the decoder's residual upsampling tail peaks at
-  # ~2.65e6 on real content, so a plain compute_precision=FLOAT16 conversion
-  # emits NaN/Inf (the channels-last FP16 export measured finite_ratio 0.71).
+  # FP16 path (Surgical Inference paper, section 5.2): the decoder's residual
+  # upsampling tail peaks at ~2.65e6 on the calibration window (median 1.7e6, max
+  # 1.04e7 across 600 windows), so a plain
+  # compute_precision=FLOAT16 conversion is wrong in either layout (NaN/Inf on
+  # CPU/GPU; finite but ~0 dB SNR on the ANE).
   # apply_fp16_safe_rescale rescales the hot mid-network by 1/S (exact in
-  # FP32), which is what makes the FP16 decoder finite AND ANE-resident on
-  # device. It requires the NCHW-parallel layout, so it is gated on
+  # FP32), which is what makes the FP16 decoder usable on the A17 Pro
+  # (approximate) and is still wrong on the A14 ANE. It requires the NCHW-parallel layout, so it is gated on
   # --nchw-parallel-layer. The transform is exact in FP32, so the
   # pytorch_vs_mlx parity below also validates it.
   fp16_rescale_info = None
@@ -537,7 +544,7 @@ def parse_args() -> argparse.Namespace:
       type=int,
       # Layer 5 in NCHW is the published SpectroStreamDecoder configuration
       # (layout_mode "nchw-parallel"); pass --nchw-parallel-layer -1 for the
-      # plain channel-last export.
+      # plain channel-last export (parse_args maps negative values to None).
       default=5,
       help="Run one ParallelChannels layer in NCHW internally before resuming the decoder.",
   )
@@ -559,8 +566,9 @@ def parse_args() -> argparse.Namespace:
       default=False,
       help=(
           "Rescale the hot mid-network (exact transform) so FLOAT16 "
-          "conversion cannot overflow; required for the finite, ANE-resident "
-          "FP16 decoder (paper §6.4). See apply_fp16_safe_rescale in "
+          "conversion does not overflow on the calibration input; required "
+          "for a usable FP16 decoder (Surgical Inference paper, section 5.2). "
+          "See apply_fp16_safe_rescale in "
           "spectrostream_decoder_wrapper.py. Pair with --compute-precision "
           "FLOAT16."
       ),
@@ -569,7 +577,10 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument("--predict", action=argparse.BooleanOptionalAction, default=True)
   parser.add_argument("--warmup-predictions", type=int, default=DEFAULT_WARMUP_PREDICTIONS)
   parser.add_argument("--timed-predictions", type=int, default=DEFAULT_TIMED_PREDICTIONS)
-  return parser.parse_args()
+  args = parser.parse_args()
+  if args.nchw_parallel_layer is not None and args.nchw_parallel_layer < 0:
+    args.nchw_parallel_layer = None  # convert() exports channels-last for None.
+  return args
 
 
 def main() -> None:

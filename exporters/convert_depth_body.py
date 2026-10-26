@@ -14,7 +14,8 @@
 
 """Convert the MRT2 Depthformer depth-body logits wrapper to Core ML.
 
-SUPERSEDED (paper §6.5) — retained as a negative-result artifact. This exports
+SUPERSEDED (Surgical Inference paper, section 5.3) — retained as a
+negative-result artifact. This exports
 full-vocabulary depth logits for host-side sampling, which requires 12 Core ML
 predictions per frame. On phones the depth path is weight-bandwidth-bound
 (per-call cost ~= weight bytes / DRAM bandwidth), so 12 predictions cost

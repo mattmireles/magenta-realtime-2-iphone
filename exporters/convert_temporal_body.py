@@ -14,7 +14,8 @@
 
 """Convert a no-wrap unrolled MRT2 temporal-body proof to Core ML.
 
-SUPERSEDED (paper §6.3) — retained as a negative-result artifact. This exports a
+SUPERSEDED (Surgical Inference paper, section 5.1) — retained as a
+negative-result artifact. This exports a
 stateful ``ct.StateType`` graph, and in-graph state mutation is exactly the ANE
 admission cliff: the 25-frame unrolled stateful graph fails ``ANECCompile()``
 with Core ML error -14 on both test phones, under both ``.cpuAndNeuralEngine``

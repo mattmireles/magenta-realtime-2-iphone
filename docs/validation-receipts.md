@@ -266,10 +266,10 @@ excluded. This evidence package therefore makes no corrected-pipeline energy,
 impact-score, battery-life, or producer-duty-cycle claim. The matched 610 s
 temporal-policy control above is the supported comparative evidence.
 
-## 0. Correction — the corrected artifact generation (paper §6.3–6.5)
+## 0. Correction — the corrected artifact generation (paper §5.1–5.3)
 
 **The ledger in sections 1+ below documents the earlier, superseded artifact
-generation.** The shipped findings in *Surgical Inference* (§6.3–6.5) correct
+generation.** The shipped findings in *Surgical Inference* (§5.1–5.3) correct
 three of its conclusions. Read this first; see `MODELS.md` for the corrected
 artifact table and receipts.
 
@@ -278,29 +278,46 @@ artifact table and receipts.
   host-owned-cache boundary (`exporters/convert_temporal_body_carry.py`,
   `TemporalBodyCoreMLCarryWrapper`: 48 K/V caches as inputs, 48 one-token
   updates as outputs, no `ct.StateType`) compiles the full 12-layer stack to a
-  single ANE-resident graph — on iPhone 12 Pro, `MLComputePlan`
+  single ANE-resident graph for one frame (the exporter's default 2-frame export
+  falls back to an all-CPU plan, §5.2 below) — on iPhone 12 Pro, `MLComputePlan`
   `preferredCounts=ane:1033,cpu:2`, `costWeights=ane:1.000`, p99 **14.991 ms**,
-  beating CPU-only and GPU. Every `ct.StateType` variant fails ANE compilation:
+  beating CPU-only and GPU. Every multi-frame or (on the A14) rolling-history
+  `ct.StateType` variant fails ANE compilation (the one-frame fixed-slot graphs compiled only as partial ANE islands, and the one the app used masked its history):
   the 25-frame stateful graph reproduces `MILCompilerForANE … ANECCompile()
   FAILED`, Core ML **error −14**, on both phones and under both
   `.cpuAndNeuralEngine` and `.all`. Core ML vs MLX temporal correlation
-  0.999975 (25-frame) / 0.999984 (carry). **Honesty note (§6.7):** admission is
-  *instance-fragile* — an artifact that compiled to the ANE in a test harness
-  later fell back to CPU in the shipping app — so the shipped temporal placement
-  is `.cpuAndGPU` today, with this stateless graph as the documented escape.
+  0.999975 (25-frame) / 0.999984 (carry). **Placement in the app (§5.1):**
+  for a time the temporal stage shipped on `.cpuAndGPU` after earlier app
+  builds did not reproduce harness ANE placement. The system runtime now ships
+  this boundary as the one-frame streaming-carry graph
+  (`convert_temporal_body_carry.py --frames 1 --streaming`) on the ANE: its
+  in-app `MLComputePlan` and state gate passes in 10/10 cold launches on both
+  phones (ANE cost share 1.000).
 
-- **Decoder FP16 (contradicts §3 below: "do not re-export at fp16").** The
-  overflow conclusion is superseded. A channels-first (NCHW) internal rewrite
-  plus an exact-in-FP32 mid-network rescale (`apply_fp16_safe_rescale`) makes the
-  FP16 decoder finite **and** ANE-resident. On iPhone 12 Pro,
-  `.cpuAndNeuralEngine` (ANE cost 1.000) yields finite output — 30,720/30,720 at
-  5-frame (p99 **6.65 ms**), 184,320/184,320 at 25-frame (p99 **24.77 ms**) —
-  while **CPU-only and CPU+GPU produce non-finite output from the same FP16
-  artifact.** The plain channels-last FP16 export is non-finite everywhere
-  (finite ratio 0.71). The ANE was the only compute unit that produced finite
-  FP16 output. FP32 NCHW parity vs MLX: SNR 118.85 dB (§3's receipt is the NCHW
-  FP32 wrapper parity, which — because the rescale is exact in FP32 — also
-  validates the FP16 transform).
+- **Decoder FP16 (qualifies §3 below: "do not re-export at fp16").** The
+  overflow conclusion holds for unrescaled FP16 and is superseded on the A17
+  Pro only (§5.2). An October 2026 device matrix (both phones, iOS 27.0.1,
+  25-frame decoders on real inputs, SNR vs the FP32 decoder on the same
+  device's CPU) found that without the rescale FP16 is wrong in either layout:
+  channels-last and NCHW both return non-finite output on CPU and GPU (the
+  5-frame channels-last export measured finite ratio 0.71 on a Mac), and both
+  run fully on the ANE and return finite output at ~0 dB SNR (correlation
+  ≤ 0.46). Layout decided neither ANE placement nor correctness. The June
+  iPhone 12 Pro result that the NCHW FP16 graph was finite only on
+  `.cpuAndNeuralEngine` (30,720/30,720 at 5-frame, p99 6.65 ms;
+  184,320/184,320 at 25-frame, p99 24.77 ms) was the unrescaled graph on a
+  constant input; the 25-frame readout reproduces byte-for-byte, and its output
+  is wrong. The exact-in-FP32
+  mid-network rescale (`apply_fp16_safe_rescale`) is what makes FP16 usable:
+  on the A17 Pro it scores 41–46 dB on its calibration window and 35–48 dB on
+  a held-out window across engines (38.8 dB on the ANE), and fails where
+  activations still exceed FP16 range after the rescale (1 of 600 windows by
+  host scan; 8.5 dB on the A17 Pro ANE, non-finite on CPU and GPU). On the A14
+  the rescaled artifact is wrong on the ANE (−12 to −21 dB) while its CPU gives
+  44.0 / 34.7 dB, so the A14 runs the FP32 decoder, which its compute plan
+  places entirely on the CPU. FP32 NCHW parity vs MLX: SNR 118.85 dB (§3's
+  receipt is the NCHW FP32 wrapper parity, which — because the rescale is exact
+  in FP32 — also validates the FP16 transform).
 
 - **Depth FP32 / host sampling (contradicts §depth below).** Superseded by the
   in-graph FP16 rollout (`exporters/convert_depth_body_rollout.py`): all 12 RVQ
@@ -543,10 +560,11 @@ are process-attributed impact scores and duty cycles, not calibrated joules —
 strong directional evidence, not a battery-life claim.
 
 Scope note: these traces ran an all-ANE runtime configuration in which every
-Core ML stage requested `.cpuAndNeuralEngine`. In the published bundle, the
-fp32 decoder is the deliberate exception: fp32 cannot execute on the ANE
-(it is fp16 hardware), so the decoder schedules on GPU — one 25-frame call
-per second of audio, off the 40 ms critical path, traded for the 118.85 dB
+Core ML stage requested `.cpuAndNeuralEngine`. In the A14 configuration the
+fp32 decoder is the exception: fp32 cannot execute on the ANE
+(it is fp16 hardware), so under `.cpuAndNeuralEngine` its compute plan places
+the decoder entirely on the CPU (October 2026 matrix, both phones) — one 25-frame call
+every 12 frames, off the per-frame critical path, traded for the 118.85 dB
 decode (Section 3).
 
 ## 5. Negative results: why the published temporal export is one frame
@@ -589,10 +607,12 @@ unless you ask the compute plan or Instruments.
 
 The carry family does run acceptably on CPU/GPU (composed 23–35 ms/frame at
 p99 in burst form), and it powered the 10-minute zero-underrun proof in
-Section 4.3 — but it is a CPU/GPU result, not an ANE result, and in a full
-integration the same fallback measured ~640 ms of temporal compute per
-25-frame generation block, which cannot sustain 25 Hz without minutes of
-buffering. Paired Power Profiler captures confirmed the direction: routing
+Section 4.3 — but it is a CPU/GPU result, not an ANE result. Separately, in a
+full integration the one-frame stateful temporal graph (a partial ANE island)
+measured ~640 ms of temporal compute per 25-frame generation block on iPhone
+12 Pro (~25.6 ms per call; in a temporal-only loop, per-call p99 29.7 ms against
+14.7 ms on CPU-only), so the partial island was slower than the CPU, not a
+cliff. Paired Power Profiler captures of an earlier all-ANE build on the A14 showed that routing
 temporal work onto the ANE path removed essentially all process-attributed
 GPU impact and roughly halved process CPU impact versus the CPU/GPU control.
 
@@ -610,16 +630,19 @@ trace — never trust a successful `.cpuAndNeuralEngine` prediction alone.
 
 ## 6. Reproducing the validation
 
-### 6.1 Fixture-only (no MLX, no checkpoint download)
+### 6.1 Fixture-only (no MLX)
 
 The repo ships the teacher-forced reference fixtures, so the headline
-temporal parity numbers can be re-derived against the published
-`MRT2TemporalBody.mlpackage` on any Apple-silicon Mac:
+temporal parity numbers can be re-derived on any Apple-silicon Mac. The
+temporal package is no longer published; export it from the checkpoint first:
 
 ```bash
+PYTHONPATH=exporters python exporters/convert_temporal_body.py
 python validation/validate_temporal_body.py \
   --skip-pytorch \
-  --reference-npz fixtures/reference_temporal_unrolled.npz
+  --reference-npz fixtures/reference_temporal_unrolled.npz \
+  --model-template build/models/mrt2_temporal_body_unrolled_01.mlpackage \
+  --metadata-template build/models/mrt2_temporal_body_unrolled_01_export_metadata.json
 ```
 
 This replays the recorded MLX reference tensors

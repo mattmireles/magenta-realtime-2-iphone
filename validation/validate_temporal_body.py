@@ -39,9 +39,10 @@ from mrt2_coreml.temporal_body_wrapper import (
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-# Default layout: model packages downloaded from the Hugging Face repo
-# (mattmireles/magenta-realtime-2-iphone) into ``models/`` at the repo root.
-# The ``{frames}`` placeholder is kept for re-exported variants; the published
+# Default layout: model packages in ``models/`` at the repo root. The Hugging
+# Face repo (mattmireles/magenta-realtime-2-iphone) no longer hosts
+# MRT2TemporalBody.mlpackage; export it with exporters/convert_temporal_body.py.
+# The ``{frames}`` placeholder is kept for re-exported variants; the formerly published
 # MRT2TemporalBody.mlpackage is the frames=01 export under its public name.
 DEFAULT_MODEL_TEMPLATE = REPO_ROOT / "models" / "MRT2TemporalBody.mlpackage"
 DEFAULT_METADATA_TEMPLATE = (
@@ -585,7 +586,7 @@ def _write_summary(report: dict[str, Any], summary_path: Path) -> None:
 def parse_args() -> argparse.Namespace:
   """Parse CLI flags."""
   parser = argparse.ArgumentParser(description=__doc__)
-  # The published MRT2TemporalBody.mlpackage is the 1-frame stateful export, so
+  # The formerly published MRT2TemporalBody.mlpackage is the 1-frame stateful export, so
   # the default validates one frame. Re-exported multi-frame unrolled variants
   # can pass --frames N with a matching --model-template.
   parser.add_argument("--frames", type=int, default=1)

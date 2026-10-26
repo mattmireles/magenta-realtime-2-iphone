@@ -190,8 +190,10 @@ The temporal graph is a pure single-frame tensor function. Inputs contain the
 current temporal and source vectors, a fixed-shape validity bias, and 48
 ordinary K/V arrays for self- and cross-attention across 12 layers. Outputs
 contain one temporal vector and 48 one-token cache updates. Swift owns a
-preallocated 41-frame chronological ring. This removes in-graph state mutation,
-which had compiled in a probe but failed ANE admission in the application.
+preallocated 41-frame chronological ring. This removes in-graph state mutation:
+the stateful single-frame graphs that compiled for the ANE did so only as
+partial islands, the one the application ran masked every history slot, and
+rolling-cache rewrites that kept history in-graph failed ANE compilation on A14.
 
 The state proof asks two independent questions. First, identical input on fresh
 and warmed state must diverge, preventing a write-only-state false pass.
@@ -570,12 +572,15 @@ iteration-normalized p50/p90/p99, produced at 0.897x, and exhausted a 20.16
 second reservoir after 294.08 seconds. It recorded 7,952 underruns. Context
 repair increases decoder cadence, so it cannot rescue this capacity result.
 
-The A17 FP16 decoder artifact is not promoted on A14. A short ANE probe on A14
-is finite but has unsafe amplitude; a long retry later becomes non-finite,
-while FLOAT32 CPU isolation remains bounded. We did not localize the exact
-overflowing layer, so we report a device-artifact numerical incompatibility,
-not a layer-level mechanism. A14 needs a different trained precision or
-decoder/depth architecture, not a larger hidden buffer.
+The A17 FP16 decoder artifact is not promoted on A14. On the A14 ANE it is
+finite but wrong: float-PCM peaks reach 264 against 0.62 when only the
+decoder moves to the CPU, and an October 2026 device matrix measures -12 to
+-21 dB SNR against the FLOAT32 decoder [Mireles, 2026]. A short CPU-only run of
+the same FP16 decoder stays bounded, but a long CPU retry later produced non-finite output. We
+did not localize why the A14 ANE output is wrong, so we report a
+device-artifact numerical incompatibility, not a layer-level mechanism. A14
+needs a different trained precision or decoder/depth architecture, not a
+larger hidden buffer.
 
 ### 5.8 Compression ladder and early stopping
 

@@ -20,7 +20,8 @@ RNG/seed host-owned). It replaces the 12-predictions-per-frame designs
 (``mrt2_depth_body_logits`` 12x full pass, ``mrt2_depth_body_step`` 12x
 stateful step), both of which are weight-bandwidth-doomed on phones: every
 prediction streams the full depth weight set from DRAM, so 12 predictions
-cost ~40 ms/frame regardless of FLOPs. This is the paper's §6.5 finding
+cost ~40 ms/frame regardless of FLOPs. This is the Surgical Inference
+paper's section 5.3 finding
 (weight bytes / DRAM bandwidth is the per-call invariant on every compute
 unit), which reshaped the sampling loop from twelve predictions per frame
 into one.
